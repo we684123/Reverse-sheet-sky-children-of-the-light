@@ -28,6 +28,33 @@ def get_do_contour_by_binary(img):
     return contours
 
 
+def get_crop_area(do_rt, w, h):
+    # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
+    x = []
+    y = []
+    for i in do_rt:
+        x.append(i[0])
+        y.append(i[1])
+    w
+    h
+    max_x = max(x)
+    min_x = min(x)
+    max_y = max(y)
+    min_y = min(y)
+
+    upper_left = [min_y, min_x]
+    lower_right = [max_y + h, max_x + w]
+    return upper_left, lower_right
+
+
+def get_crop_img(img, upper_left, lower_right):
+    # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
+    ul = upper_left
+    lr = lower_right
+    crop_img = img[ul[0]:lr[0], ul[1]:lr[1]]
+    return crop_img
+
+
 if __name__ == '__main__':
     img_path = str(Path("./color.png").resolve())
     template_img_path = str(Path("./template.png").resolve())
@@ -46,20 +73,23 @@ if __name__ == '__main__':
     res = cv2.matchTemplate(binary, template_binary, cv2.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc = np.where(res >= threshold)
+    do_rt = []  # x,y
     for pt in zip(*loc[::-1]):
+        print(pt)
+        list_pt = list(pt)
+        do_rt.append(list_pt)
+
         cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
 
-    cv2.imwrite('res.png', img)
-
-    contours = get_do_contour_by_binary(binary)
-
-    cv2.drawContours(binary, contours, -1, (0, 255, 0), 3)
+    upper_left, lower_right = get_crop_area(do_rt, w, h)
+    crop_binary = get_crop_img(img, upper_left, lower_right)
 
     cv2.imshow('mask', mask)
     cv2.imshow('res', res)
     cv2.imshow('img', img)
     cv2.imshow('binary', binary)
     cv2.imshow('template_binary', template_binary)
+    cv2.imshow('crop_binary', crop_binary)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
