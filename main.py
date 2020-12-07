@@ -2,8 +2,6 @@ from pathlib import Path
 
 import cv2
 
-from matplotlib import pyplot as plt
-
 import numpy as np
 
 
@@ -56,8 +54,8 @@ def get_crop_img(img, upper_left, lower_right):
 
 
 def get_matchTemplate_rt(img, template):
-    w = template.shape[1]
-    h = template.shape[0]
+    # w = template.shape[1]
+    # h = template.shape[0]
     res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc = np.where(res >= threshold)
@@ -67,7 +65,7 @@ def get_matchTemplate_rt(img, template):
         list_pt = list(pt)
         do_rt.append(list_pt)
 
-        cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        # cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
     return do_rt
 
 
@@ -82,10 +80,7 @@ if __name__ == '__main__':
     binary = get_binary_img(res, 127)
     template_binary = get_binary_img(template, 127)
 
-    # w, h = template.shape[::-1]
-
     do_rt = get_matchTemplate_rt(binary, template_binary)
-
     upper_left, lower_right = get_crop_area(do_rt, template)
     crop_binary = get_crop_img(binary, upper_left, lower_right)
 
