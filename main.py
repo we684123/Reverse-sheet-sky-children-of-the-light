@@ -28,15 +28,15 @@ def get_do_contour_by_binary(img):
     return contours
 
 
-def get_crop_area(do_rt, w, h):
+def get_crop_area(do_rt, template):
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     x = []
     y = []
     for i in do_rt:
         x.append(i[0])
         y.append(i[1])
-    w
-    h
+    w = template.shape[1]
+    h = template.shape[0]
     max_x = max(x)
     min_x = min(x)
     max_y = max(y)
@@ -55,6 +55,22 @@ def get_crop_img(img, upper_left, lower_right):
     return crop_img
 
 
+def get_matchTemplate_rt(img, template):
+    w = template.shape[1]
+    h = template.shape[0]
+    res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(res >= threshold)
+    do_rt = []  # x,y
+    for pt in zip(*loc[::-1]):
+        print(pt)
+        list_pt = list(pt)
+        do_rt.append(list_pt)
+
+        cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+    return do_rt
+
+
 if __name__ == '__main__':
     img_path = str(Path("./color.png").resolve())
     template_img_path = str(Path("./template.png").resolve())
@@ -67,22 +83,11 @@ if __name__ == '__main__':
     template_binary = get_binary_img(template, 127)
 
     # w, h = template.shape[::-1]
-    w = template.shape[1]
-    h = template.shape[0]
 
-    res = cv2.matchTemplate(binary, template_binary, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.8
-    loc = np.where(res >= threshold)
-    do_rt = []  # x,y
-    for pt in zip(*loc[::-1]):
-        print(pt)
-        list_pt = list(pt)
-        do_rt.append(list_pt)
+    do_rt = get_matchTemplate_rt(binary, template_binary)
 
-        cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-
-    upper_left, lower_right = get_crop_area(do_rt, w, h)
-    crop_binary = get_crop_img(img, upper_left, lower_right)
+    upper_left, lower_right = get_crop_area(do_rt, template)
+    crop_binary = get_crop_img(binary, upper_left, lower_right)
 
     cv2.imshow('mask', mask)
     cv2.imshow('res', res)
