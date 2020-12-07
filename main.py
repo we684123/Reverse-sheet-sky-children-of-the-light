@@ -39,36 +39,17 @@ if __name__ == '__main__':
     binary = get_binary_img(res, 127)
     template_binary = get_binary_img(template, 127)
 
-    methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
-               'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
-
+    # w, h = template.shape[::-1]
     w = template.shape[1]
     h = template.shape[0]
-    img2 = img
-    for meth in methods:
-        img = img2.copy()
-        method = eval(meth)
 
-        # Apply template Matching
-        res = cv2.matchTemplate(img, template, method)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    res = cv2.matchTemplate(binary, template_binary, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(res >= threshold)
+    for pt in zip(*loc[::-1]):
+        cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
 
-        # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
-        if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
-            top_left = min_loc
-        else:
-            top_left = max_loc
-        bottom_right = (top_left[0] + w, top_left[1] + h)
-
-        cv2.rectangle(img, top_left, bottom_right, 255, 2)
-
-        plt.subplot(121), plt.imshow(res, cmap='gray')
-        plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
-        plt.subplot(122), plt.imshow(img)
-        plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
-        plt.suptitle(meth)
-
-        plt.show()
+    cv2.imwrite('res.png', img)
 
     contours = get_do_contour_by_binary(binary)
 
