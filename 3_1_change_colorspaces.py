@@ -28,8 +28,8 @@ def segmentation_tennis(img_path):
     hsv_keyboard_colour2 = cv2.cvtColor(keyboard_colour2, cv2.COLOR_BGR2HSV)
 
     # 在HSV的色彩空間中定義黃色區間,這樣就可以初步分出網球的位置
-    lower_yellow = np.array([0, 0, 150])
-    upper_yellow = np.array([60, 90, 255])
+    lower_yellow = np.array([0, 0, 140])
+    upper_yellow = np.array([75, 100, 255])
 
     # 將圖像中色彩分割黃色區間出來的遮罩
     mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
