@@ -124,6 +124,12 @@ if __name__ == '__main__':
         binary = get_binary_img(res, 127)
         video = link_line(binary)
 
+        # 僅取鍵盤畫面
+        # 裁剪坐标为[y0:y1, x0:x1]
+        upper_left = [121, 530]
+        lower_right = [623, 1400]
+        video = get_crop_img(video, upper_left, lower_right)
+
         cv2.imshow('Video Player', video)
 
         if cv2.waitKey(1) == ord('q'):
