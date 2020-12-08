@@ -135,14 +135,21 @@ def split_keyboard(img, x, y):
 
     for i in range(1, y + 1):
         for j in range(1, x + 1):
-            print(f"i={i},j={j}")
+            # print(f"i={i},j={j}")
             rd = [int(j * area_x), int(i * area_y)]
             lu = [int(rd[0] - area_x), int(rd[1] - area_y)]
-            print(f"lu={lu},rd={rd}")
-            print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
+            # print(f"lu={lu},rd={rd}")
+            # print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
             new_img = img[lu[1]:rd[1], lu[0]:rd[0]]
             keyboard.append(new_img)
     return keyboard
+
+
+def get_img_number_count(keyboard):
+    a = []
+    for i in np.unique(keyboard):
+        a.append(np.sum(keyboard == i))
+    return a
 
 
 if __name__ == '__main__':
@@ -194,6 +201,12 @@ if __name__ == '__main__':
 
     keyboard = split_keyboard(img, 5, 3)
     keyboard[0]
+    data = keyboard[1]
+    np.unique(keyboard[0])
+    get_img_number_count(data)
+    for i in np.unique(data):
+        print(np.sum(data == i))
+
     cv2.imwrite("./kbs/kb14.png", keyboard[i])
 
     for i in range(0, len(keyboard)):
@@ -207,6 +220,7 @@ if __name__ == '__main__':
     print(upper_left)
     print(lower_right)
 
+    frame_keyboards = []
     # 再處理剩下的
     while cap.isOpened():
 
@@ -221,22 +235,32 @@ if __name__ == '__main__':
             print("影片讀取失敗，請確認影片格式...")
             break
 
-        # 轉灰階畫面顯示
+        # 畫面處理
         mask, res = get_keyboard_by_hsv(frame)
         binary = get_binary_img(res, 127)
+        upper_left = [121, 530]
+        lower_right = [623, 1400]
+        crop_img = get_crop_img(binary, upper_left, lower_right)
+        img = link_line(crop_img)
+        keyboards = split_keyboard(img, 5, 3)
+        keyboards_count = []
+        for k in keyboards:
+            keyboards_count.append(get_img_number_count(k))
+        frame_keyboards.append(keyboards_count)
 
-        crop_binary = get_crop_img(binary, upper_left, lower_right)
-
-        cv2.imshow('Video Player', crop_binary)
+        # cv2.imshow('Video Player', img)
 
         if cv2.waitKey(1) == ord('q'):
-            print('===')
-            print(do_rt)
-            print(upper_left)
-            print(lower_right)
             break
 
     cap.release()
     cv2.destroyAllWindows()
+
+    len(frame_keyboards)
+    frame_keyboards[0]
+
+    with open('./frame_keyboards.txt', mode='w', encoding='utf-8') as f:
+        f.write(str(frame_keyboards))
+
 
 #
