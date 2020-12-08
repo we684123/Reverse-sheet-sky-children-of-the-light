@@ -16,7 +16,7 @@ def get_keyboard(img):
 
 def get_binary_img(img, thresh):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY)
+    ret, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
     return binary
 
 
