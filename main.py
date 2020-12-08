@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 
-def get_keyboard(img):
+def get_keyboard_by_hsv(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     lower_yellow = np.array([0, 0, 140])
     upper_yellow = np.array([75, 100, 255])
@@ -28,6 +28,7 @@ def get_do_contour_by_binary(img):
 
 def get_crop_area(do_rt, template):
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
+    # print(do_rt)
     x = []
     y = []
     for i in do_rt:
@@ -61,7 +62,7 @@ def get_matchTemplate_rt(img, template):
     loc = np.where(res >= threshold)
     do_rt = []  # x,y
     for pt in zip(*loc[::-1]):
-        print(pt)
+        # print(pt)
         list_pt = list(pt)
         do_rt.append(list_pt)
 
@@ -69,30 +70,92 @@ def get_matchTemplate_rt(img, template):
     return do_rt
 
 
+def get_Template_binary_img(template_img_path):
+    template = cv2.imread(template_img_path)
+    template_binary = get_binary_img(template, 127)
+    return template_binary
+
+
 if __name__ == '__main__':
     img_path = str(Path("./color.png").resolve())
     template_img_path = str(Path("./template.png").resolve())
 
     img = cv2.imread(img_path)
-    mask, res = get_keyboard(img)
-    template = cv2.imread(template_img_path)
-
+    mask, res = get_keyboard_by_hsv(img)
     binary = get_binary_img(res, 127)
-    template_binary = get_binary_img(template, 127)
+
+    template_binary = get_Template_binary_img(template_img_path)
 
     do_rt = get_matchTemplate_rt(binary, template_binary)
-    upper_left, lower_right = get_crop_area(do_rt, template)
+    upper_left, lower_right = get_crop_area(do_rt, template_binary)
     crop_binary = get_crop_img(binary, upper_left, lower_right)
 
-    cv2.imshow('mask', mask)
-    cv2.imshow('res', res)
-    cv2.imshow('img', img)
-    cv2.imshow('binary', binary)
-    cv2.imshow('template_binary', template_binary)
-    cv2.imshow('crop_binary', crop_binary)
+    # cv2.imshow('mask', mask)
+    # cv2.imshow('res', res)
+    # cv2.imshow('img', img)
+    # cv2.imshow('binary', binary)
+    # cv2.imshow('template_binary', template_binary)
+    # cv2.imshow('crop_binary', crop_binary)
+    #
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
-    cv2.waitKey(0)
+    video_path = './sky.mkv'
+    cap = cv2.VideoCapture(video_path)
+    frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+
+    # 先到達指定偵數
+    specify_count = 60
+    for i in range(0, specify_count):
+        ret, frame = cap.read()
+
+    frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
+    print(f'frame_count = {frame_count}')
+    print(cap.get(cv2.CAP_PROP_FPS))
+    print(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+    mask, res = get_keyboard_by_hsv(frame)
+    binary = get_binary_img(res, 127)
+    cv2.imwrite("./video_binary.png", binary)
+
+    template_binary = get_Template_binary_img("./video_binary.png")
+    do_rt = get_matchTemplate_rt(binary, template_binary)
+    upper_left, lower_right = get_crop_area(do_rt, template_binary)
+    print('if frame_count == 0:')
+    print(do_rt)
+    print(upper_left)
+    print(lower_right)
+
+    # 再處理剩下的
+    while cap.isOpened():
+
+        ret, frame = cap.read()
+
+        # 正確讀取影像時 ret 回傳 True
+        frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
+        if frame_count == frame_end:
+            print("影片讀取完畢")
+            break
+        if not ret:
+            print("影片讀取失敗，請確認影片格式...")
+            break
+
+        # 轉灰階畫面顯示
+        mask, res = get_keyboard_by_hsv(frame)
+        binary = get_binary_img(res, 127)
+
+        crop_binary = get_crop_img(binary, upper_left, lower_right)
+
+        cv2.imshow('Video Player', crop_binary)
+
+        if cv2.waitKey(1) == ord('q'):
+            print('===')
+            print(do_rt)
+            print(upper_left)
+            print(lower_right)
+            break
+
+    cap.release()
     cv2.destroyAllWindows()
-
 
 #
