@@ -1,7 +1,9 @@
-import numpy as np
 import json
 
 import matplotlib.pyplot as plt
+
+import numpy as np
+
 
 with open('./frame_keyboards.txt', mode='r', encoding='utf-8') as f:
     frame_keyboards = f.read()
@@ -41,6 +43,7 @@ len(kb_list[14])
 
 ironman = np.linspace(0, len(kb_list[0]), len(kb_list[0]))
 fig = plt.figure()  # 定義一個圖像窗口
+plt.plot(ironman[140:180], kb_list[0][140:180], '.')
 plt.plot(ironman[0:500], kb_list[0][0:500], '.')
 plt.plot(ironman[500:1000], kb_list[0][500:1000], '.')
 plt.plot(ironman[1000:1500], kb_list[0][1000:1500], '.')
@@ -61,11 +64,34 @@ for i in range(0, len(frame_keyboards[0])):
 
 
 # 譜面生成
-#
+
+len(frame_keyboards)
+len(kb_list)
 sheet = []
-for m in range(0,len(frame_keyboards)):
-    frame_keyboards[m]
+trigger_valve = 750
+for m in range(0, len(frame_keyboards)):
+    # m = 0
+    track = 1
+    after_time = (m - temp_state_list[track]['st_frame'])
+    refractory_timeout = after_time > refractory_time
+    trigger = kb_list[track][m] < trigger_valve
+    if trigger and refractory_timeout:
+        temp_state_list[track]['st_frame'] = m
+        temp_state_list[track]['refractory'] = True
+        sheet.append({"frame": m, "keyboard": track})
 
-
+sheet
+# TEST
+for m in range(0, len(frame_keyboards)):
+    # m = 0
+    # m = 150
+    # m = 151
+    track = 0
+    refractory_time = (m - temp_state_list[track]['st_frame'])
+    refractory_timeout = refractory_time > refractory_time
+    trigger = kb_list[track][m] < trigger_valve
+    if trigger and refractory_timeout:
+        print(m)
+        break
 
 #
