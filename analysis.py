@@ -69,29 +69,24 @@ len(frame_keyboards)
 len(kb_list)
 sheet = []
 trigger_valve = 750
-for m in range(0, len(frame_keyboards)):
-    # m = 0
-    track = 1
-    after_time = (m - temp_state_list[track]['st_frame'])
-    refractory_timeout = after_time > refractory_time
-    trigger = kb_list[track][m] < trigger_valve
-    if trigger and refractory_timeout:
-        temp_state_list[track]['st_frame'] = m
-        temp_state_list[track]['refractory'] = True
-        sheet.append({"frame": m, "keyboard": track})
+for n in range(0, len(kb_list)):
+    for m in range(0, len(frame_keyboards)):
+        # m = 0
+        track = n
+        after_time = (m - temp_state_list[track]['st_frame'])
+        refractory_timeout = after_time > refractory_time
+        trigger = kb_list[track][m] < trigger_valve
+        if trigger and refractory_timeout:
+            temp_state_list[track]['st_frame'] = m
+            temp_state_list[track]['refractory'] = True
+            sheet.append({"frame": m, "keyboard": track})
 
 sheet
-# TEST
-for m in range(0, len(frame_keyboards)):
-    # m = 0
-    # m = 150
-    # m = 151
-    track = 0
-    refractory_time = (m - temp_state_list[track]['st_frame'])
-    refractory_timeout = refractory_time > refractory_time
-    trigger = kb_list[track][m] < trigger_valve
-    if trigger and refractory_timeout:
-        print(m)
-        break
+len(sheet)
+sheet[0]
+
+sort_sheet = sorted(sheet, key=lambda s: s['frame'])
+
+
 
 #
