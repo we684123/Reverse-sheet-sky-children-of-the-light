@@ -37,19 +37,20 @@ for i in frame_keyboards:
     for j in range(0, len(i)):
         kb_list[j].append(max_pixel_len - i[j][0])
 
+len(kb_list)
 len(kb_list[0])
 len(kb_list[14])
 
-
-ironman = np.linspace(0, len(kb_list[0]), len(kb_list[0]))
+track = 6
+ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
 fig = plt.figure()  # 定義一個圖像窗口
-plt.plot(ironman[140:180], kb_list[0][140:180], '.')
-plt.plot(ironman[0:500], kb_list[0][0:500], '.')
-plt.plot(ironman[500:1000], kb_list[0][500:1000], '.')
-plt.plot(ironman[1000:1500], kb_list[0][1000:1500], '.')
-plt.plot(ironman[1350:1400], kb_list[0][1350:1400], '.')
-plt.plot(ironman[0:500], kb_list[0][0:500], '.')
-plt.plot(ironman[0:500], kb_list[0][0:500], '.')
+plt.plot(ironman[140:180], kb_list[track][140:180], '.')
+plt.plot(ironman[0:500], kb_list[track][0:500], '.')
+plt.plot(ironman[500:1000], kb_list[track][500:1000], '.')
+plt.plot(ironman[1000:1500], kb_list[track][1000:1500], '.')
+plt.plot(ironman[1350:1400], kb_list[track][1350:1400], '.')
+plt.plot(ironman[1500:2000], kb_list[track][1500:2000], '.')
+plt.plot(ironman[2000:2500], kb_list[track][2000:2500], '.')
 
 
 # 狀態器初始化
@@ -62,21 +63,29 @@ for i in range(0, len(frame_keyboards[0])):
     }
     temp_state_list.append(temp_state)
 
+# 生成閥值陣列
+trigger_valve = []
+for i in kb_list:
+    mean = int(np.mean(i))
+    # print(mean)
+    trigger_valve.append(mean/2)
+
 
 # 譜面生成
-
 len(frame_keyboards)
 len(kb_list)
-sheet = []
-trigger_valve = 750
+sheet = [].copy()
 for n in range(0, len(kb_list)):
+    # n = 1
     for m in range(0, len(frame_keyboards)):
         # m = 0
+        # print('+')
         track = n
         after_time = (m - temp_state_list[track]['st_frame'])
         refractory_timeout = after_time > refractory_time
-        trigger = kb_list[track][m] < trigger_valve
+        trigger = kb_list[track][m] < trigger_valve[n]
         if trigger and refractory_timeout:
+            # print('.')
             temp_state_list[track]['st_frame'] = m
             temp_state_list[track]['refractory'] = True
             sheet.append({"frame": m, "keyboard": track})
@@ -85,9 +94,18 @@ sheet
 len(sheet)
 sheet[0]
 
+sheet2 = sheet
+sheet2
+sheet3 = sheet
+sheet3
+
+
 sort_sheet = sorted(sheet, key=lambda s: s['frame'])
 sort_sheet
 
+
+[1, 2, 3] + [4, 5, 6]
+t_sheet = sheet2 + sheet3
 
 test_reverse = {
     "name": "test_reverse",
