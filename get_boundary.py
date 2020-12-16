@@ -66,7 +66,7 @@ if video_path.exists():
 
     cv2.imwrite("./binary.png", binary)
 
-    print('===已生成===')
+    print('===已生成 done===')
 else:
     print('video_path is not exist!')
 time.sleep(2)
