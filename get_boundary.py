@@ -1,10 +1,11 @@
-import sys
 import time
 from pathlib import Path
 
 import cv2
-
 import numpy as np
+
+from config import base
+base = base.base()
 
 
 def get_keyboard_by_hsv(img):
@@ -35,36 +36,37 @@ def get_binary_img(img, thresh):
     return binary
 
 
-video_path = sys.argv[1]
-# video_path = "./sky.mkv"
-cap = cv2.VideoCapture(video_path)
+video_path = Path(base['video_path'])  # "./sky.mkv"
+if video_path.exists():
+    cap = cv2.VideoCapture(video_path)
 
-frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
-fps = int(cap.get(cv2.CAP_PROP_FPS))
-count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-duration = count / fps
-minute = int(duration / 60)
-seconds = int(duration % 60)
+    duration = count / fps
+    minute = int(duration / 60)
+    seconds = int(duration % 60)
 
+    print(f'frame_count = {frame_count}')
+    print(f'fps = {fps}')
+    print(f'count= {count}')
+    print(f'duration= {duration}')
+    print(f'minute= {minute}')
+    print(f'seconds= {seconds}')
 
-print(f'frame_count = {frame_count}')
-print(f'fps = {fps}')
-print(f'count= {count}')
-print(f'duration= {duration}')
-print(f'minute= {minute}')
-print(f'seconds= {seconds}')
+    specify_minute = input('plz input specify "minute" = ')
+    specify_seconds = input('plz input specify "seconds" = ')
 
-specify_minute = input('plz input specify "minute" = ')
-specify_seconds = input('plz input specify "seconds" = ')
+    specify_count = int(specify_minute) * 60 * fps + int(specify_seconds) * fps
+    for i in range(0, specify_count):
+        ret, frame = cap.read()
+    mask, res = get_keyboard_by_hsv(frame)
+    binary = get_binary_img(res, 127)
 
-specify_count = int(specify_minute) * 60 * fps + int(specify_seconds) * fps
-for i in range(0, specify_count):
-    ret, frame = cap.read()
-mask, res = get_keyboard_by_hsv(frame)
-binary = get_binary_img(res, 127)
+    cv2.imwrite("./binary.png", binary)
 
-cv2.imwrite("./binary.png", binary)
-
-print('===已生成===')
+    print('===已生成===')
+else:
+    print('video_path is not exist!')
 time.sleep(2)
