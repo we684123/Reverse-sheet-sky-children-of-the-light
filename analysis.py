@@ -31,6 +31,7 @@ for i in range(0, len(frame_keyboards[0])):
         max_pixel_len = b + k
         break
     except Exception as e:
+        e
         pass
 
 for i in frame_keyboards:
