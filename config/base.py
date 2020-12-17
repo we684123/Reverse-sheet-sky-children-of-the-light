@@ -1,4 +1,4 @@
-def base():
+def reverse_config():
     return {
         # 影片的位置
         "video_path": "./sky.mkv",
@@ -57,4 +57,15 @@ def base():
                 'B1', 'B2', 'B3', 'B4'
             ]
         },
+    }
+
+
+def logger_config():
+    return {
+        "logging_level": "INFO",  # DEBUG # INFO # ERROR # WARNING
+        "log_file_path": './logs/Reverse-sheet-sky-children-of-the-light',
+        "log_format": '%(asctime)s - %(levelname)s : %(message)s',
+        "backupCount": 7,
+        "when": 'D',
+        "encoding": 'utf-8',
     }
