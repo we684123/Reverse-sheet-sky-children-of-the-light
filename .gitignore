@@ -8,3 +8,5 @@ kbs/
 config/__pycache__/
 
 *.pyc
+
+deno.mp4

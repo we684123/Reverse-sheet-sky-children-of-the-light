@@ -72,7 +72,7 @@ def get_crop_img(img, upper_left, lower_right):
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     ul = upper_left
     lr = lower_right
-    crop_img = img[ul[0]:lr[0], ul[1]:lr[1]]
+    crop_img = img[lr[0]:ul[0], lr[1]:ul[1]]
     return crop_img
 
 

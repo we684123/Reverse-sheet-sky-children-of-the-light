@@ -1,7 +1,7 @@
 def reverse_config():
     return {
         # 影片的位置
-        "video_path": "./sky.mkv",
+        "video_path": "./deno.mp4",
         # 譜面輸出目錄
         "output_sheet_path": "./output",
         # 譜面輸出名稱
@@ -10,11 +10,11 @@ def reverse_config():
         # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最左上邊界位置 (可用小畫家看)
         # use get_boundart.py conversion video to an image
         # in the image ,keyboard far left and far upper point position
-        "left_upper": [121, 530],
+        "left_upper": [670, 129],
         # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最右下邊界位置 (可用小畫家看)
         # use get_boundart.py conversion video to an image
         # in the image ,keyboard far right and far lower point position
-        "right_lower": [623, 1400],
+        "right_lower": [1663, 700],
 
         # 開始分析時間
         "start_minute": 0,  # 只接受整數 # only integer

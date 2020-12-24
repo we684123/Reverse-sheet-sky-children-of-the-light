@@ -42,7 +42,7 @@ len(kb_list)
 len(kb_list[0])
 len(kb_list[14])
 
-track = 6
+track = 0
 ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
 fig = plt.figure()  # 定義一個圖像窗口
 plt.plot(ironman[140:180], kb_list[track][140:180], '.')
