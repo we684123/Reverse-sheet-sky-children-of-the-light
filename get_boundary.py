@@ -39,9 +39,8 @@ specify_count = int(specify_minute) * 60 * fps + int(specify_seconds) * fps
 for i in range(0, specify_count):
     ret, frame = cap.read()
 mask, res = ru.get_keyboard_by_hsv(frame)
-binary = ru.get_binary_img(res, 127)
 
-cv2.imwrite("./binary.png", binary)
+cv2.imwrite("./frame.png", mask)
 
 print('===已生成 done.===')
 time.sleep(2)
