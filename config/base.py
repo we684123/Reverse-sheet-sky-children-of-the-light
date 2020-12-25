@@ -14,7 +14,7 @@ def reverse_config():
         # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最右下邊界位置 (可用小畫家看)
         # use get_boundart.py conversion video to an image
         # in the image ,keyboard far right and far lower point position
-        "right_lower": [1663, 700],
+        "right_lower": [1663, 684],
 
         # 開始分析時間
         "start_minute": 0,  # 只接受整數 # only integer
