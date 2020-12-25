@@ -9,10 +9,11 @@ def get_keyboard_by_hsv(img,
                         lower_rad=[148, 10, 72],
                         upper_rad=[255, 150, 255]):
 
-    # lower_yellow = np.array([0, 0, 0])
-    # upper_yellow = np.array([75, 255, 255])
-    # lower_rad = np.array([150, 0, 0])
-    # upper_rad = np.array([255, 255, 255])
+    # lower_yellow = [0, 0, 0]
+    # upper_yellow = [75, 255, 255]
+    # lower_rad = [150, 0, 0]
+    # upper_rad = [255, 255, 255]
+
     lower_yellow = np.array(lower_yellow)
     upper_yellow = np.array(upper_yellow)
     lower_rad = np.array(lower_rad)
@@ -82,7 +83,7 @@ def get_crop_img(img, upper_left, lower_right):
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     ul = upper_left
     lr = lower_right
-    crop_img = img[lr[0]:ul[0], lr[1]:ul[1]]
+    crop_img = img[ul[1]:lr[1], ul[0]:lr[0]]
     return crop_img
 
 
