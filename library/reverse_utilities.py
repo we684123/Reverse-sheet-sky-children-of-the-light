@@ -3,20 +3,30 @@ import cv2
 import numpy as np
 
 
-def get_keyboard_by_hsv(img):
+def get_keyboard_by_hsv(img,
+                        lower_yellow=[0, 11, 89],
+                        upper_yellow=[39, 89, 255],
+                        lower_rad=[148, 10, 72],
+                        upper_rad=[255, 150, 255]):
+
+    # lower_yellow = np.array([0, 0, 0])
+    # upper_yellow = np.array([75, 255, 255])
+    # lower_rad = np.array([150, 0, 0])
+    # upper_rad = np.array([255, 255, 255])
+    lower_yellow = np.array(lower_yellow)
+    upper_yellow = np.array(upper_yellow)
+    lower_rad = np.array(lower_rad)
+    upper_rad = np.array(upper_rad)
+
     img_1 = img.copy()
     img_2 = img.copy()
 
     hsv1 = cv2.cvtColor(img_1, cv2.COLOR_BGR2HSV)
     hsv2 = cv2.cvtColor(img_2, cv2.COLOR_BGR2HSV)
 
-    lower_yellow = np.array([0, 0, 0])
-    upper_yellow = np.array([75, 255, 255])
     mask1 = cv2.inRange(hsv1, lower_yellow, upper_yellow)
     res1 = cv2.bitwise_and(img_1, img_1, mask=mask1)
 
-    lower_rad = np.array([150, 0, 0])
-    upper_rad = np.array([255, 255, 255])
     mask2 = cv2.inRange(hsv2, lower_rad, upper_rad)
     res2 = cv2.bitwise_and(img_2, img_2, mask=mask2)
 
