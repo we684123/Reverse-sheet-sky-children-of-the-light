@@ -98,7 +98,7 @@ for i in frame_keyboards:
 
 
 # 狀態器初始化
-refractory_time = 35  # 單位 偵數
+refractory_time = rc['refractory_time']  # 冷卻時間(單位 偵數)
 temp_state_list = []  # 狀態器陣列
 for i in range(0, len(frame_keyboards[0])):
     temp_state = {
@@ -136,6 +136,16 @@ for n in range(0, len(kb_list)):
 
 sort_sheet = sorted(sheet, key=lambda s: s['frame'])
 sort_sheet
+
+# 加個正確時間(frame -> time)
+# 順便給個編號
+for j in range(0, len(sort_sheet)):
+    sort_sheet[j]['time'] = sort_sheet[j]['frame'] / fps
+    sort_sheet[j]['note'] = j
+
 logger.info('generated original sheet done.')
 with open('./sort_sheet.txt', mode='w', encoding='utf-8') as f:
     f.write(str(sort_sheet))
+
+
+#
