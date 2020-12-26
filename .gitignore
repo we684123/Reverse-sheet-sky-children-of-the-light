@@ -10,3 +10,5 @@ config/__pycache__/
 *.pyc
 
 deno.mp4
+
+t2.py
