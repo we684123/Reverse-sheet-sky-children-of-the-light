@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-import time
 
 import cv2
 
@@ -86,4 +85,4 @@ with open(str(_temp), mode='w', encoding='utf-8') as f:
     f.write(json.dumps(data))
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
-time.sleep(2)
+input('input any key to exit. 輸入任意值離開.')

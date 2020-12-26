@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-import time
 
 import numpy as np
 
@@ -103,4 +102,4 @@ with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(str(sort_sheet))
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
-time.sleep(2)
+input('input any key to exit. 輸入任意值離開.')
