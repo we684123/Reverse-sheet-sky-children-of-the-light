@@ -2,10 +2,8 @@ from pathlib import Path
 import json
 import time
 
-import cv2
 import numpy as np
 
-from library import reverse_utilities as ru
 from library import logger_generate
 from config import base
 
@@ -103,3 +101,6 @@ output_sheet_path = (aims_folder_path /
 _temp = output_sheet_path / './original_sheet.txt'
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(str(sort_sheet))
+logger.info('save data done.')
+logger.info('Please proceed to the next action.')
+time.sleep(2)
