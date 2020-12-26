@@ -1,5 +1,8 @@
 def reverse_config():
     return {
+        # 目標資料夾絕對位置
+        "aims_folder_path":
+            r"C:\Github\Reverse-sheet-sky-children-of-the-light",
         # 影片的位置
         "video_path": "./deno.mp4",
         # 譜面輸出目錄
@@ -57,10 +60,15 @@ def reverse_config():
                 'B1', 'B2', 'B3', 'B4'
             ]
         },
+
         # sync_symbol 同步符號，用於表示符號內是同時按的
         # in the sync_symbol note is simultaneously.
         # 8 4 5【3 5】 6 6 4
-        "sync_symbol": ["【", "】"]
+        "sync_symbol": ["【", "】"],
+
+        # 這個別亂動
+        # 音符生成冷去時間 (單位 frame)
+        "refractory_time": 35,
     }
 
 
