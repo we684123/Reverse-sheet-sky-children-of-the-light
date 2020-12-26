@@ -57,6 +57,10 @@ def reverse_config():
                 'B1', 'B2', 'B3', 'B4'
             ]
         },
+        # sync_symbol 同步符號，用於表示符號內是同時按的
+        # in the sync_symbol note is simultaneously.
+        # 8 4 5【3 5】 6 6 4
+        "sync_symbol": ["【", "】"]
     }
 
 
