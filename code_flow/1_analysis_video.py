@@ -3,7 +3,6 @@ import json
 import time
 
 import cv2
-import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
