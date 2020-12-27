@@ -63,12 +63,21 @@ def reverse_config():
 
         # sync_symbol 同步符號，用於表示符號內是同時按的
         # in the sync_symbol note is simultaneously.
-        # 8 4 5【3 5】 6 6 4
+        # 8 4 5 【3 5】 6 6 4
         "sync_symbol": ["【", "】"],
+        # 音符間的間隔符號
+        # space between notes symbol
+        # if "blank_symbol": ","
+        # 8,4,5,【3 5】,6,6,4,
+        "blank_symbol": " ",
+        # 視為同步的時間區間
+        # 單位 ms, unit ms
+        "sync_area_time": 300,
 
         # 這個別亂動
         # 音符生成冷去時間 (單位 frame)
-        "refractory_time": 35,
+        # generate new note refractory time
+        "refractory_time": 30,
     }
 
 
