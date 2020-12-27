@@ -77,7 +77,7 @@ def reverse_config():
         # 這個別亂動
         # 音符生成冷去時間 (單位 frame)
         # generate new note refractory time
-        "refractory_time": 30,
+        "refractory_time": 25,
     }
 
 
