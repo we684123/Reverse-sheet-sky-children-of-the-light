@@ -24,6 +24,7 @@ fps = int(cap.get(cv2.CAP_PROP_FPS))
 duration = frame_end / fps
 minute = int(duration / 60)
 seconds = int(duration % 60)
+hsv = rc['hsv']
 
 logger.info('base data got it!')
 
@@ -52,7 +53,12 @@ while cap.isOpened():
         break
 
     # 畫面處理
-    mask, res = ru.get_keyboard_by_hsv(frame)
+    mask, res = ru.get_keyboard_by_hsv(
+        frame,
+        hsv['lower_yellow'],
+        hsv['upper_yellow'],
+        hsv['lower_rad'],
+        hsv['upper_rad'])
     binary = ru.get_binary_img(res, 127)
     left_upper = rc['left_upper']
     right_lower = rc['right_lower']
