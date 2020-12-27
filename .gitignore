@@ -12,3 +12,5 @@ config/__pycache__/
 deno.mp4
 
 t2.py
+
+output/
