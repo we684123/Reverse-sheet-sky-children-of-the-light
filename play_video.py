@@ -1,12 +1,12 @@
 from pathlib import Path
 
 import cv2
-import numpy as np
 
 from library import reverse_utilities as ru
 from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
+hsv = rc['hsv']
 
 
 if __name__ == '__main__':
@@ -29,7 +29,12 @@ if __name__ == '__main__':
             break
 
         # 轉灰階畫面顯示
-        mask, res = ru.get_keyboard_by_hsv(frame)
+        mask, res = ru.get_keyboard_by_hsv(
+            frame,
+            hsv['lower_yellow'],
+            hsv['upper_yellow'],
+            hsv['lower_rad'],
+            hsv['upper_rad'])
         binary = ru.get_binary_img(res, 127)
         video = ru.link_line(binary)
 
