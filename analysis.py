@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-with open('./frame_keyboards.txt', mode='r', encoding='utf-8') as f:
-    frame_keyboards = f.read()
+with open('./output/analysis_from_video.txt', mode='r', encoding='utf-8') as f:
+    _frame_keyboards = f.read()
 
-frame_keyboards = json.loads(frame_keyboards)
+frame_keyboards = json.loads(json.loads(_frame_keyboards)['notes'])
 
 len(frame_keyboards)
 len(frame_keyboards[0])
@@ -42,16 +42,17 @@ len(kb_list)
 len(kb_list[0])
 len(kb_list[14])
 
-track = 0
+track = 4
 ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
 fig = plt.figure()  # 定義一個圖像窗口
-plt.plot(ironman[140:180], kb_list[track][140:180], '.')
-plt.plot(ironman[0:500], kb_list[track][0:500], '.')
+plt.plot(ironman[0:1000], kb_list[track][0:1000], '.')
+plt.plot(ironman[200:230], kb_list[track][200:230], '.')
 plt.plot(ironman[500:1000], kb_list[track][500:1000], '.')
 plt.plot(ironman[1000:1500], kb_list[track][1000:1500], '.')
 plt.plot(ironman[1350:1400], kb_list[track][1350:1400], '.')
 plt.plot(ironman[1500:2000], kb_list[track][1500:2000], '.')
 plt.plot(ironman[2000:2500], kb_list[track][2000:2500], '.')
+plt.plot(ironman[:], kb_list[track][:], '.')
 
 
 # 狀態器初始化
