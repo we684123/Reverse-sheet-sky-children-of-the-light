@@ -91,15 +91,15 @@ sort_sheet
 for j in range(0, len(sort_sheet)):
     sort_sheet[j]['time'] = sort_sheet[j]['frame'] / fps
     sort_sheet[j]['note'] = j
-
+analysis_from_video['original_sheet'] = sort_sheet
 logger.info('generated original sheet done.')
 
 logger.info('now to save data...')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './original_sheet.txt'
+_temp = output_sheet_path / './sort_sheet.txt'
 with open(_temp, mode='w', encoding='utf-8') as f:
-    f.write(str(sort_sheet))
+    f.write(json.dumps(analysis_from_video))
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
 input('input any key to exit. 輸入任意值離開.')
