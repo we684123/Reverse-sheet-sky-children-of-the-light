@@ -1,8 +1,6 @@
 from pathlib import Path
 import json
 
-import numpy as np
-
 from library import logger_generate
 from config import base
 
