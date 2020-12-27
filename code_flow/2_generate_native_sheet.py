@@ -94,6 +94,8 @@ for j in range(0, len(sort_sheet)):
 analysis_from_video['original_sheet'] = sort_sheet
 logger.info('generated original sheet done.')
 
+del analysis_from_video['notes']
+
 logger.info('now to save data...')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
