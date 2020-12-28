@@ -109,7 +109,17 @@ output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / 'original_sheet.json'
 with open(_temp, mode='w', encoding='utf-8') as f:
-    f.write(json.dumps(original_sheet))
+    new_data = {
+        "original_sheet": original_sheet,
+        "frame_end": data['frame_end'],
+        "fps": data['fps'],
+        "duration": data['duration'],
+        "minute": data['minute'],
+        "seconds": data['seconds'],
+        "st_specify_count": data['st_specify_count'],
+        "ed_specify_count": data['ed_specify_count'],
+    }
+    f.write(json.dumps(new_data))
 
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
