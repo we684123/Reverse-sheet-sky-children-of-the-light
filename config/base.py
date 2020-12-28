@@ -4,7 +4,7 @@ def reverse_config():
         "aims_folder_path":
             r"C:\Github\Reverse-sheet-sky-children-of-the-light",
         # 影片的位置
-        "video_path": "./deno.mp4",
+        "video_path": "./Shelter.mkv",
         # 譜面輸出目錄
         "output_sheet_path": "./output",
         # 譜面輸出名稱
@@ -13,18 +13,18 @@ def reverse_config():
         # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最左上邊界位置 (可用小畫家看)
         # use get_boundart.py conversion video to an image
         # in the image ,keyboard far left and far upper point position
-        "left_upper": [670, 129],
+        "left_upper": [556, 113],
         # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最右下邊界位置 (可用小畫家看)
         # use get_boundart.py conversion video to an image
         # in the image ,keyboard far right and far lower point position
-        "right_lower": [1663, 684],
+        "right_lower": [1363, 578],
 
         # 開始分析時間
         "start_minute": 0,  # 只接受整數 # only integer
         "start_second": 1,  # 只接受整數 # only integer
         # 結束分析時間
-        "end_minute": 2,  # 只接受整數 # only integer
-        "end_second": 27,  # 只接受整數 # only integer
+        "end_minute": 1,  # 只接受整數 # only integer
+        "end_second": 39,  # 只接受整數 # only integer
 
         # 鍵盤格式。通常是5*3，像是鋼琴，少數是4*2，像是鼓
         # keyboards format, like to piano is 5*3, and drum is 4*2
@@ -39,7 +39,7 @@ def reverse_config():
         # Available formats are below "sheet_formats"
         # you can modify or add format
         # Remember to modify "output_sheet_format" after changing
-        "output_sheet_format": "5_3_sheet_format_mode_1",
+        "output_sheet_format": "5_3_sheet_format_mode_2",
         "sheet_formats": {
             "5_3_sheet_format_mode_1": [
                 1, 2, 3, 4, 5,
@@ -72,11 +72,11 @@ def reverse_config():
         "blank_symbol": " ",
         # 視為同步的時間區間
         # 單位 ms, unit ms
-        "sync_area_time": 300,
+        "sync_area_time": 70,
 
         # 音符生成冷去時間 (單位 frame)
         # generate new note refractory time
-        "refractory_time": 25,
+        "refractory_time": 13,
 
         # ===⚠️以下別亂動，除非你知道自己幹嘛⚠️=======
         # ===⚠️Do not change below! Unless you know what you are doing⚠️====
