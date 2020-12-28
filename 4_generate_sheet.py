@@ -62,6 +62,7 @@ for i in range(0, osl):
                 original_sheet[i]['index'] = index
                 original_sheet[j + 1]['index'] = index
                 index += 1
+original_sheet
 
 # 按照 index(同時) 分組
 sheet = ""
@@ -94,11 +95,21 @@ for i in range(0, osl):
 logger.info('generated  sheet done.')
 
 logger.info('now to save data...')
+
+# 先存 output_sheet
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / rc['output_file_name']
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(str(sheet))
+
+# 再存 original_sheet
+output_sheet_path = (aims_folder_path /
+                     Path(rc['output_sheet_path'])).resolve()
+_temp = output_sheet_path / 'original_sheet.json'
+with open(_temp, mode='w', encoding='utf-8') as f:
+    f.write(json.dumps(original_sheet))
+
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
 input('input any key to exit. 輸入任意值離開.')
