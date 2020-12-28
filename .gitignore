@@ -1,16 +1,14 @@
 
-sky.mkv
-
-t.py
-
-kbs/
-
-config/__pycache__/
-
-*.pyc
+for_dev/
 
 deno.mp4
 
-t2.py
+Shelter.mkv
+
+sky.mkv
 
 logs/
+
+library/__pycache__/
+
+*.pyc
