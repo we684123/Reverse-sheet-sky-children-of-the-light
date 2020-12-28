@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import time
 
 import pygame
 
@@ -22,4 +23,30 @@ sounds = []
 for p in sounds_path:
     sounds.append(pygame.mixer.Sound(p))
 
-sounds[0].play()
+# sounds[0].play()
+
+# 讀取譜面
+aims_folder_path = Path(rc['aims_folder_path'])
+output_sheet_path = (aims_folder_path /
+                     Path(rc['output_sheet_path'])).resolve()
+_temp = output_sheet_path / './original_sheet.json'
+with open(_temp, mode='r', encoding='utf-8') as f:
+    _original_sheet = f.read()
+original_sheet = json.loads(_original_sheet)
+
+
+# 先生出時間差
+for j in range(0, len(original_sheet)):
+    if j == len(original_sheet) - 1:
+        break
+    original_sheet[j]['time_area'] =\
+        original_sheet[j + 1]['time'] - original_sheet[j]['time']
+
+# 來播放
+for k in original_sheet:
+    # k = 0
+    sleep_time = original_sheet[k]['time_area']
+    sound_number = original_sheet[k]['keyboard']
+    sounds[sound_number].play()
+    time.sleep(sleep_time)
+#
