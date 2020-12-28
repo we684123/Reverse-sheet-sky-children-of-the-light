@@ -40,7 +40,10 @@ for i in range(0, specify_count):
     ret, frame = cap.read()
 mask, res = ru.get_keyboard_by_hsv(frame)
 
-cv2.imwrite("./frame.png", mask)
+_temp = Path(rc['aims_folder_path']) / Path(rc['output_sheet_path'])
+temp = _temp / "boundary.png"
+
+cv2.imwrite(str(temp), mask)
 
 print('===已生成 done.===')
 time.sleep(2)
