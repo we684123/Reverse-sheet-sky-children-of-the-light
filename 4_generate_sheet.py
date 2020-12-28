@@ -16,9 +16,10 @@ output_sheet_path = (aims_folder_path /
 _temp = output_sheet_path / './sort_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
-    _sort_sheet = f.read()
+    _data = f.read()
 
-sort_sheet = json.loads(_sort_sheet)
+data = json.loads(_data)
+fps = data['fps']
 
 # 基本設定讀取
 sheet_formats = rc['sheet_formats'][rc['output_sheet_format']]
@@ -26,7 +27,7 @@ sync_area_time = rc['sync_area_time']
 sync_symbol = rc['sync_symbol']
 blank_symbol = rc['blank_symbol']
 
-original_sheet = sort_sheet['original_sheet']
+original_sheet = data['original_sheet']
 
 
 def get_in_area(n, a, max):
