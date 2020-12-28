@@ -38,15 +38,16 @@ original_sheet = json.loads(_original_sheet)
 # 先生出時間差
 for j in range(0, len(original_sheet)):
     if j == len(original_sheet) - 1:
+        original_sheet[j]['time_area'] = 0
         break
     original_sheet[j]['time_area'] =\
         original_sheet[j + 1]['time'] - original_sheet[j]['time']
 
 # 來播放
-for k in original_sheet:
+for note in original_sheet:
     # k = 0
-    sleep_time = original_sheet[k]['time_area']
-    sound_number = original_sheet[k]['keyboard']
+    sleep_time = note['time_area']
+    sound_number = note['keyboard']
     sounds[sound_number].play()
     time.sleep(sleep_time)
 #
