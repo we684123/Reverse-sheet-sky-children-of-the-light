@@ -13,7 +13,7 @@ logger.info('generated  sheet ing...')
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './sort_sheet.txt'
+_temp = output_sheet_path / './sort_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
     _sort_sheet = f.read()

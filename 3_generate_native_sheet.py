@@ -13,7 +13,7 @@ logger = logger_generate.generator(base.logger_config())
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './analysis_from_video.txt'
+_temp = output_sheet_path / './analysis_from_video.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
     _analysis_from_video = f.read()
@@ -99,7 +99,7 @@ del analysis_from_video['notes']
 logger.info('now to save data...')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './sort_sheet.txt'
+_temp = output_sheet_path / './sort_sheet.json'
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(json.dumps(analysis_from_video))
 logger.info('save data done.')

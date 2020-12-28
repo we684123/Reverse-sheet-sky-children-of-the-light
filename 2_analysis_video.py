@@ -76,7 +76,7 @@ logger.info('now to save data...')
 # 生成完後要儲存資料
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './analysis_from_video.txt'
+_temp = output_sheet_path / './analysis_from_video.json'
 with open(str(_temp), mode='w', encoding='utf-8') as f:
     data = {
         "notes": str(frame_keyboards),
