@@ -13,7 +13,7 @@ logger = logger_generate.generator(base.logger_config())
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './analysis_from_video.txt'
+_temp = output_sheet_path / './analysis_from_video.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
     _analysis_from_video = f.read()
@@ -21,6 +21,8 @@ with open(_temp, mode='r', encoding='utf-8') as f:
 analysis_from_video = json.loads(_analysis_from_video)
 frame_keyboards = json.loads(analysis_from_video['notes'])
 fps = analysis_from_video['fps']
+cool_down_time = rc['cool_down_time']  # 冷卻時間(單位 ms)
+cool_down_frame = round((cool_down_time/1000) / (1 / fps))  # 冷卻時間(單位 偵數)
 
 # 先來定義一下 kb_list 格式
 kb_list = []
@@ -47,7 +49,6 @@ for i in frame_keyboards:
 
 
 # 狀態器初始化
-refractory_time = rc['refractory_time']  # 冷卻時間(單位 偵數)
 temp_state_list = []  # 狀態器陣列
 for i in range(0, len(frame_keyboards[0])):
     temp_state = {
@@ -75,7 +76,7 @@ for n in range(0, len(kb_list)):
         # logger.debug('+')
         track = n
         after_time = (m - temp_state_list[track]['st_frame'])
-        refractory_timeout = after_time > refractory_time
+        refractory_timeout = after_time > cool_down_frame
         trigger = kb_list[track][m] < trigger_valve[n]
         if trigger and refractory_timeout:
             # logger.debug('.')
@@ -99,7 +100,7 @@ del analysis_from_video['notes']
 logger.info('now to save data...')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './sort_sheet.txt'
+_temp = output_sheet_path / './sort_sheet.json'
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(json.dumps(analysis_from_video))
 logger.info('save data done.')

@@ -13,12 +13,13 @@ logger.info('generated  sheet ing...')
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './sort_sheet.txt'
+_temp = output_sheet_path / './sort_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
-    _sort_sheet = f.read()
+    _data = f.read()
 
-sort_sheet = json.loads(_sort_sheet)
+data = json.loads(_data)
+fps = data['fps']
 
 # 基本設定讀取
 sheet_formats = rc['sheet_formats'][rc['output_sheet_format']]
@@ -26,7 +27,7 @@ sync_area_time = rc['sync_area_time']
 sync_symbol = rc['sync_symbol']
 blank_symbol = rc['blank_symbol']
 
-original_sheet = sort_sheet['original_sheet']
+original_sheet = data['original_sheet']
 
 
 def get_in_area(n, a, max):
@@ -62,6 +63,7 @@ for i in range(0, osl):
                 original_sheet[i]['index'] = index
                 original_sheet[j + 1]['index'] = index
                 index += 1
+original_sheet
 
 # 按照 index(同時) 分組
 sheet = ""
@@ -94,11 +96,31 @@ for i in range(0, osl):
 logger.info('generated  sheet done.')
 
 logger.info('now to save data...')
+
+# 先存 output_sheet
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / rc['output_file_name']
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(str(sheet))
+
+# 再存 original_sheet
+output_sheet_path = (aims_folder_path /
+                     Path(rc['output_sheet_path'])).resolve()
+_temp = output_sheet_path / 'original_sheet.json'
+with open(_temp, mode='w', encoding='utf-8') as f:
+    new_data = {
+        "original_sheet": original_sheet,
+        "frame_end": data['frame_end'],
+        "fps": data['fps'],
+        "duration": data['duration'],
+        "minute": data['minute'],
+        "seconds": data['seconds'],
+        "st_specify_count": data['st_specify_count'],
+        "ed_specify_count": data['ed_specify_count'],
+    }
+    f.write(json.dumps(new_data))
+
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
 input('input any key to exit. 輸入任意值離開.')

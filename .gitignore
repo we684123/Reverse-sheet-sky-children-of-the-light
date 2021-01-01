@@ -12,3 +12,5 @@ logs/
 library/__pycache__/
 
 *.pyc
+
+note_songs/change_ext.py

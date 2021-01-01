@@ -74,9 +74,9 @@ def reverse_config():
         # 單位 ms, unit ms
         "sync_area_time": 70,
 
-        # 音符生成冷去時間 (單位 frame)
-        # generate new note refractory time
-        "refractory_time": 13,
+        # 音符生成冷去時間 (單位 ms)
+        # generate new note cool down time
+        "cool_down_time": 330,
 
         # ===⚠️以下別亂動，除非你知道自己幹嘛⚠️=======
         # ===⚠️Do not change below! Unless you know what you are doing⚠️====
