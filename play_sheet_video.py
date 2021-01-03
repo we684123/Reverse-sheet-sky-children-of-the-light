@@ -27,6 +27,8 @@ with open(_temp, mode='r', encoding='utf-8') as f:
 data = json.loads(_data)
 original_sheet = data['original_sheet']
 o_s = original_sheet
+o_s_2 = o_s.copy()
+o_s_3 = o_s.copy()
 fps = data['fps']
 
 # load 聲音路徑
@@ -95,7 +97,8 @@ while cap.isOpened():
 
     # 播放對應的聲音用
     _for_sound_frame_count = frame_count - st_specify_count
-    rt = filter(lambda x: x['frame'] == int(_for_sound_frame_count), o_s)
+    _fsfc = int(_for_sound_frame_count)
+    rt = filter(lambda x: x['frame'] == _fsfc, o_s_2)
     rt = list(rt)
     for note in rt:
         sounds[note['keyboard']].play()
@@ -132,11 +135,12 @@ while cap.isOpened():
     if input_key == ord('f'):  # f == flag
         print('f tigger')
         _for_flag_frame_count = int(frame_count - st_specify_count)
+        _fffc = int(_for_flag_frame_count)
         while 1:
-            rt = filter(lambda x: x['frame'] == _for_flag_frame_count, o_s)
+            rt = filter(lambda x: x['frame'] == _fffc, o_s_3)
             rt = list(rt)
             if rt == []:
-                _d = {'frame': frame_count, "type": "flag"},
+                _d = {'frame': frame_count, "type": "flag"}
                 break
             else:
                 _for_flag_frame_count += 1
@@ -145,5 +149,8 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 
-o_s
+# print(o_s_3)
+_temp = output_sheet_path / './030.json'
+with open(str(_temp), mode='w', encoding='utf-8') as f:
+    f.write(json.dumps(o_s))
 #
