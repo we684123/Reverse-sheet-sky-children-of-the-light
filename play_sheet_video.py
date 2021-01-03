@@ -58,6 +58,16 @@ now_time = time.time()
 st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
 
+
+# 加個進度條
+def nothing(x):
+    pass
+
+
+cv2.namedWindow('Video Player')
+cv2.createTrackbar('Timeline', 'Video Player', 0, int(frame_end), nothing)
+
+
 # 處理影片
 while cap.isOpened():
 
@@ -71,6 +81,9 @@ while cap.isOpened():
     if not ret:
         print("影片讀取失敗，請確認影片格式...")
         break
+
+    # 設定時間軸
+    cv2.setTrackbarPos('Timeline', 'Video Player', int(frame_count))
 
     # 僅取鍵盤畫面
     # 裁剪坐标为[y0:y1, x0:x1]
