@@ -28,21 +28,21 @@ if __name__ == '__main__':
             print("影片讀取失敗，請確認影片格式...")
             break
 
-        # 轉灰階畫面顯示
-        mask, res = ru.get_keyboard_by_hsv(
-            frame,
-            hsv['lower_yellow'],
-            hsv['upper_yellow'],
-            hsv['lower_rad'],
-            hsv['upper_rad'])
-        binary = ru.get_binary_img(res, 127)
-        video = ru.link_line(binary)
-
         # 僅取鍵盤畫面
         # 裁剪坐标为[y0:y1, x0:x1]
         left_upper = rc['left_upper']
         right_lower = rc['right_lower']
-        video = ru.get_crop_img(video, left_upper, right_lower)
+        video = ru.get_crop_img(frame, left_upper, right_lower)
+
+        # 轉灰階畫面顯示
+        mask, res = ru.get_keyboard_by_hsv(
+            video,
+            rc['hsv']['lower_yellow'],
+            rc['hsv']['upper_yellow'],
+            rc['hsv']['lower_rad'],
+            rc['hsv']['upper_rad'])
+        binary = ru.get_binary_img(res, 127)
+        video = ru.link_line(binary)
 
         cv2.imshow('Video Player', video)
 
