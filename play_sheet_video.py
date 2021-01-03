@@ -107,24 +107,39 @@ while cap.isOpened():
     time.sleep(wait_time)
     now_time = time.time()
 
-    if cv2.waitKey(1) == ord('q'):  # 離開 BJ4
+    input_key = cv2.waitKey(1)
+    if input_key == ord('q'):  # 離開 BJ4
         break
 
-    # 預計做 z x c 後退 暫停 前進
-    # if cv2.waitKey(1) == ord('z'):
-    #     cv2.CAP_PROP_POS_FRAMES - fps
-    #     cap.get(cv2.CAP_PROP_POS_FRAMES)
+    # z x c 後退 暫停 前進
+    if input_key == ord('x'):
+        print('x tigger')
+        if cv2.waitKey(0) == ord('x'):
+            continue
+    if input_key == ord('z'):
+        print('z tigger')
+        aims_frame = frame_count - fps * 5
+        if aims_frame < 0:
+            aims_frame = 0
+        cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
+    if input_key == ord('c'):
+        print('c tigger')
+        aims_frame = frame_count + fps * 5
+        if aims_frame >= frame_end:
+            aims_frame = frame_end
+        cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
 
-    if cv2.waitKey(1) == ord('f'):  # f == flag
-        _fc = frame_count
+    if input_key == ord('f'):  # f == flag
+        print('f tigger')
+        _for_flag_frame_count = int(frame_count - st_specify_count)
         while 1:
-            rt = filter(lambda x: x['frame'] == int(_fc), o_s)
+            rt = filter(lambda x: x['frame'] == _for_flag_frame_count, o_s)
             rt = list(rt)
             if rt == []:
                 _d = {'frame': frame_count, "type": "flag"},
                 break
             else:
-                _fc += 1
+                _for_flag_frame_count += 1
         o_s.append(_d)
 
 cap.release()
