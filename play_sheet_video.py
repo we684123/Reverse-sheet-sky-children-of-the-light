@@ -65,8 +65,9 @@ def nothing(x):
 
 
 cv2.namedWindow('Video Player')
-cv2.createTrackbar('Timeline', 'Video Player', 0, int(frame_end), nothing)
-
+cv2.createTrackbar('Time_line', 'Video Player', 0, int(frame_end), nothing)
+cv2.createTrackbar('change', 'Video Player', 0, 1, nothing)
+change_Time = 0
 
 # 處理影片
 while cap.isOpened():
@@ -83,7 +84,8 @@ while cap.isOpened():
         break
 
     # 設定時間軸
-    cv2.setTrackbarPos('Timeline', 'Video Player', int(frame_count))
+    if change_Time == 0:
+        cv2.setTrackbarPos('Time_line', 'Video Player', int(frame_count))
 
     # 僅取鍵盤畫面
     # 裁剪坐标为[y0:y1, x0:x1]
@@ -144,6 +146,17 @@ while cap.isOpened():
         if aims_frame >= frame_end:
             aims_frame = frame_end
         cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
+
+    # 處理進度
+    if input_key == ord('s'):
+        cv2.setTrackbarPos('change', 'Video Player', 1)
+        change_Time = 1
+    if input_key == ord('d'):
+        if change_Time == 1:
+            aims_frame = cv2.getTrackbarPos('Time_line', 'Video Player')
+            cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
+            cv2.setTrackbarPos('change', 'Video Player', 0)
+            change_Time = 0
 
     if input_key == ord('f'):  # f == flag
         print('f tigger')
