@@ -1,7 +1,9 @@
 from pathlib import Path
+import time
 import json
 
 import cv2
+import pygame
 
 from library import reverse_utilities as ru
 from library import logger_generate
@@ -13,7 +15,7 @@ logger = logger_generate.generator(base.logger_config())
 
 
 # 讀取譜面
-logger.info('generated  sheet ing...')
+logger.info('Loading  sheet...')
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
@@ -27,10 +29,28 @@ original_sheet = data['original_sheet']
 o_s = original_sheet
 fps = data['fps']
 
+# load 聲音路徑
+note_songs_path = Path('./note_songs')
+sounds_path = []
+for i in range(0, 15):
+    sounds_path.append(note_songs_path / f"{i}.ogg")
 
+# 載入聲音
+pygame.mixer.init()
+sounds = []
+for p in sounds_path:
+    sounds.append(pygame.mixer.Sound(p))
+
+# 影片基礎
 video_path = Path(rc['video_path'])
 cap = cv2.VideoCapture(str(video_path))
 frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+
+# 控制播放速度用
+frame_time = 1 / fps
+wait_time = 0
+area_time = 0
+now_time = time.time()
 
 # 處理影片
 while cap.isOpened():
@@ -46,9 +66,15 @@ while cap.isOpened():
         print("影片讀取失敗，請確認影片格式...")
         break
 
+    # 僅取鍵盤畫面
+    # 裁剪坐标为[y0:y1, x0:x1]
+    left_upper = rc['left_upper']
+    right_lower = rc['right_lower']
+    video = ru.get_crop_img(frame, left_upper, right_lower)
+
     # 轉灰階畫面顯示
     mask, res = ru.get_keyboard_by_hsv(
-        frame,
+        video,
         rc['hsv']['lower_yellow'],
         rc['hsv']['upper_yellow'],
         rc['hsv']['lower_rad'],
@@ -56,18 +82,25 @@ while cap.isOpened():
     binary = ru.get_binary_img(res, 127)
     video = ru.link_line(binary)
 
-    # 僅取鍵盤畫面
-    # 裁剪坐标为[y0:y1, x0:x1]
-    left_upper = rc['left_upper']
-    right_lower = rc['right_lower']
-    video = ru.get_crop_img(video, left_upper, right_lower)
-
     # # 接下來要上色，表示音符觸發
     # # frame_count = 123
     # rt = list(filter(lambda x: x['frame'] == int(frame_count), o_s))
     # for
 
     cv2.imshow('Video Player', video)
+
+    # 播放對應的聲音用
+    rt = filter(lambda x: x['frame'] == int(frame_count), o_s)
+    rt = list(rt)
+    for note in rt:
+        sounds[note['keyboard']].play()
+
+    # 控制播放速度用
+    # frame_time
+    area_time = time.time() - now_time
+    wait_time = abs(frame_time - area_time)
+    time.sleep(wait_time)
+    now_time = time.time()
 
     if cv2.waitKey(1) == ord('q'):  # 離開 BJ4
         break
@@ -92,4 +125,5 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 
+o_s
 #
