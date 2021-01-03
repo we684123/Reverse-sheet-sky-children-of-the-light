@@ -52,6 +52,10 @@ wait_time = 0
 area_time = 0
 now_time = time.time()
 
+# 處理聲音延遲問題
+st_specify_count = fps * \
+    (60 * int(rc['start_minute']) + int(rc['start_second']))
+
 # 處理影片
 while cap.isOpened():
 
@@ -90,7 +94,8 @@ while cap.isOpened():
     cv2.imshow('Video Player', video)
 
     # 播放對應的聲音用
-    rt = filter(lambda x: x['frame'] == int(frame_count), o_s)
+    _for_sound_frame_count = frame_count - st_specify_count
+    rt = filter(lambda x: x['frame'] == int(_for_sound_frame_count), o_s)
     rt = list(rt)
     for note in rt:
         sounds[note['keyboard']].play()
