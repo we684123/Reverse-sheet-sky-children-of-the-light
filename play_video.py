@@ -60,10 +60,10 @@ if __name__ == '__main__':
         time.sleep(wait_time)
         now_time = time.time()
 
-        print(f"area_time = {area_time} wait_time = {wait_time}")
-        if frame_count >= 500:
-            print(area_time)
-            break
+        # print(f"area_time = {area_time} wait_time = {wait_time}")
+        # if frame_count >= 500:
+        #     print(area_time)
+        #     break
 
         if cv2.waitKey(1) == ord('q'):
             break
