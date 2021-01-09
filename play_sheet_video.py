@@ -19,7 +19,7 @@ logger.info('Loading  sheet...')
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './original_sheet.json'
+_temp = output_sheet_path / './native_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
     _data = f.read()
