@@ -54,31 +54,55 @@ for i in frame_keyboards:
         kb_list[j].append(max_pixel_len - i[j][0])
 # ===== 以上像素點分析 =====
 
+# =====讀譜用以畫線=====
+aims_folder_path = Path(rc['aims_folder_path'])
+output_sheet_path = (aims_folder_path /
+                     Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / './native_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
-    _analysis_from_video = f.read()
+    _native_sheet = f.read()
+native_sheet = json.loads(_native_sheet)
+original_sheet = native_sheet['original_sheet']
+trigger_valve = native_sheet['trigger_valve']
 
 
+# horizon_range = [280,400]
+# track = 9
+def check_graph(original_sheet, kb_list, trigger_valve, track, horizon_range):
+    hr = horizon_range
+    ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
+
+    def in_range(x):
+        frame = int(x['frame'])
+        if frame <= hr[1] and frame >= hr[0] and x['keyboard'] == track:
+            return x
+    rt = filter(in_range, original_sheet.copy())
+    rt = list(rt)
+
+    # 生出起始觸發時間
+    note_st = np.zeros(len(kb_list[track]))
+    for _i in rt:
+        _index = _i['frame']
+        _cd = _index + cool_down_frame
+        note_st[_index:_cd] = trigger_valve[track]
+
+    # cool_down_area = np.zeros(len(kb_list[track]))
+    # for _i in rt:
+    #     _index = _i['frame']+cool_down_frame
+    #     cool_down_area[_index] = (trigger_valve[track]/2)
+
+    fig = plt.figure(f'track{track}')  # 定義一個圖像窗口
+    plt.plot(
+        ironman[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
+        color='#48D1CC', linestyle='solid', marker='.'
+    )
+    plt.plot(
+        ironman[hr[0]:hr[1]], note_st[hr[0]:hr[1]],
+        color='orange', linestyle='solid', marker='|'
+    )
+    fig.show()
+    input('1')
 
 
-track = 9
-ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
-fig = plt.figure()  # 定義一個圖像窗口
-plt.plot(ironman[0:1000], kb_list[track][0:1000], '.')
-plt.plot(ironman[180:220], kb_list[track][180:220], '.')
-plt.plot(ironman[180:280], kb_list[track][180:280], '.')
-plt.plot(ironman[240:280], kb_list[track][240:280], '.')
-plt.plot(ironman[240:260], kb_list[track][240:260], '.')
-plt.plot(ironman[247:260], kb_list[track][247:260], '.')
-plt.plot(ironman[280:400], kb_list[track][280:400], '.')
-plt.plot(ironman[:500], kb_list[track][:500], '.')
-plt.plot(ironman[500:1000], kb_list[track][500:1000], '.')
-plt.plot(ironman[1000:1500], kb_list[track][1000:1500], '.')
-plt.plot(ironman[1350:1400], kb_list[track][1350:1400], '.')
-plt.plot(ironman[1500:2000], kb_list[track][1500:2000], '.')
-plt.plot(ironman[2000:2500], kb_list[track][2000:2500], '.')
-plt.plot(ironman[:], kb_list[track][:], '.')
-
-
-#
+check_graph(original_sheet, kb_list, trigger_valve, 9, [0, 1000])
