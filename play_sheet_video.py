@@ -69,61 +69,64 @@ cv2.createTrackbar('Time_line', 'Video Player', 0, int(frame_end), nothing)
 cv2.createTrackbar('change', 'Video Player', 0, 1, nothing)
 change_Time = 0
 
+# 加個時間狀態
+time_stop = False
 # 處理影片
 while cap.isOpened():
 
-    ret, frame = cap.read()
+    if not time_stop:
+        ret, frame = cap.read()
 
-    # 正確讀取影像時 ret 回傳 True
-    frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
-    if frame_count == frame_end:
-        print("影片讀取完畢")
-        break
-    if not ret:
-        print("影片讀取失敗，請確認影片格式...")
-        break
+        # 正確讀取影像時 ret 回傳 True
+        frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
+        if frame_count == frame_end:
+            print("影片讀取完畢")
+            break
+        if not ret:
+            print("影片讀取失敗，請確認影片格式...")
+            break
 
-    # 設定時間軸
-    if change_Time == 0:
-        cv2.setTrackbarPos('Time_line', 'Video Player', int(frame_count))
+        # 設定時間軸
+        if change_Time == 0:
+            cv2.setTrackbarPos('Time_line', 'Video Player', int(frame_count))
 
-    # 僅取鍵盤畫面
-    # 裁剪坐标为[y0:y1, x0:x1]
-    left_upper = rc['left_upper']
-    right_lower = rc['right_lower']
-    video = ru.get_crop_img(frame, left_upper, right_lower)
+        # 僅取鍵盤畫面
+        # 裁剪坐标为[y0:y1, x0:x1]
+        left_upper = rc['left_upper']
+        right_lower = rc['right_lower']
+        video = ru.get_crop_img(frame, left_upper, right_lower)
 
-    # 轉灰階畫面顯示
-    mask, res = ru.get_keyboard_by_hsv(
-        video,
-        rc['hsv']['lower_yellow'],
-        rc['hsv']['upper_yellow'],
-        rc['hsv']['lower_rad'],
-        rc['hsv']['upper_rad'])
-    binary = ru.get_binary_img(res, 127)
-    video = ru.link_line(binary)
+        # 轉灰階畫面顯示
+        mask, res = ru.get_keyboard_by_hsv(
+            video,
+            rc['hsv']['lower_yellow'],
+            rc['hsv']['upper_yellow'],
+            rc['hsv']['lower_rad'],
+            rc['hsv']['upper_rad'])
+        binary = ru.get_binary_img(res, 127)
+        video = ru.link_line(binary)
 
-    # # 接下來要上色，表示音符觸發
-    # # frame_count = 123
-    # rt = list(filter(lambda x: x['frame'] == int(frame_count), o_s))
-    # for
+        # # 接下來要上色，表示音符觸發
+        # # frame_count = 123
+        # rt = list(filter(lambda x: x['frame'] == int(frame_count), o_s))
+        # for
 
-    cv2.imshow('Video Player', video)
+        cv2.imshow('Video Player', video)
 
-    # 播放對應的聲音用
-    _for_sound_frame_count = frame_count - st_specify_count
-    _fsfc = int(_for_sound_frame_count)
-    rt = filter(lambda x: x['frame'] == _fsfc, o_s_2)
-    rt = list(rt)
-    for note in rt:
-        sounds[note['keyboard']].play()
+        # 播放對應的聲音用
+        _for_sound_frame_count = frame_count - st_specify_count
+        _fsfc = int(_for_sound_frame_count)
+        rt = filter(lambda x: x['frame'] == _fsfc, o_s_2)
+        rt = list(rt)
+        for note in rt:
+            sounds[note['keyboard']].play()
 
-    # 控制播放速度用
-    # frame_time
-    area_time = time.time() - now_time
-    wait_time = abs(frame_time - area_time)
-    time.sleep(wait_time)
-    now_time = time.time()
+        # 控制播放速度用
+        # frame_time
+        area_time = time.time() - now_time
+        wait_time = abs(frame_time - area_time)
+        time.sleep(wait_time)
+        now_time = time.time()
 
     input_key = cv2.waitKey(1)
     if input_key == ord('q'):  # 離開 BJ4
@@ -132,11 +135,14 @@ while cap.isOpened():
     # z x c 後退 暫停 前進
     if input_key == ord('x'):
         print('x tigger')
-        if cv2.waitKey(0) == ord('x'):
-            continue
+        time_stop = not time_stop
+        print(time_stop)
+        # if cv2.waitKey(0) == ord('x'):
+        #     continue
     if input_key == ord('z'):
         print('z tigger')
         aims_frame = frame_count - fps * 5
+
         if aims_frame < 0:
             aims_frame = 0
         cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
