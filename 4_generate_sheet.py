@@ -13,7 +13,7 @@ logger.info('generated  sheet ing...')
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './sort_sheet.json'
+_temp = output_sheet_path / './native_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
     _data = f.read()
@@ -30,6 +30,7 @@ blank_symbol = rc['blank_symbol']
 original_sheet = data['original_sheet']
 
 
+# 為了防止 list 在最後倒數14個搜尋 out of range 用的
 def get_in_area(n, a, max):
     # n = 6
     # a = 15
@@ -79,17 +80,27 @@ for i in range(0, osl):
         index_st = original_sheet[i]['index']
         _text_1 = str(sheet_formats[int(original_sheet[i]['keyboard'])])
         _text_2 = ""
+
+        # 接下來在15個音符中搜尋哪個是同時按的
+        # (這已被index標註，所以換句話說找接下來15個有沒有跟開頭的index一樣的)
+        # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
+        # TODO: 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
         for k in range(i, get_in_area(i, 15, osl)):
             if k == (osl - 1):  # 防止 out of range
                 break
+            # 如果有的話看看index一不一樣
             if 'index' in original_sheet[k]:
+                # 一樣就標起來，組合字串
                 if original_sheet[k]['index'] == index_st:
+                    # 按他base中的譜面格式設定生成要被組合的字串
                     _a = original_sheet[k]['keyboard']
                     _text_2 += str(sheet_formats[_a]) + blank_symbol
                 else:
                     break
+        # 組合完畢就用組合符號括起來(預設是 【 】)
         note = f"{sync_symbol[0]}{_text_2[:-1]}{sync_symbol[1]}"
     else:
+        # 沒有index的就直接按base要求組起來就好
         note = str(sheet_formats[int(original_sheet[i]['keyboard'])])
     sheet += note + blank_symbol
 

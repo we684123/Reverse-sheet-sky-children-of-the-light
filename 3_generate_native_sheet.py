@@ -69,15 +69,14 @@ len(frame_keyboards)
 len(kb_list)
 # 譜面生成
 sheet = [].copy()
-for n in range(0, len(kb_list)):
-    # n = 1
+for track in range(0, len(kb_list)):
+    # track = 1
     for m in range(0, len(frame_keyboards)):
         # m = 0
         # logger.debug('+')
-        track = n
         after_time = (m - temp_state_list[track]['st_frame'])
         refractory_timeout = after_time > cool_down_frame
-        trigger = kb_list[track][m] < trigger_valve[n]
+        trigger = kb_list[track][m] < trigger_valve[track]
         if trigger and refractory_timeout:
             # logger.debug('.')
             temp_state_list[track]['st_frame'] = m
@@ -102,7 +101,7 @@ analysis_from_video['trigger_valve'] = trigger_valve
 logger.info('now to save data...')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './sort_sheet.json'
+_temp = output_sheet_path / './native_sheet.json'
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(json.dumps(analysis_from_video))
 logger.info('save data done.')
