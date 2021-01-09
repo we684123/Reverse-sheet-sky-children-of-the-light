@@ -67,40 +67,43 @@ original_sheet = native_sheet['original_sheet']
 trigger_valve = native_sheet['trigger_valve']
 
 
-# horizon_range = [280,400]
-# track = 9
+horizon_range = [280, 400]
+track = 9
 # now_frame = 500
 # now_frame_height = 800
-def check_graph(original_sheet, kb_list, trigger_valve,
-                track, horizon_range, now_frame, now_frame_height):
+
+
+def in_range(x):
+    if x['keyboard'] == track and x['type'] == 'note':
+        return x
+
+
+rt = filter(in_range, original_sheet.copy())
+rt = list(rt)
+ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
+
+# 生出起始觸發時間 + 冷卻時間
+note_st_ed = np.zeros(len(kb_list[track]))
+for _i in rt:
+    _index = _i['frame']
+    _cd = _index + cool_down_frame
+    note_st_ed[_index:_cd] = trigger_valve[track]
+
+
+def check_graph(ironman, kb_list, note_st_ed,
+                track, horizon_range, now_frame, index_height):
     hr = horizon_range
-    ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
-
-    # 這裡未來要移出去，這不用一直重複計算
-    def in_range(x):
-        frame = int(x['frame'])
-        if frame <= hr[1] and frame >= hr[0] and x['keyboard'] == track:
-            return x
-    rt = filter(in_range, original_sheet.copy())
-    rt = list(rt)
-
-    # 生出起始觸發時間
-    note_st = np.zeros(len(kb_list[track]))
-    for _i in rt:
-        _index = _i['frame']
-        _cd = _index + cool_down_frame
-        note_st[_index:_cd] = trigger_valve[track]
 
     now_index = np.zeros(len(kb_list[track]))
-    now_index[now_frame] = now_frame_height
+    now_index[now_frame] = index_height
 
-    fig = plt.figure(f'track{track}')  # 定義一個圖像窗口
+    fig = plt.figure(f'track{track}')
     plt.plot(
         ironman[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
         color='#48D1CC', linestyle='solid', marker='.'
     )
     plt.plot(
-        ironman[hr[0]:hr[1]], note_st[hr[0]:hr[1]],
+        ironman[hr[0]:hr[1]], note_st_ed[hr[0]:hr[1]],
         color='orange', linestyle='solid', marker='|'
     )
     plt.plot(
@@ -111,4 +114,4 @@ def check_graph(original_sheet, kb_list, trigger_valve,
     # input('1')
 
 
-check_graph(original_sheet, kb_list, trigger_valve, 9, [280, 400], 300, 800)
+check_graph(ironman, kb_list, note_st_ed, 9, [280, 400], 300, 800)
