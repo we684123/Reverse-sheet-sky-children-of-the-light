@@ -97,6 +97,8 @@ logger.info('generated original sheet done.')
 
 del analysis_from_video['notes']
 
+analysis_from_video['trigger_valve'] = trigger_valve
+
 logger.info('now to save data...')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
