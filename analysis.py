@@ -69,10 +69,14 @@ trigger_valve = native_sheet['trigger_valve']
 
 # horizon_range = [280,400]
 # track = 9
-def check_graph(original_sheet, kb_list, trigger_valve, track, horizon_range):
+# now_frame = 500
+# now_frame_height = 800
+def check_graph(original_sheet, kb_list, trigger_valve,
+                track, horizon_range, now_frame, now_frame_height):
     hr = horizon_range
     ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
 
+    # 這裡未來要移出去，這不用一直重複計算
     def in_range(x):
         frame = int(x['frame'])
         if frame <= hr[1] and frame >= hr[0] and x['keyboard'] == track:
@@ -87,10 +91,8 @@ def check_graph(original_sheet, kb_list, trigger_valve, track, horizon_range):
         _cd = _index + cool_down_frame
         note_st[_index:_cd] = trigger_valve[track]
 
-    # cool_down_area = np.zeros(len(kb_list[track]))
-    # for _i in rt:
-    #     _index = _i['frame']+cool_down_frame
-    #     cool_down_area[_index] = (trigger_valve[track]/2)
+    now_index = np.zeros(len(kb_list[track]))
+    now_index[now_frame] = now_frame_height
 
     fig = plt.figure(f'track{track}')  # 定義一個圖像窗口
     plt.plot(
@@ -101,8 +103,12 @@ def check_graph(original_sheet, kb_list, trigger_valve, track, horizon_range):
         ironman[hr[0]:hr[1]], note_st[hr[0]:hr[1]],
         color='orange', linestyle='solid', marker='|'
     )
+    plt.plot(
+        ironman[hr[0]:hr[1]], now_index[hr[0]:hr[1]],
+        color='red', linestyle='solid', marker='v'
+    )
     fig.show()
-    input('1')
+    # input('1')
 
 
-check_graph(original_sheet, kb_list, trigger_valve, 9, [0, 1000])
+check_graph(original_sheet, kb_list, trigger_valve, 9, [280, 400], 300, 800)
