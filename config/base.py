@@ -2,7 +2,7 @@ def reverse_config():
     return {
         # 目標資料夾絕對位置
         "aims_folder_path":
-            r"C:\Github\Reverse-sheet-sky-children-of-the-light",
+            r"C:\Users\we684123\Dropbox\各類專案\Github\Reverse-sheet-sky-children-of-the-light",
         # 影片的位置
         "video_path": "./Shelter.mkv",
         # 譜面輸出目錄
