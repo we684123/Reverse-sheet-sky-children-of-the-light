@@ -10,6 +10,8 @@ from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
 logger = logger_generate.generator(base.logger_config())
+# ====基礎準備完畢====
+
 
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
@@ -27,11 +29,6 @@ cool_down_frame = round((cool_down_time / 1000) / (1 / fps))  # 冷卻時間(單
 
 analysis_from_video = json.loads(_analysis_from_video)
 frame_keyboards = json.loads(analysis_from_video['notes'])
-
-len(frame_keyboards)
-len(frame_keyboards[0])
-len(frame_keyboards[0][0])
-frame_keyboards[0]
 
 # 先來定義一下 kb_list 格式
 kb_list = []
@@ -55,95 +52,57 @@ for i in range(0, len(frame_keyboards[0])):
 for i in frame_keyboards:
     for j in range(0, len(i)):
         kb_list[j].append(max_pixel_len - i[j][0])
+# ===== 以上像素點分析 =====
 
-len(kb_list)
-len(kb_list[0])
-len(kb_list[14])
+# =====讀譜用以畫線=====
+aims_folder_path = Path(rc['aims_folder_path'])
+output_sheet_path = (aims_folder_path /
+                     Path(rc['output_sheet_path'])).resolve()
+_temp = output_sheet_path / './native_sheet.json'
 
-track = 7
-ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
-fig = plt.figure()  # 定義一個圖像窗口
-plt.plot(ironman[0:1000], kb_list[track][0:1000], '.')
-plt.plot(ironman[180:220], kb_list[track][180:220], '.')
-plt.plot(ironman[180:280], kb_list[track][180:280], '.')
-plt.plot(ironman[240:280], kb_list[track][240:280], '.')
-plt.plot(ironman[240:260], kb_list[track][240:260], '.')
-plt.plot(ironman[247:260], kb_list[track][247:260], '.')
-plt.plot(ironman[:500], kb_list[track][:500], '.')
-plt.plot(ironman[500:1000], kb_list[track][500:1000], '.')
-plt.plot(ironman[1000:1500], kb_list[track][1000:1500], '.')
-plt.plot(ironman[1350:1400], kb_list[track][1350:1400], '.')
-plt.plot(ironman[1500:2000], kb_list[track][1500:2000], '.')
-plt.plot(ironman[2000:2500], kb_list[track][2000:2500], '.')
-plt.plot(ironman[:], kb_list[track][:], '.')
+with open(_temp, mode='r', encoding='utf-8') as f:
+    _native_sheet = f.read()
+native_sheet = json.loads(_native_sheet)
+original_sheet = native_sheet['original_sheet']
+trigger_valve = native_sheet['trigger_valve']
 
 
-# 狀態器初始化
-temp_state_list = []  # 狀態器陣列
-for i in range(0, len(frame_keyboards[0])):
-    temp_state = {
-        "st_frame": 0,
-        "refractory": False
-    }
-    temp_state_list.append(temp_state)
+# horizon_range = [280,400]
+# track = 9
+def check_graph(original_sheet, kb_list, trigger_valve, track, horizon_range):
+    hr = horizon_range
+    ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
 
-# 生成閥值陣列
-trigger_valve = []
-for i in kb_list:
-    mean = int(np.mean(i))
-    # print(mean)
-    trigger_valve.append(mean / 2)
+    def in_range(x):
+        frame = int(x['frame'])
+        if frame <= hr[1] and frame >= hr[0] and x['keyboard'] == track:
+            return x
+    rt = filter(in_range, original_sheet.copy())
+    rt = list(rt)
 
-trigger_valve[track]
+    # 生出起始觸發時間
+    note_st = np.zeros(len(kb_list[track]))
+    for _i in rt:
+        _index = _i['frame']
+        _cd = _index + cool_down_frame
+        note_st[_index:_cd] = trigger_valve[track]
 
-# 譜面生成
-len(frame_keyboards)
-len(kb_list)
-sheet = [].copy()
-for n in range(0, len(kb_list)):
-    # n = 1
-    for m in range(0, len(frame_keyboards)):
-        # m = 0
-        # print('+')
-        track = n
-        after_time = (m - temp_state_list[track]['st_frame'])
-        refractory_timeout = after_time > cool_down_frame
-        trigger = kb_list[track][m] < trigger_valve[n]
-        if trigger and refractory_timeout:
-            # print('.')
-            temp_state_list[track]['st_frame'] = m
-            temp_state_list[track]['refractory'] = True
-            sheet.append({"frame": m, "keyboard": track})
+    # cool_down_area = np.zeros(len(kb_list[track]))
+    # for _i in rt:
+    #     _index = _i['frame']+cool_down_frame
+    #     cool_down_area[_index] = (trigger_valve[track]/2)
 
-sheet
-len(sheet)
-sheet[0]
-
-sheet2 = sheet
-sheet2
-sheet3 = sheet
-sheet3
+    fig = plt.figure(f'track{track}')  # 定義一個圖像窗口
+    plt.plot(
+        ironman[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
+        color='#48D1CC', linestyle='solid', marker='.'
+    )
+    plt.plot(
+        ironman[hr[0]:hr[1]], note_st[hr[0]:hr[1]],
+        color='orange', linestyle='solid', marker='|'
+    )
+    fig.show()
+    input('1')
 
 
-sort_sheet = sorted(sheet, key=lambda s: s['frame'])
-sort_sheet
-
-
-[1, 2, 3] + [4, 5, 6]
-t_sheet = sheet2 + sheet3
-
-test_reverse = {
-    "name": "test_reverse",
-    "author": "Unknown",
-    "transcribedBy": "Unknown",
-    "isComposed": True,
-    "bpm": 240,
-    "bitsPerPage": 16,
-    "pitchLevel": 0,
-    "isEncrypted": False,
-    "songNotes": []
-}
-test_reverse['songNotes'].append()
-
-
-#
+check_graph(original_sheet, kb_list, trigger_valve, 9, [0, 1000])
