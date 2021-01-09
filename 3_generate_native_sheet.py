@@ -83,7 +83,7 @@ for track in range(0, len(kb_list)):
             # logger.debug('.')
             temp_state_list[track]['st_frame'] = m
             temp_state_list[track]['refractory'] = True
-            sheet.append({"frame": m, "keyboard": track})
+            sheet.append({"type": "note", "frame": m, "keyboard": track})
 
 sort_sheet = sorted(sheet, key=lambda s: s['frame'])
 sort_sheet
@@ -214,6 +214,8 @@ with open(_temp, mode='w', encoding='utf-8') as f:
         "seconds": _afv['seconds'],
         "st_specify_count": _afv['st_specify_count'],
         "ed_specify_count": _afv['ed_specify_count'],
+        "trigger_valve": _afv['trigger_valve'],
+        "cool_down_frame": cool_down_frame,
     }
     f.write(json.dumps(new_data))
 logger.info('generated native_sheet done.')
