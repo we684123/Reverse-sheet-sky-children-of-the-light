@@ -4,8 +4,6 @@ import json
 
 import cv2
 import pygame
-import matplotlib.pyplot as plt
-import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
@@ -60,59 +58,6 @@ now_time = time.time()
 # 處理聲音延遲問題
 st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
-
-# WTF 為什麼 fig 跟 opencv 視窗不能同時開?
-# 開了就當掉
-# # 處理key分析視窗部分
-# horizon_range = [280, 400]
-# track = 9
-# # now_frame = 500
-# # now_frame_height = 800
-#
-#
-# def in_range(x):
-#     if x['keyboard'] == track and x['type'] == 'note':
-#         return x
-#
-#
-# kb_list = data['kb_list']
-# rt = filter(in_range, original_sheet.copy())
-# rt = list(rt)
-# ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
-#
-# # 生出起始觸發時間 + 冷卻時間
-# note_st_ed = np.zeros(len(kb_list[track]))
-# for _i in rt:
-#     _index = _i['frame']
-#     _cd = _index + data['cool_down_frame']
-#     note_st_ed[_index:_cd] = data['trigger_valve'][track]
-#
-#
-# def check_graph(ironman, kb_list, note_st_ed,
-#                 track, horizon_range, now_frame, index_height):
-#     hr = horizon_range
-#
-#     now_index = np.zeros(len(kb_list[track]))
-#     now_index[now_frame] = index_height
-#
-#     fig = plt.figure(f'track{track}')
-#     plt.plot(
-#         ironman[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
-#         color='#48D1CC', linestyle='solid', marker='.'
-#     )
-#     plt.plot(
-#         ironman[hr[0]:hr[1]], note_st_ed[hr[0]:hr[1]],
-#         color='orange', linestyle='solid', marker='|'
-#     )
-#     plt.plot(
-#         ironman[hr[0]:hr[1]], now_index[hr[0]:hr[1]],
-#         color='red', linestyle='solid', marker='v'
-#     )
-#     fig.show()
-#
-#
-# # check_graph(ironman, kb_list, note_st_ed, 9, [280, 400], 300, 800)
-# # input('1')
 
 
 def nothing(x):
