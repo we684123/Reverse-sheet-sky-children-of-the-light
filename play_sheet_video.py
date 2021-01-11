@@ -29,6 +29,8 @@ original_sheet = data['original_sheet']
 o_s = original_sheet
 o_s_2 = o_s.copy()
 o_s_3 = o_s.copy()
+o_s_4 = o_s.copy()
+o_s_5 = o_s.copy()
 fps = data['fps']
 
 # load 聲音路徑
@@ -60,6 +62,54 @@ st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
 
 
+# 影片附加元素狀態器
+# frame_count = 124
+# temp_state_list = []
+# o_s_4.append({'frame': 124, "type": "line_feed"})
+def addition_to_video(img, frame_count, o_s):
+    # def addition_lf():  # 換行效果登記
+    #     # 這裡可以寫的效能更好一點，用指標跟狀態器達成
+    #     # 但先不要，要沒時間了
+    #     def ld_to_lf(x):
+    #         if x['frame'] == int(frame_count) and x['type'] == 'line_feed':
+    #             return x
+    #     rt = list(filter(ld_to_lf, o_s))
+    #     if rt != []:
+    #         temp_state_list.append(rt[0])
+
+    def ld_to_lf(x):
+        if abs(int(frame_count) - x['frame']) < 20:
+            if x['type'] == 'line_feed' or x['type'] == 'flag':
+                return x
+    temp_state_list = list(filter(ld_to_lf, o_s.copy()))
+
+    for i in range(0, len(temp_state_list)):
+        _e = temp_state_list[i]
+        _ef = _e['frame']
+        _et = _e['type']
+        if _et == 'line_feed':
+            width = 20 - int(frame_count - _ef)
+            # logger.debug(width)
+            # logger.debug(type(width))
+            if width > 3 and width < 13:
+                cv2.rectangle(
+                    img,
+                    (0, 0),
+                    (int(img.shape[1]), int(img.shape[0])),
+                    (255, 140, 0),
+                    width
+                )
+                img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+                # (int(img.shape[1]), int(img.shape[0])),
+
+            else:
+                temp_state_list[i]['display'] = False
+
+    return img
+
+# 這給 createTrackbar 用的
+
+
 def nothing(x):
     pass
 
@@ -77,6 +127,11 @@ change_Time = 0
 
 # 加個時間狀態
 time_stop = False
+
+# 狀態器初始化
+temp_state_list = []  # 狀態器陣列
+tsl = temp_state_list
+
 # 處理影片
 while cap.isOpened():
 
@@ -112,12 +167,13 @@ while cap.isOpened():
         binary = ru.get_binary_img(res, 127)
         video = ru.link_line(binary)
 
-        # # 接下來要上色，表示音符觸發
+        # # 接下來要上色，表 示音符觸發
         # # frame_count = 123
         # rt = list(filter(lambda x: x['frame'] == int(frame_count), o_s))
         # for
+        add_ed_img = addition_to_video(video, frame_count, o_s)
 
-        cv2.imshow('Sheet Player', video)
+        cv2.imshow('Sheet Player', add_ed_img)
 
         # 播放對應的聲音用
         _for_sound_frame_count = frame_count - st_specify_count
@@ -160,11 +216,13 @@ while cap.isOpened():
         cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
 
     # 處理進度
-    if input_key == ord('s'):
+    if input_key == ord('w'):
+        print('w tigger')
         cv2.setTrackbarPos('change', 'Sheet Player', 1)
         change_Time = 1
 
-    if input_key == ord('d'):
+    if input_key == ord('e'):
+        print('e tigger')
         if change_Time == 1:
             aims_frame = cv2.getTrackbarPos('Time_line', 'Sheet Player')
             cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
@@ -179,12 +237,49 @@ while cap.isOpened():
             rt = filter(lambda x: x['frame'] == _fffc, o_s_3)
             rt = list(rt)
             if rt == []:
-                _d = {'frame': frame_count, "type": "flag"}
+                _d = {
+                    'frame': frame_count,
+                    "type": "flag",
+                }
                 break
             else:
-                _for_flag_frame_count += 1
+                _fffc += 1
         o_s.append(_d)
+    if input_key == ord('a'):  # a == 'line_feed'
+        print('a tigger')
+        print(frame_count)
+        _for_line_feed_frame_count = int(frame_count - st_specify_count)
+        _flffc = int(_for_line_feed_frame_count)
+        while 1:
+            rt = filter(lambda x: x['frame'] == _flffc, o_s_5)
+            rt = list(rt)
+            if rt == []:
+                _d = {
+                    'frame': frame_count,
+                    "type": "line_feed",
+                    # "display": True
+                }
+                break
+            else:
+                _flffc += 1
+        o_s.append(_d)
+    if input_key == ord('s'):  # a == 'line_feed'
+        print('s tigger')
+        print(frame_count)
+        rt = list(filter(lambda x: x['type'] == 'line_feed', o_s.copy()))
+        _k = []
+        for i in range(0, len(rt)):
+            _k.append(int(rt[i]['frame']) - frame_count)
+        print(f"_k = {_k}")
+        print(f"max _k = {max(_k)}")
+        print(f"rt[_k.index(max(_k))]  = {rt[_k.index(max(_k))]}")
+        # rt[_k.index(max(_k))]
+        del o_s[o_s.index(rt[_k.index(max(_k))])]
 
+    if input_key == ord('j'):  # a == 'line_feed'
+        print('j tigger')
+        rt = list(filter(lambda x: x['type'] == 'line_feed', o_s.copy()))
+        print(rt)
 cap.release()
 cv2.destroyAllWindows()
 
