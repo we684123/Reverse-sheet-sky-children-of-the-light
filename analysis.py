@@ -9,7 +9,7 @@ from config import base
 
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generator(base.logger_config())
+logger = logger_generate.generate(base.logger_config())
 # ====基礎準備完畢====
 
 
@@ -27,8 +27,6 @@ fps = analysis_from_video['fps']
 cool_down_time = rc['cool_down_time']  # 冷卻時間(單位 ms)
 cool_down_frame = round((cool_down_time / 1000) / (1 / fps))  # 冷卻時間(單位 偵數
 
-analysis_from_video = json.loads(_analysis_from_video)
-frame_keyboards = json.loads(analysis_from_video['notes'])
 
 # 先來定義一下 kb_list 格式
 kb_list = []
@@ -65,44 +63,77 @@ with open(_temp, mode='r', encoding='utf-8') as f:
 native_sheet = json.loads(_native_sheet)
 original_sheet = native_sheet['original_sheet']
 trigger_valve = native_sheet['trigger_valve']
+len_track = int(rc['keyboards_X_format']) * int(rc['keyboards_y_format'])
+# ===== 準備完畢 =====
 
 
-# horizon_range = [280,400]
-# track = 9
-def check_graph(original_sheet, kb_list, trigger_valve, track, horizon_range):
+def generate_pixel_force():
+    # 因為 np.shape(kb_list) 結果會一樣，故直接用 0 取代
+    pixel_force = np.linspace(0, len(kb_list[0]), len(kb_list[0]))
+    return pixel_force
+
+
+def generate_note_st_ed():
+    # 生出起始觸發時間 + 冷卻時間
+    note_st_ed_list = []
+    for track in range(0, len_track):
+        def is_note_from_track(x):
+            if x['keyboard'] == track and x['type'] == 'note':
+                return x
+
+        rt = filter(is_note_from_track, original_sheet.copy())
+        rt = list(rt)
+        note_st_ed = np.zeros(len(kb_list[track]))
+        for _i in rt:
+            _index = _i['frame']
+            _cd = _index + cool_down_frame
+            note_st_ed[_index:_cd] = trigger_valve[track]
+        note_st_ed_list.append(note_st_ed)
+    return note_st_ed_list
+
+
+# horizon_range = [280, 400]
+# now_frame = 300
+# index_height = 800
+def check_graph(pixel_force, kb_list, note_st_ed,
+                track, horizon_range, now_frame, index_height):
     hr = horizon_range
-    ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
 
-    def in_range(x):
-        frame = int(x['frame'])
-        if frame <= hr[1] and frame >= hr[0] and x['keyboard'] == track:
-            return x
-    rt = filter(in_range, original_sheet.copy())
-    rt = list(rt)
+    now_index = np.zeros(len(kb_list[track]))
+    now_index[now_frame] = index_height
 
-    # 生出起始觸發時間
-    note_st = np.zeros(len(kb_list[track]))
-    for _i in rt:
-        _index = _i['frame']
-        _cd = _index + cool_down_frame
-        note_st[_index:_cd] = trigger_valve[track]
-
-    # cool_down_area = np.zeros(len(kb_list[track]))
-    # for _i in rt:
-    #     _index = _i['frame']+cool_down_frame
-    #     cool_down_area[_index] = (trigger_valve[track]/2)
-
-    fig = plt.figure(f'track{track}')  # 定義一個圖像窗口
+    fig = plt.figure(f'track{track}')
     plt.plot(
-        ironman[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
+        pixel_force[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
         color='#48D1CC', linestyle='solid', marker='.'
     )
     plt.plot(
-        ironman[hr[0]:hr[1]], note_st[hr[0]:hr[1]],
+        pixel_force[hr[0]:hr[1]], note_st_ed[track][hr[0]:hr[1]],
         color='orange', linestyle='solid', marker='|'
     )
+    plt.plot(
+        pixel_force[hr[0]:hr[1]], now_index[hr[0]:hr[1]],
+        color='red', linestyle='solid', marker='v'
+    )
     fig.show()
-    input('1')
+    # input('1')
 
 
-check_graph(original_sheet, kb_list, trigger_valve, 9, [0, 1000])
+# len(pixel_force)
+# len(kb_list[0])
+# len(note_st_ed_list)
+if __name__ == '__main__':
+    index_height = 800
+    pixel_force = generate_pixel_force()
+    note_st_ed_list = generate_note_st_ed()
+    now_frame = 600
+
+    horizon_range = [280, 400]
+    track = 9
+    image = check_graph(pixel_force, kb_list, note_st_ed_list,
+                        track, horizon_range, now_frame, index_height)
+    track = 3
+    image = check_graph(pixel_force, kb_list, note_st_ed_list,
+                        track, horizon_range, now_frame, index_height)
+
+#

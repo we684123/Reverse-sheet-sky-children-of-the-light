@@ -1,4 +1,3 @@
-import time
 from pathlib import Path
 
 import cv2
@@ -8,7 +7,7 @@ from library import logger_generate
 from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generator(base.logger_config())
+logger = logger_generate.generate(base.logger_config())
 
 
 video_path = Path(rc['video_path'])  # "./sky.mkv"
@@ -44,6 +43,6 @@ _temp = Path(rc['aims_folder_path']) / Path(rc['output_sheet_path'])
 temp = _temp / "boundary.png"
 
 cv2.imwrite(str(temp), mask)
-
+print(temp)
 print('===已生成 done.===')
-time.sleep(2)
+input('input any key to exit. 輸入任意值離開.')

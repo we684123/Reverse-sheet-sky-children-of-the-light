@@ -4,6 +4,8 @@ import json
 
 import cv2
 import pygame
+import matplotlib.pyplot as plt
+import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
@@ -11,7 +13,7 @@ from config import base
 
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generator(base.logger_config())
+logger = logger_generate.generate(base.logger_config())
 
 
 # 讀取譜面
@@ -19,7 +21,7 @@ logger.info('Loading  sheet...')
 aims_folder_path = Path(rc['aims_folder_path'])
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / './original_sheet.json'
+_temp = output_sheet_path / './native_sheet.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
     _data = f.read()
@@ -39,6 +41,7 @@ for i in range(0, 15):
 
 # 載入聲音
 pygame.mixer.init()
+pygame.mixer.set_num_channels(15)
 sounds = []
 for p in sounds_path:
     sounds.append(pygame.mixer.Sound(p))
@@ -58,15 +61,73 @@ now_time = time.time()
 st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
 
+# WTF 為什麼 fig 跟 opencv 視窗不能同時開?
+# 開了就當掉
+# # 處理key分析視窗部分
+# horizon_range = [280, 400]
+# track = 9
+# # now_frame = 500
+# # now_frame_height = 800
+#
+#
+# def in_range(x):
+#     if x['keyboard'] == track and x['type'] == 'note':
+#         return x
+#
+#
+# kb_list = data['kb_list']
+# rt = filter(in_range, original_sheet.copy())
+# rt = list(rt)
+# ironman = np.linspace(0, len(kb_list[track]), len(kb_list[track]))
+#
+# # 生出起始觸發時間 + 冷卻時間
+# note_st_ed = np.zeros(len(kb_list[track]))
+# for _i in rt:
+#     _index = _i['frame']
+#     _cd = _index + data['cool_down_frame']
+#     note_st_ed[_index:_cd] = data['trigger_valve'][track]
+#
+#
+# def check_graph(ironman, kb_list, note_st_ed,
+#                 track, horizon_range, now_frame, index_height):
+#     hr = horizon_range
+#
+#     now_index = np.zeros(len(kb_list[track]))
+#     now_index[now_frame] = index_height
+#
+#     fig = plt.figure(f'track{track}')
+#     plt.plot(
+#         ironman[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
+#         color='#48D1CC', linestyle='solid', marker='.'
+#     )
+#     plt.plot(
+#         ironman[hr[0]:hr[1]], note_st_ed[hr[0]:hr[1]],
+#         color='orange', linestyle='solid', marker='|'
+#     )
+#     plt.plot(
+#         ironman[hr[0]:hr[1]], now_index[hr[0]:hr[1]],
+#         color='red', linestyle='solid', marker='v'
+#     )
+#     fig.show()
+#
+#
+# # check_graph(ironman, kb_list, note_st_ed, 9, [280, 400], 300, 800)
+# # input('1')
 
-# 加個進度條
+
 def nothing(x):
     pass
 
 
-cv2.namedWindow('Video Player')
-cv2.createTrackbar('Time_line', 'Video Player', 0, int(frame_end), nothing)
-cv2.createTrackbar('change', 'Video Player', 0, 1, nothing)
+cv2.namedWindow('Sheet Player')
+# 加個進度條
+cv2.createTrackbar('Time_line', 'Sheet Player', 0, int(frame_end), nothing)
+# # 加個觀察的目標鍵盤
+# # # TODO: 14要改成可變動
+# cv2.createTrackbar('listen_key', 'Sheet Player', 0, 14, nothing)
+# change_key = 0
+# 改變開關
+cv2.createTrackbar('change', 'Sheet Player', 0, 1, nothing)
 change_Time = 0
 
 # 加個時間狀態
@@ -88,7 +149,7 @@ while cap.isOpened():
 
         # 設定時間軸
         if change_Time == 0:
-            cv2.setTrackbarPos('Time_line', 'Video Player', int(frame_count))
+            cv2.setTrackbarPos('Time_line', 'Sheet Player', int(frame_count))
 
         # 僅取鍵盤畫面
         # 裁剪坐标为[y0:y1, x0:x1]
@@ -111,7 +172,7 @@ while cap.isOpened():
         # rt = list(filter(lambda x: x['frame'] == int(frame_count), o_s))
         # for
 
-        cv2.imshow('Video Player', video)
+        cv2.imshow('Sheet Player', video)
 
         # 播放對應的聲音用
         _for_sound_frame_count = frame_count - st_specify_count
@@ -155,13 +216,14 @@ while cap.isOpened():
 
     # 處理進度
     if input_key == ord('s'):
-        cv2.setTrackbarPos('change', 'Video Player', 1)
+        cv2.setTrackbarPos('change', 'Sheet Player', 1)
         change_Time = 1
+
     if input_key == ord('d'):
         if change_Time == 1:
-            aims_frame = cv2.getTrackbarPos('Time_line', 'Video Player')
+            aims_frame = cv2.getTrackbarPos('Time_line', 'Sheet Player')
             cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
-            cv2.setTrackbarPos('change', 'Video Player', 0)
+            cv2.setTrackbarPos('change', 'Sheet Player', 0)
             change_Time = 0
 
     if input_key == ord('f'):  # f == flag
