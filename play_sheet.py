@@ -9,7 +9,7 @@ from config import base
 
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generator(base.logger_config())
+logger = logger_generate.generate(base.logger_config())
 
 # load 聲音路徑
 note_songs_path = Path('./note_songs')

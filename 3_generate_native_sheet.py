@@ -8,7 +8,7 @@ from config import base
 
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generator(base.logger_config())
+logger = logger_generate.generate(base.logger_config())
 # ===== 環境OK =====
 
 logger.info("Loading analysis_from_video.json ...")

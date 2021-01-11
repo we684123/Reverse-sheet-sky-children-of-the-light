@@ -9,7 +9,7 @@ from config import base
 
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generator(base.logger_config())
+logger = logger_generate.generate(base.logger_config())
 # ====基礎準備完畢====
 
 
@@ -90,6 +90,9 @@ for _i in rt:
     note_st_ed[_index:_cd] = trigger_valve[track]
 
 
+# horizon_range = [280, 400]
+# now_frame = 300
+# index_height = 800
 def check_graph(ironman, kb_list, note_st_ed,
                 track, horizon_range, now_frame, index_height):
     hr = horizon_range
@@ -114,4 +117,7 @@ def check_graph(ironman, kb_list, note_st_ed,
     # input('1')
 
 
-check_graph(ironman, kb_list, note_st_ed, 9, [280, 400], 300, 800)
+image = check_graph(ironman, kb_list, note_st_ed, 9, [280, 400], 300, 800)
+image = check_graph(ironman, kb_list, note_st_ed, 3, [280, 400], 300, 800)
+
+#
