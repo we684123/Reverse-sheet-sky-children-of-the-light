@@ -216,7 +216,6 @@ with open(_temp, mode='w', encoding='utf-8') as f:
         "ed_specify_count": _afv['ed_specify_count'],
         "trigger_valve": _afv['trigger_valve'],
         "cool_down_frame": cool_down_frame,
-        "kb_list": kb_list,
     }
     f.write(json.dumps(new_data))
 logger.info('generated native_sheet done.')
