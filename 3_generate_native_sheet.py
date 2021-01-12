@@ -193,7 +193,7 @@ logger.info('generated native sheet done.')
 logger.info('generating output_sheet.')
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
-_temp = output_sheet_path / rc['output_file_name']
+_temp = output_sheet_path / "penultimate_sheet.txt"
 with open(_temp, mode='w', encoding='utf-8') as f:
     f.write(str(sheet))
 logger.info('generated output_sheet done.')
