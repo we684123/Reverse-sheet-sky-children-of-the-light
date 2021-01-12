@@ -187,7 +187,8 @@ while cap.isOpened():
         rt = filter(lambda x: x['frame'] == _fsfc, o_s_2)
         rt = list(rt)
         for note in rt:
-            sounds[note['keyboard']].play()
+            if 'keyboard' in note:
+                sounds[note['keyboard']].play()
 
         # 控制播放速度用
         # frame_time
