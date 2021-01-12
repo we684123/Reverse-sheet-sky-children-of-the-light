@@ -1,3 +1,4 @@
 opencv-python==4.4.0.46
 numpy==1.18.2
 pygame==2.0.1
+coloredlogs==14.0
