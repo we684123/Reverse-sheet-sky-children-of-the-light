@@ -21,6 +21,14 @@ output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / './native_sheet.json'
 
+_temp2 = output_sheet_path / './enhance_sheet.json'
+if _temp2.exists():
+    k = input(('plz choose a file load.\n'
+               '1 native_sheet.json\n'
+               '2 enhance_sheet.json\n'))
+    if int(k) == 2:
+        _temp = _temp2
+
 with open(_temp, mode='r', encoding='utf-8') as f:
     _data = f.read()
 
@@ -137,6 +145,7 @@ while cap.isOpened():
 
         # 正確讀取影像時 ret 回傳 True
         frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
+        logger.debug(f"frame_count = {frame_count}")
         if frame_count == frame_end:
             print("影片讀取完畢")
             break
