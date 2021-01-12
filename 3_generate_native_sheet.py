@@ -168,8 +168,6 @@ for i in range(0, osl):
         # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
         # TODO: 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
         for k in range(i, get_in_area(i, 15, osl)):
-            if k == (osl - 1):  # 防止 out of range
-                break
             # 如果有的話看看index一不一樣
             if 'index' in original_sheet[k]:
                 # 一樣就標起來，組合字串
