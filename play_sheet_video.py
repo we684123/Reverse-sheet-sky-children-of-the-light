@@ -99,9 +99,6 @@ def addition_to_video(img, frame_count, o_s):
                     (255, 140, 0),
                     width
                 )
-                img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-                # (int(img.shape[1]), int(img.shape[0])),
-
             else:
                 temp_state_list[i]['display'] = False
 
@@ -283,8 +280,97 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 
-# print(o_s_3)
+
+# 最後把 enhance_sheet 譜面輸出
 _temp = output_sheet_path / './enhance_sheet.json'
 with open(str(_temp), mode='w', encoding='utf-8') as f:
-    f.write(json.dumps(o_s))
+    new_data = {
+        "original_sheet": sorted(o_s, key=lambda s: s['frame']),
+        "frame_end": data['frame_end'],
+        "fps": data['fps'],
+        "duration": data['duration'],
+        "minute": data['minute'],
+        "seconds": data['seconds'],
+        "st_specify_count": data['st_specify_count'],
+        "ed_specify_count": data['ed_specify_count'],
+        "trigger_valve": data['trigger_valve'],
+        "cool_down_frame": data['cool_down_frame'],
+    }
+    f.write(json.dumps(new_data))
+
+# ======================================================================
+# 這裡做一下 output_sheet 生成
+# 對了 這裡是直接複製 3_generate_native_sheet 的部分，之後看要不要修整
+# # TODO: 如上
+
+# 為了防止 list 在最後倒數14個搜尋 out of range 用的
+
+
+def get_in_area(n, a, max):
+    # n = 6
+    # a = 15
+    # max = 20
+    d = 0
+    # max += 1
+    if (n + a) > max:
+        d = max - (n + a)
+    return n + a + d
+
+
+# 基本設定讀取
+sheet_formats = rc['sheet_formats'][rc['output_sheet_format']]
+sync_area_time = rc['sync_area_time']
+sync_symbol = rc['sync_symbol']
+blank_symbol = rc['blank_symbol']
+line_feed_symbol = rc['line_feed_symbol']
+
+sheet = ""
+index_st = ''
+osl = len(o_s)
+for i in range(0, osl):
+    # i = 0
+    # i = 9
+    # i = 10
+
+    if o_s[i]['type'] == 'line_feed':
+        sheet += line_feed_symbol
+        continue
+
+    if 'index' in o_s[i]:
+        if o_s[i]['index'] == index_st:
+            continue
+        index_st = o_s[i]['index']
+        _text_1 = str(sheet_formats[int(o_s[i]['keyboard'])])
+        _text_2 = ""
+
+        # 接下來在15個音符中搜尋哪個是同時按的
+        # (這已被index標註，所以換句話說找接下來15個有沒有跟開頭的index一樣的)
+        # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
+        # TODO: 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
+        for k in range(i, get_in_area(i, 15, osl)):
+            if k == (osl - 1):  # 防止 out of range
+                break
+            # 如果有的話看看index一不一樣
+            if 'index' in o_s[k]:
+                # 一樣就標起來，組合字串
+                if o_s[k]['index'] == index_st:
+                    # 按他base中的譜面格式設定生成要被組合的字串
+                    _a = o_s[k]['keyboard']
+                    _text_2 += str(sheet_formats[_a]) + blank_symbol
+                else:
+                    break
+        # 組合完畢就用組合符號括起來(預設是 【 】)
+        note = f"{sync_symbol[0]}{_text_2[:-1]}{sync_symbol[1]}"
+    else:
+        # 沒有index的就直接按base要求組起來就好
+        note = str(sheet_formats[int(o_s[i]['keyboard'])])
+    sheet += note + blank_symbol
+# ======================================================================
+logger.info('generating output_sheet.')
+output_sheet_path = (aims_folder_path /
+                     Path(rc['output_sheet_path'])).resolve()
+_temp = output_sheet_path / rc['output_file_name']
+with open(_temp, mode='w', encoding='utf-8') as f:
+    f.write(str(sheet))
+
 #
