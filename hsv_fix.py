@@ -49,6 +49,8 @@ def get_aims_img():
 def main(img):
     hsv = rc['hsv']
     cv2.namedWindow('image')
+    img_zeros = np.zeros((300, 512, 3), np.uint8)
+
     # RGB 顏色調整軸0~255
     cv2.createTrackbar('H_1_0', 'image', hsv['lower_yellow'][0], 255, nothing)
     cv2.createTrackbar('S_1_0', 'image', hsv['lower_yellow'][1], 255, nothing)
@@ -62,6 +64,7 @@ def main(img):
     cv2.createTrackbar('H_2_1', 'image', hsv['upper_rad'][0], 255, nothing)
     cv2.createTrackbar('S_2_1', 'image', hsv['upper_rad'][1], 255, nothing)
     cv2.createTrackbar('V_2_1', 'image', hsv['upper_rad'][2], 255, nothing)
+    cv2.imshow('image', img_zeros)
 
     while(1):
         # 讀取調整軸顏色數值
@@ -88,7 +91,7 @@ def main(img):
             lower_yellow, upper_yellow,
             lower_rad, upper_rad)
 
-        pic = cv2.resize(mask, (640, 480), interpolation=cv2.INTER_CUBIC)
+        pic = cv2.resize(mask, (960, 540), interpolation=cv2.INTER_CUBIC)
         cv2.imshow('image2', pic)
 
         if cv2.waitKey(100) == ord('q'):
