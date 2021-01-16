@@ -93,7 +93,6 @@ def reverse_config():
         },
 
         # 譜面生成時，用於閥值的參數
-        # (英文待補)
         "trigger_valve_parameter": 3,
     }
 
