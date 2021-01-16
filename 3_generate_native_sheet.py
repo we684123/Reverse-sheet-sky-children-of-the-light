@@ -66,7 +66,7 @@ trigger_valve = []
 for i in kb_list:
     mean = int(np.mean(i))
     # logger.debug(mean)
-    trigger_valve.append(mean / 2)
+    trigger_valve.append(mean / rc['trigger_valve_parameter'])
 
 
 # 譜面生成
