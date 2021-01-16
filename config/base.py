@@ -91,6 +91,9 @@ def reverse_config():
             "lower_rad": [148, 10, 72],
             "upper_rad": [255, 150, 255]
         },
+
+        # 譜面生成時，用於閥值的參數
+        "trigger_valve_parameter": 3,
     }
 
 

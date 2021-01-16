@@ -37,10 +37,14 @@ specify_seconds = input('plz input specify "seconds" = ')
 specify_count = int(specify_minute) * 60 * fps + int(specify_seconds) * fps
 for i in range(0, specify_count):
     ret, frame = cap.read()
-mask, res = ru.get_keyboard_by_hsv(frame)
+mask, res = ru.get_keyboard_by_hsv(
+    frame,
+    rc['hsv']['lower_yellow'],
+    rc['hsv']['upper_yellow'],
+    rc['hsv']['lower_rad'],
+    rc['hsv']['upper_rad'])
 
-_temp = Path(rc['aims_folder_path']) / Path(rc['output_sheet_path'])
-temp = _temp / "boundary.png"
+temp = Path(rc['output_sheet_path']) / "boundary.png"
 
 cv2.imwrite(str(temp), mask)
 print(temp)
