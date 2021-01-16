@@ -102,7 +102,7 @@ def check_graph(pixel_force, kb_list, note_st_ed,
     now_index = np.zeros(len(kb_list[track]))
     now_index[now_frame] = index_height
 
-    fig = plt.figure(f'track{track}')
+    # fig = plt.figure(f'track{track}')
     plt.plot(
         pixel_force[hr[0]:hr[1]], kb_list[track][hr[0]:hr[1]],
         color='#48D1CC', linestyle='solid', marker='.'
@@ -115,7 +115,7 @@ def check_graph(pixel_force, kb_list, note_st_ed,
         pixel_force[hr[0]:hr[1]], now_index[hr[0]:hr[1]],
         color='red', linestyle='solid', marker='v'
     )
-    fig.show()
+    # fig.show()
     # input('1')
 
 
@@ -128,12 +128,28 @@ if __name__ == '__main__':
     note_st_ed_list = generate_note_st_ed()
     now_frame = 600
 
-    horizon_range = [280, 400]
-    track = 9
-    image = check_graph(pixel_force, kb_list, note_st_ed_list,
-                        track, horizon_range, now_frame, index_height)
-    track = 3
-    image = check_graph(pixel_force, kb_list, note_st_ed_list,
-                        track, horizon_range, now_frame, index_height)
+    horizon_range = [0, 2400]
+    len(pixel_force)
+    len(note_st_ed_list)
+    len(note_st_ed_list[0])
+    len(kb_list[0])
+    horizon_range = [0, len(kb_list[0])]
 
+    # track = 7
+    # image = check_graph(pixel_force, kb_list, note_st_ed_list,
+    #                     track, horizon_range, now_frame, index_height)
+    # track = 6
+    # image = check_graph(pixel_force, kb_list, note_st_ed_list,
+    #                     track, horizon_range, now_frame, index_height)
+    # track = 14
+    # image = check_graph(pixel_force, kb_list, note_st_ed_list,
+    #                     track, horizon_range, now_frame, index_height)
+
+    for track in range(0, len(kb_list)):
+        # plt.figure(track)
+        # 第一張圖的第一張子圖，231 表示大小為 row:2 col:3 的第一張，index 從 1 開始
+        plt.subplot(3, 5, track + 1)
+        check_graph(pixel_force, kb_list, note_st_ed_list,
+                    track, horizon_range, now_frame, index_height)
+    plt.show()
 #
