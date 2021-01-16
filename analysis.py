@@ -125,9 +125,9 @@ def check_graph(pixel_force, kb_list, note_st_ed,
 if __name__ == '__main__':
     pixel_force = generate_pixel_force()
     note_st_ed_list = generate_note_st_ed()
-    now_frame = 600
+    horizon_range = [0, len(kb_list[0])]
+    now_frame = 1
 
-    # horizon_range = [0, len(kb_list[0])]
     # kb_list_max = np.max(kb_list[0])
     # track = 7
     # image = check_graph(pixel_force, kb_list, note_st_ed_list,
