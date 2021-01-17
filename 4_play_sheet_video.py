@@ -3,7 +3,6 @@ import time
 import json
 
 import cv2
-import pygame
 
 from library import reverse_utilities as ru
 from library import logger_generate
