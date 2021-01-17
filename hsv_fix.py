@@ -41,8 +41,8 @@ def get_aims_img():
     specify_seconds = input('plz input specify "seconds" = ')
 
     specify_count = int(specify_minute) * 60 * fps + int(specify_seconds) * fps
-    for i in range(0, specify_count):
-        ret, frame = cap.read()
+    cap.set(cv2.CAP_PROP_POS_FRAMES, specify_count)
+    ret, frame = cap.read()
     return frame
 
 

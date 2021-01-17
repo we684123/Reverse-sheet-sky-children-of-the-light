@@ -3,7 +3,6 @@ import time
 import json
 
 import cv2
-import pygame
 
 from library import reverse_utilities as ru
 from library import logger_generate
@@ -42,17 +41,7 @@ o_s_5 = o_s.copy()
 fps = data['fps']
 
 # load 聲音路徑
-note_songs_path = Path('./note_songs')
-sounds_path = []
-for i in range(0, 15):
-    sounds_path.append(note_songs_path / f"{i}.ogg")
-
-# 載入聲音
-pygame.mixer.init()
-pygame.mixer.set_num_channels(15)
-sounds = []
-for p in sounds_path:
-    sounds.append(pygame.mixer.Sound(p))
+sounds = ru.get_sounds()
 
 # 影片基礎
 video_path = Path(rc['video_path'])

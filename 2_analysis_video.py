@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import time
 
 import cv2
 
@@ -32,8 +33,8 @@ logger.info('base data got it!')
 st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
 
-for i in range(0, st_specify_count):
-    ret, frame = cap.read()
+cap.set(cv2.CAP_PROP_POS_FRAMES, st_specify_count)
+ret, frame = cap.read()
 
 ed_specify_count = fps * (60 * int(rc['end_minute']) + int(rc['end_second']))
 
@@ -91,4 +92,17 @@ with open(str(_temp), mode='w', encoding='utf-8') as f:
     f.write(json.dumps(data))
 logger.info('save data done.')
 logger.info('Please proceed to the next action.')
+
+# 播放音樂表示完結了~
+# 🎵╰(´꒳`⸝⸝⸝)╯🎵  ✧◝(⁰▿⁰)◜✧
+# 花媽廚房好囉~
+print('✧◝(⁰▿⁰)◜✧')
+sounds = ru.get_sounds()
+sounds[7].play()
+time.sleep(0.3)
+sounds[8].play()
+time.sleep(0.4)
+sounds[9].play()
+time.sleep(0.5)
+sounds[14].play()
 input('input any key to exit. 輸入任意值離開.')
