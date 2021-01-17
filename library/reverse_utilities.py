@@ -1,6 +1,8 @@
-import cv2
+from pathlib import Path
 
+import cv2
 import numpy as np
+import pygame
 
 
 def get_keyboard_by_hsv(img,
@@ -159,3 +161,20 @@ def get_img_number_count(keyboard):
     for i in np.unique(keyboard):
         a.append(np.sum(keyboard == i))
     return a
+
+
+# TODO: 這裡之後要看看要不要支援其他樂器的聲音
+def get_sounds():
+    # load 聲音路徑
+    note_songs_path = Path('./note_songs')
+    sounds_path = []
+    for i in range(0, 15):
+        sounds_path.append(note_songs_path / f"{i}.ogg")
+
+    # 載入聲音
+    pygame.mixer.init(channels=6)  # 對 超扯 這邊的設定通道數沒有用，要下面那行 (V2.0.1)
+    pygame.mixer.set_num_channels(15)
+    sounds = []
+    for p in sounds_path:
+        sounds.append(pygame.mixer.Sound(p))
+    return sounds
