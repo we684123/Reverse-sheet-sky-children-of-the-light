@@ -19,18 +19,18 @@ Here have some sky sheet can play
 
 ## 貢獻譜面 contribute sheets
 
-**歡迎透過表單貢獻給所有光之子**
-**Welcome to contribute to skykids through this form**
+**歡迎透過表單貢獻給所有光之子**    
+**Welcome to contribute to skykids through this form**    
 
 如果可以的話還是希望你能夠提供有譜面檔的版本    
 如此一來對方可以輕鬆的將譜面轉成他所喜歡的格式    
 If possible, I hope you do provide the version with the score file.    
 In this way, the skykids can easily convert the score to his preferred format    
 
-Need to login google. 需要登入 google
-[https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)
-No need to login google. 不用登入 google
-[https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)
+Need to login google. 需要登入 google    
+[https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)    
+No need to login google. 不用登入 google    
+[https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)    
 
 ## 如何使用 How to use
 
