@@ -32,8 +32,8 @@ logger.info('base data got it!')
 st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
 
-for i in range(0, st_specify_count):
-    ret, frame = cap.read()
+cap.set(cv2.CAP_PROP_POS_FRAMES, st_specify_count)
+ret, frame = cap.read()
 
 ed_specify_count = fps * (60 * int(rc['end_minute']) + int(rc['end_second']))
 
