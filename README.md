@@ -1,50 +1,52 @@
 # Reverse-sheet-sky-children-of-the-light
 
-我想要彈更多的音樂 ((っ･ω･)っ    
-I want to play more music in Sky ((っ･ω･)っ    
+我想要彈更多的音樂 ((っ･ω･)っ  
+I want to play more music in Sky ((っ･ω･)っ
+
+這個程式可以從 sky 影片中逆向出文字譜面  
+This program can reverse the sheet from the sky video
 
 ---
 
 ## 教學影片 teach video
 
-[![待補的URL](http://img.youtube.com/vi/E-ofS-MiVzs/0.jpg)](http://bit.ly/3agGXdu)  
+[![待補的URL](http://img.youtube.com/vi/E-ofS-MiVzs/0.jpg)](http://bit.ly/3agGXdu)
 
 ## 譜面 sheets
 
-這裡有一些已經轉好的譜面    
-Here have some sky sheet can play    
+這裡有一些已經轉好的譜面  
+Here have some sky sheet can play
 
 - http://bit.ly/3qy6aZ1 (from [不用登入 google](https://forms.gle/q11xptKWeZkbFU687))
 - http://bit.ly/38RwvuO (from [需要登入 google](https://forms.gle/cNgn23CM3FDkR5Tg7))
 
 ## 貢獻譜面 contribute sheets
 
-**歡迎透過表單貢獻給所有光之子**    
-**Welcome to contribute to skykids through this form**    
+**歡迎透過表單貢獻給所有光之子**  
+**Welcome to contribute to skykids through this form**
 
-如果可以的話還是希望你能夠提供有譜面檔的版本    
-如此一來對方可以輕鬆的將譜面轉成他所喜歡的格式    
-If possible, I hope you do provide the version with the score file.    
-In this way, the skykids can easily convert the score to his preferred format    
+如果可以的話還是希望你能夠提供有譜面檔的版本  
+如此一來對方可以輕鬆的將譜面轉成他所喜歡的格式  
+If possible, I hope you do provide the version with the score file.  
+In this way, the skykids can easily convert the score to his preferred format
 
-Need to login google. 需要登入 google    
-[https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)    
-No need to login google. 不用登入 google    
-[https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)    
-
+Need to login google. 需要登入 google  
+[https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)  
+No need to login google. 不用登入 google  
+[https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)
 
 ## 程式執行環境安裝 environment install
 
 **⚠️python version require >= 3.5⚠️**
+
 ```allowEmpty
 pip install -r requirements.txt
 ```
 
-
 ## 如何使用 How to use
 
-目前只有教學影片，歡迎貢獻 PR    
-Now just have teach video，welcome PR    
+目前只有教學影片，歡迎貢獻 PR  
+Now just have teach video，welcome PR
 
 ## 已知問題 + 待做功能 , issues + ToDo
 
