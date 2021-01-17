@@ -1,24 +1,43 @@
 # Reverse-sheet-sky-children-of-the-light
+
 我想要彈更多的音樂 ((っ･ω･)っ
+I want to play more music in Sky ((っ･ω･)っ
 
-## 影片
-[Shelter (Porter Robinson & Madeon) | 避難所 | Sky: Children of the Light 光遇 COVER](https://www.youtube.com/watch?v=Rf_DHuEkdY4)
+---
 
-## 筆記
-由於鍵盤本身就會跳動，因此要做變化值檢測
-然後設定閥值，當突波時就是點下去的時機，連續點擊同一鍵時(高於閥值時要再做第二次斜率變化偵測)
+## 教學影片 teach video
 
-目前 code_flow 程式 logger 沒說多好，要再修改，且要再做防呆。
+[![待補的URL](http://img.youtube.com/vi/E-ofS-MiVzs/0.jpg)](http://bit.ly/3agGXdu)  
 
-- 要做 可以即時檢測的東西 最少要知道譜面是否生成正確
-做一半了，不能及時檢測
+## 譜面 sheets
 
+這裡有一些已經轉好的譜面
+Here have some sky sheet can play
 
-2021/1/11
-~~！！！警告 目前 pygame 播放有問題 不能信~~
-~~自是是不是鎖同音重複時間~~
-~~還是檔案~~
-已增加通道數解決
+- http://bit.ly/3qy6aZ1 (from [不用登入 google](https://forms.gle/q11xptKWeZkbFU687))
+- http://bit.ly/38RwvuO (from [需要登入 google](https://forms.gle/cNgn23CM3FDkR5Tg7))
 
-2021/01/14
-好... 還要做一個總表格檢視所以key的狀況
+## 貢獻譜面 contribute sheets
+
+**歡迎透過表單貢獻給所有光之子**
+**Welcome to contribute to skykids through this form**
+
+如果可以的話還是希望你能夠提供有譜面檔的版本
+如此一來對方可以輕鬆的將譜面轉成他所喜歡的格式
+If possible, I hope you do provide the version with the score file.
+In this way, the skykids can easily convert the score to his preferred format
+
+Need to login google. 需要登入 google
+[https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)
+No need to login google. 不用登入 google
+[https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)
+
+## 如何使用 How to use
+
+目前只有教學影片，歡迎貢獻 PR
+Now just have teach video，welcome PR
+
+## 已知問題 + 待做功能 , issues + ToDo
+
+- 換行(a 鍵)時間比影片畫面會再晚一點點。目前不知道會不會跟電腦環境有關，有關的話較難排除。
+- 應該要加個 X 軸向長條狀態列在影片下方，藉此告知目前所有換行符的位置
