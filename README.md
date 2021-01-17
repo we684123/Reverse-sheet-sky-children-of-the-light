@@ -32,6 +32,15 @@ Need to login google. 需要登入 google
 No need to login google. 不用登入 google    
 [https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)    
 
+
+## 程式執行環境安裝 environment install
+
+**⚠️python version require >= 3.5⚠️**
+```allowEmpty
+pip install -r requirements.txt
+```
+
+
 ## 如何使用 How to use
 
 目前只有教學影片，歡迎貢獻 PR    
