@@ -48,7 +48,11 @@ pip install -r requirements.txt
 目前只有教學影片，歡迎貢獻 PR  
 Now just have teach video，welcome PR
 
-## 已知問題 + 待做功能 , issues + ToDo
+## 已知問題 issues
 
-- 換行(a 鍵)時間比影片畫面會再晚一點點。目前不知道會不會跟電腦環境有關，有關的話較難排除。
-- 應該要加個 X 軸向長條狀態列在影片下方，藉此告知目前所有換行符的位置
+- 4_play_sheet_video 應該要加個 X 軸向長條狀態列在影片下方，藉此告知目前所有換行符的位置
+- 4_play_sheet_video 考慮做在轉換影片中，如果該鍵盤正被播放，要給一個紅色框框提示
+
+## 待做功能 ToDo
+
+- 4_play_sheet_video 換行(a 鍵)時間比影片畫面會再晚一點點。目前不知道會不會跟電腦環境有關，有關的話較難排除。
