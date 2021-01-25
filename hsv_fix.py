@@ -11,7 +11,7 @@ rc = reverse_config
 logger = logger_generate.generate(base.logger_config())
 
 
-def nothing(x):
+def ng(x):  # nothing
     pass
 
 
@@ -48,23 +48,23 @@ def get_aims_img():
 
 def main(img):
     hsv = rc['hsv']
-    cv2.namedWindow('image')
+    cv2.namedWindow('hsv_config')
     img_zeros = np.zeros((300, 512, 3), np.uint8)
 
     # RGB 顏色調整軸0~255
-    cv2.createTrackbar('H_1_0', 'image', hsv['lower_yellow'][0], 255, nothing)
-    cv2.createTrackbar('S_1_0', 'image', hsv['lower_yellow'][1], 255, nothing)
-    cv2.createTrackbar('V_1_0', 'image', hsv['lower_yellow'][2], 255, nothing)
-    cv2.createTrackbar('H_1_1', 'image', hsv['upper_yellow'][0], 255, nothing)
-    cv2.createTrackbar('S_1_1', 'image', hsv['upper_yellow'][1], 255, nothing)
-    cv2.createTrackbar('V_1_1', 'image', hsv['upper_yellow'][2], 255, nothing)
-    cv2.createTrackbar('H_2_0', 'image', hsv['lower_rad'][0], 255, nothing)
-    cv2.createTrackbar('S_2_0', 'image', hsv['lower_rad'][1], 255, nothing)
-    cv2.createTrackbar('V_2_0', 'image', hsv['lower_rad'][2], 255, nothing)
-    cv2.createTrackbar('H_2_1', 'image', hsv['upper_rad'][0], 255, nothing)
-    cv2.createTrackbar('S_2_1', 'image', hsv['upper_rad'][1], 255, nothing)
-    cv2.createTrackbar('V_2_1', 'image', hsv['upper_rad'][2], 255, nothing)
-    cv2.imshow('image', img_zeros)
+    cv2.createTrackbar('H_1_0', 'hsv_config', hsv['lower_yellow'][0], 255, ng)
+    cv2.createTrackbar('S_1_0', 'hsv_config', hsv['lower_yellow'][1], 255, ng)
+    cv2.createTrackbar('V_1_0', 'hsv_config', hsv['lower_yellow'][2], 255, ng)
+    cv2.createTrackbar('H_1_1', 'hsv_config', hsv['upper_yellow'][0], 255, ng)
+    cv2.createTrackbar('S_1_1', 'hsv_config', hsv['upper_yellow'][1], 255, ng)
+    cv2.createTrackbar('V_1_1', 'hsv_config', hsv['upper_yellow'][2], 255, ng)
+    cv2.createTrackbar('H_2_0', 'hsv_config', hsv['lower_rad'][0], 255, ng)
+    cv2.createTrackbar('S_2_0', 'hsv_config', hsv['lower_rad'][1], 255, ng)
+    cv2.createTrackbar('V_2_0', 'hsv_config', hsv['lower_rad'][2], 255, ng)
+    cv2.createTrackbar('H_2_1', 'hsv_config', hsv['upper_rad'][0], 255, ng)
+    cv2.createTrackbar('S_2_1', 'hsv_config', hsv['upper_rad'][1], 255, ng)
+    cv2.createTrackbar('V_2_1', 'hsv_config', hsv['upper_rad'][2], 255, ng)
+    cv2.imshow('hsv_config', img_zeros)
 
     while(1):
         # 讀取調整軸顏色數值
@@ -92,7 +92,7 @@ def main(img):
             lower_rad, upper_rad)
 
         pic = cv2.resize(mask, (960, 540), interpolation=cv2.INTER_CUBIC)
-        cv2.imshow('image2', pic)
+        cv2.imshow('fix_hsv_video', pic)
 
         if cv2.waitKey(100) == ord('q'):
             break
