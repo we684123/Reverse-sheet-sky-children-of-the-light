@@ -125,7 +125,10 @@ time_stop = False
 # 狀態器初始化
 temp_state_list = []  # 狀態器陣列
 tsl = temp_state_list
-
+# 僅取鍵盤畫面
+# 裁剪坐标为[y0:y1, x0:x1]
+left_upper = rc['left_upper']
+right_lower = rc['right_lower']
 # 處理影片
 while cap.isOpened():
 
@@ -146,10 +149,6 @@ while cap.isOpened():
         if change_Time == 0:
             cv2.setTrackbarPos('Time_line', 'Sheet Player', int(frame_count))
 
-        # 僅取鍵盤畫面
-        # 裁剪坐标为[y0:y1, x0:x1]
-        left_upper = rc['left_upper']
-        right_lower = rc['right_lower']
         video = ru.get_crop_img(frame, left_upper, right_lower)
 
         # 轉灰階畫面顯示
@@ -159,14 +158,15 @@ while cap.isOpened():
             rc['hsv']['upper_yellow'],
             rc['hsv']['lower_rad'],
             rc['hsv']['upper_rad'])
-        binary = ru.get_binary_img(res, 127)
-        video = ru.link_line(binary)
+        img = ru.get_binary_img(res, rc['binarization']['thresh'])
+        if rc['closing']['use']:
+            img = ru.link_line(img)
 
         # # 接下來要上色，表 示音符觸發
         # # frame_count = 123
         # rt = list(filter(lambda x: x['frame'] == int(frame_count), o_s))
         # for
-        add_ed_img = addition_to_video(video, frame_count, o_s)
+        add_ed_img = addition_to_video(img, frame_count, o_s)
 
         cv2.imshow('Sheet Player', add_ed_img)
 

@@ -71,7 +71,7 @@ def reverse_config():
         # 8,4,5,【3 5】,6,6,4,
         "blank_symbol": " ",
         # 換行符號
-        "line_feed_symbol": "\n",
+        "line_feed_symbol": "\r\n",
         # 視為同步的時間區間
         # 單位 ms, unit ms
         "sync_area_time": 70,
@@ -80,8 +80,8 @@ def reverse_config():
         # generate new note cool down time
         "cool_down_time": 330,
 
-        # ===⚠️以下別亂動，除非你知道自己幹嘛⚠️=======
-        # ===⚠️Do not change below! Unless you know what you are doing⚠️====
+        # 譜面生成時，用於閥值的參數
+        "trigger_valve_parameter": 3,
 
         # hsv邊界參數
         # hsv boundary parameter
@@ -92,8 +92,24 @@ def reverse_config():
             "upper_rad": [255, 150, 255]
         },
 
-        # 譜面生成時，用於閥值的參數
-        "trigger_valve_parameter": 3,
+        # 二值化方法設定
+        # set binarization method
+        "binarization": {
+            # 閥值
+            "thresh": 127
+        },
+
+        # 閉合方法設定
+        # set closing
+        "closing": {
+            # 是否使用closing方法?
+            # use closing?
+            "use": True,
+            # ⚠️這個我就不用動態生成了，麻煩...
+            # 遮罩大小
+            # kernel size
+            # "kernel": [2, 2] # <- 沒作用 is not work
+        },
     }
 
 

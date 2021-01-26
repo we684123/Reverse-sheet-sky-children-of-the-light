@@ -15,6 +15,8 @@ logger = logger_generate.generate(base.logger_config())
 # 基礎資訊獲取
 aims_folder_path = Path(rc['aims_folder_path'])
 video_path = aims_folder_path / Path(rc['video_path']).resolve()
+left_upper = rc['left_upper']
+right_lower = rc['right_lower']
 
 if not video_path.exists():
     logger.warning('video_path is not exist!')
@@ -26,6 +28,8 @@ duration = frame_end / fps
 minute = int(duration / 60)
 seconds = int(duration % 60)
 hsv = rc['hsv']
+binarization = rc['binarization']
+closing = rc['closing']
 
 logger.info('base data got it!')
 
@@ -41,8 +45,10 @@ ed_specify_count = fps * (60 * int(rc['end_minute']) + int(rc['end_second']))
 # 再處理剩下的
 # 生成 frame_keyboards
 frame_keyboards = []
-logger.info('frame_keyboards now is generating, need more times,')
-logger.info('maybe eat something, for wait time?')
+logger.info((
+    'analysis_from_video.json now is generating, need more times,',
+    'maybe eat something, for wait time?'
+))
 while cap.isOpened():
     ret, frame = cap.read()
     frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
@@ -54,23 +60,26 @@ while cap.isOpened():
         break
 
     # 畫面處理
+    crop_img = ru.get_crop_img(frame, left_upper, right_lower)
     mask, res = ru.get_keyboard_by_hsv(
-        frame,
+        crop_img,
         hsv['lower_yellow'],
         hsv['upper_yellow'],
         hsv['lower_rad'],
         hsv['upper_rad'])
-    binary = ru.get_binary_img(res, 127)
-    left_upper = rc['left_upper']
-    right_lower = rc['right_lower']
-    crop_img = ru.get_crop_img(binary, left_upper, right_lower)
-    img = ru.link_line(crop_img)
-    keyboards = ru.split_keyboard(img, 5, 3)
+    img = ru.get_binary_img(res, binarization['thresh'])
+    if closing['use']:
+        img = ru.link_line(img)
+    keyboards = ru.split_keyboard(
+        img,
+        rc['keyboards_X_format'],
+        rc['keyboards_y_format']
+    )
     keyboards_count = []
     for k in keyboards:
         keyboards_count.append(ru.get_img_number_count(k))
     frame_keyboards.append(keyboards_count)
-logger.info('frame_keyboards is generated!')
+logger.info('analysis_from_video.json is generated!')
 logger.info('now to save data...')
 
 
