@@ -70,7 +70,11 @@ while cap.isOpened():
     img = ru.get_binary_img(res, binarization['thresh'])
     if closing['use']:
         img = ru.link_line(img)
-    keyboards = ru.split_keyboard(img, 5, 3)
+    keyboards = ru.split_keyboard(
+        img,
+        rc['keyboards_X_format'],
+        rc['keyboards_y_format']
+    )
     keyboards_count = []
     for k in keyboards:
         keyboards_count.append(ru.get_img_number_count(k))
