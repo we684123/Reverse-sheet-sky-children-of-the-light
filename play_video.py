@@ -8,7 +8,8 @@ from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
 hsv = rc['hsv']
-
+binarization = rc['binarization']
+closing = rc['closing']
 
 if __name__ == '__main__':
     video_path = Path(rc['video_path'])
@@ -40,19 +41,20 @@ if __name__ == '__main__':
         # 裁剪坐标为[y0:y1, x0:x1]
         left_upper = rc['left_upper']
         right_lower = rc['right_lower']
-        video = ru.get_crop_img(frame, left_upper, right_lower)
+        img = ru.get_crop_img(frame, left_upper, right_lower)
 
         # 轉灰階畫面顯示
         mask, res = ru.get_keyboard_by_hsv(
-            video,
+            img,
             rc['hsv']['lower_yellow'],
             rc['hsv']['upper_yellow'],
             rc['hsv']['lower_rad'],
             rc['hsv']['upper_rad'])
-        binary = ru.get_binary_img(res, 127)
-        video = ru.link_line(binary)
+        img = ru.get_binary_img(res, binarization['thresh'])
+        if closing['use']:
+            img = ru.link_line(img)
 
-        cv2.imshow('Video Player', video)
+        cv2.imshow('Video Player', img)
 
         # frame_time
         area_time = time.time() - now_time
