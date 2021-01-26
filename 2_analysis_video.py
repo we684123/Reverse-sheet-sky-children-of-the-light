@@ -28,6 +28,8 @@ duration = frame_end / fps
 minute = int(duration / 60)
 seconds = int(duration % 60)
 hsv = rc['hsv']
+binarization = rc['binarization']
+closing = rc['closing']
 
 logger.info('base data got it!')
 
@@ -65,8 +67,9 @@ while cap.isOpened():
         hsv['upper_yellow'],
         hsv['lower_rad'],
         hsv['upper_rad'])
-    binary = ru.get_binary_img(res, 127)
-    img = ru.link_line(binary)
+    img = ru.get_binary_img(res, binarization['thresh'])
+    if closing['use']:
+        img = ru.link_line(img)
     keyboards = ru.split_keyboard(img, 5, 3)
     keyboards_count = []
     for k in keyboards:
