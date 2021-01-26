@@ -71,7 +71,7 @@ def reverse_config():
         # 8,4,5,【3 5】,6,6,4,
         "blank_symbol": " ",
         # 換行符號
-        "line_feed_symbol": "\n",
+        "line_feed_symbol": "\r\n",
         # 視為同步的時間區間
         # 單位 ms, unit ms
         "sync_area_time": 70,
