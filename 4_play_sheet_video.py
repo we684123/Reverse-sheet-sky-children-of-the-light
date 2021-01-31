@@ -58,11 +58,20 @@ now_time = time.time()
 st_specify_count = fps * \
     (60 * int(rc['start_minute']) + int(rc['start_second']))
 
+# 處理附加動畫時間
+max_effect_time = 0.4
+max_effect_frame = max_effect_time * fps
+feed_effect_time = 0.4
+feed_effect_frame = feed_effect_time * fps
+note_effect_time = 0.2
+note_effect_frame = note_effect_time * fps
 
 # 影片附加元素狀態器
 # frame_count = 124
 # temp_state_list = []
 # o_s_4.append({'frame': 124, "type": "line_feed"})
+
+
 def addition_to_video(img, frame_count, o_s):
     # def addition_lf():  # 換行效果登記
     #     # 這裡可以寫的效能更好一點，用指標跟狀態器達成
@@ -75,8 +84,8 @@ def addition_to_video(img, frame_count, o_s):
     #         temp_state_list.append(rt[0])
 
     def ld_to_lf(x):
-        if abs(int(frame_count) - x['frame']) < 20:
-            if x['type'] == 'line_feed' or x['type'] == 'flag':
+        if abs(int(frame_count) - x['frame']) < max_effect_frame:
+            if x['type'] == 'line_feed' or x['type'] == 'note':
                 return x
     temp_state_list = list(filter(ld_to_lf, o_s.copy()))
 
@@ -98,6 +107,8 @@ def addition_to_video(img, frame_count, o_s):
                 )
             else:
                 temp_state_list[i]['display'] = False
+        elif _et == 'note':
+            pass
 
     return img
 
