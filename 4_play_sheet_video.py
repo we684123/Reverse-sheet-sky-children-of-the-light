@@ -84,8 +84,11 @@ def addition_to_video(img, frame_count, o_s):
     #     if rt != []:
     #         temp_state_list.append(rt[0])
 
+    _for_addition_frame_count = frame_count - st_specify_count
+    _fafc = _for_addition_frame_count
+
     def ld_to_lf(x):
-        if abs(int(frame_count) - x['frame']) < max_effect_frame:
+        if abs(int(_fafc) - x['frame']) < max_effect_frame:
             if x['type'] == 'line_feed' or x['type'] == 'note':
                 return x
     temp_state_list = list(filter(ld_to_lf, o_s.copy()))
@@ -94,28 +97,60 @@ def addition_to_video(img, frame_count, o_s):
         _e = temp_state_list[i]
         _ef = _e['frame']
         _et = _e['type']
-        width = 20 - int(frame_count - _ef)
-        logger.debug(width)
-        logger.debug(type(width))
+        width = 20 - int(_fafc - _ef)
+        # logger.debug(f"width = {width}")
+        # logger.debug(type(width))
+
+        _width_in_area = width > 3 and width < 20
+        use_keyboard_effect = rc['play_effect_config']['use_keyboard_effect']
+        _run_keyboard_effect = _width_in_area and use_keyboard_effect
+
         if _et == 'line_feed':
             # logger.debug(width)
             # logger.debug(type(width))
-            if width > 3 and width < 13:
+            cv2.rectangle(
+                img,
+                (0, 0),
+                (int(img.shape[1]), int(img.shape[0])),
+                (255, 140, 0),
+                width
+            )
+        elif _run_keyboard_effect and _et == 'note':
+            _ka = keyboard_area[_e['keyboard']]
+            # logger.debug(_ka)
+            _keyboard_effect = rc['play_effect_config']['keyboard_effect']
+            if _keyboard_effect == "center":
                 cv2.rectangle(
                     img,
-                    (0, 0),
-                    (int(img.shape[1]), int(img.shape[0])),
+                    (int(_ka[2]), int(_ka[0])),
+                    (int(_ka[3]), int(_ka[1])),
                     (255, 140, 0),
                     width
                 )
-        elif _et == 'note':
-            pass
+            elif _keyboard_effect == "upper_left":
+                _x = int(_ka[3]) - int(_ka[2])
+                _y = int(_ka[1]) - int(_ka[0])
+                _x_d = int(_x / 11)
+                _y_d = int(_y / 11)
+                width -= 9
+                # logger.debug("-----")
+                # logger.debug(_x)
+                # logger.debug(_y)
+                # logger.debug(_x_d)
+                # logger.debug(_y_d)
 
+                cv2.rectangle(
+                    img,
+                    (int(_ka[2]), int(_ka[0])),
+                    (int(_ka[2]) + _x_d * width,
+                     int(_ka[0]) + _y_d * width),
+                    (255, 140, 0),
+                    3
+                )
     return img
 
+
 # 這給 createTrackbar 用的
-
-
 def nothing(x):
     pass
 
@@ -142,6 +177,13 @@ tsl = temp_state_list
 left_upper = rc['left_upper']
 right_lower = rc['right_lower']
 
+# 獲取畫面鍵盤分割座標
+ret, frame = cap.read()  # 這裡偷偷拿一
+_v = ru.get_crop_img(frame, left_upper, right_lower)
+keyboard_area = ru.get_split_keyboard_area(_v,
+                                           rc['keyboards_X_format'],
+                                           rc['keyboards_y_format'])
+
 # 處理影片
 while cap.isOpened():
 
@@ -150,7 +192,7 @@ while cap.isOpened():
 
         # 正確讀取影像時 ret 回傳 True
         frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
-        logger.debug(f"frame_count = {frame_count}")
+        # logger.debug(f"frame_count = {frame_count}")
         if frame_count == frame_end:
             print("影片讀取完畢")
             break
@@ -191,6 +233,7 @@ while cap.isOpened():
         for note in rt:
             if 'keyboard' in note:
                 sounds[note['keyboard']].play()
+                logger.debug(f"🎵sounds = {note['keyboard']}")
 
         # 控制播放速度用
         # frame_time
