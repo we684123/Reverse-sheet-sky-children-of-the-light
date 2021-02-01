@@ -12,6 +12,7 @@ This program can reverse the sheet from the sky video
 
 ## 教學影片 teach video
 
+[塞這URL](http://bit.ly/3agGXdu)
 [![待補的URL](http://img.youtube.com/vi/E-ofS-MiVzs/0.jpg)](http://bit.ly/3agGXdu)
 
 ## 譜面 sheets
@@ -34,7 +35,7 @@ In this way, the skykids can easily convert the score to his preferred format
 
 Need to login google. 需要登入 google  
 [https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)  
-No need to login google. 不用登入 google  
+Not need to login google. 不用登入 google  
 [https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)
 
 ## 程式執行環境安裝 environment install
