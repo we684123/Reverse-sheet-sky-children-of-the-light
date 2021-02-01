@@ -185,6 +185,7 @@ keyboard_area = ru.get_split_keyboard_area(_v,
                                            rc['keyboards_y_format'])
 
 # 處理影片
+# TODO: 這裡要修成符合pep8 最少分2區 waitkey + frame_處理 (影像讀取)
 while cap.isOpened():
 
     if not time_stop:
