@@ -4,7 +4,7 @@
 I want to play more music in Sky ((っ･ω･)っ
 
 這個程式可以從 sky 影片中逆向出文字譜面  
-This program can reverse the sheet from the sky video   
+This program can reverse the sheet from the sky video
 
 **該程式盡量遵守** [pep8](https://www.python.org/dev/peps/pep-0008/)、[gitmoji](https://gitmoji.dev/)
 
@@ -12,7 +12,7 @@ This program can reverse the sheet from the sky video
 
 ## 教學影片 teach video
 
-[塞這URL](http://bit.ly/3agGXdu)
+[塞這 URL](http://bit.ly/3agGXdu)
 [![待補的URL](http://img.youtube.com/vi/E-ofS-MiVzs/0.jpg)](http://bit.ly/3agGXdu)
 
 ## 譜面 sheets
@@ -62,21 +62,19 @@ Now just have teach video，welcome PR
 - 4_play_sheet_video 要做音符時間輸出 每個行首一個
 - 4_play_sheet_video 要做自動換行，隔幾秒空白就一個
 - 新增 自動打包並替代所有 win x64 的東東(不想用複雜的環境，想一鍵解決) 目前候選用 [PyUpdater](https://github.com/Digital-Sapphire/PyUpdater)
-- 新增 轉換格式的程式，讓user可以用於 "Sky Studio" or "Sky Music"
+- 新增 轉換格式的程式，讓 user 可以用於 "Sky Studio" or "Sky Music"
+- analysis 要做極高峰植濾波
 
 ## 已知問題 issues
 
 - 4_play_sheet_video 換行(a 鍵)時間**好像**比影片畫面會再晚一點點。目前不知道會不會跟電腦環境有關，有關的話較難排除。
 - 4_play_sheet_video 輸出的換行符 '\\n' 有時候會失效，不確定觸發機制，如果遇上可以改 '\\r\\n' 看看。
 
-## 資料來源 data source
+## 資料來源 + 授權 data source + authorize
 
 - 鍵盤圖片([可免費商用授權](https://www.pexels.com/zh-tw/photo/698808/))
 - [Shelter (Porter Robinson & Madeon) | 避難所 | Sky: Children of the Light 光遇 COVER](https://www.youtube.com/watch?v=Rf_DHuEkdY4)
 - 感謝 [Y C](https://www.youtube.com/watch?v=leOckppuFkY&lc=Ugw3kpea7BD0LvKWLEt4AaABAg.9BJJCPqBs-N9ISCkLZAPiw) 大大授權使用影片
-
-
-
 
 ## 作者 Author
 
