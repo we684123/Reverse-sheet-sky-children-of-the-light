@@ -54,14 +54,14 @@ Now just have teach video，welcome PR
 ## 待做功能 ToDo
 
 - 4_play_sheet_video 應該要加個 X 軸向長條狀態列在影片下方，藉此告知目前所有換行符的位置
-- 4_play_sheet_video 考慮做在轉換影片中，如果該鍵盤正被播放，要給一個紅色框框提示
+- ~~4_play_sheet_video 考慮做在轉換影片中，如果該鍵盤正被播放，要給一個紅色框框提示~~
 - 4_play_sheet_video 要做音符時間輸出 每個行首一個
 - 4_play_sheet_video 要做自動換行，隔幾秒空白就一個
 
 ## 已知問題 issues
 
-- 4_play_sheet_video 換行(a 鍵)時間比影片畫面會再晚一點點。目前不知道會不會跟電腦環境有關，有關的話較難排除。
-
+- 4_play_sheet_video 換行(a 鍵)時間**好像**比影片畫面會再晚一點點。目前不知道會不會跟電腦環境有關，有關的話較難排除。
+- 4_play_sheet_video 輸出的換行符 '\\n' 有時候會失效，不確定觸發機制，如果遇上可以改 '\\r\\n' 看看。
 
 ## 資料來源
 - 鍵盤圖片([可免費商用授權](https://www.pexels.com/zh-tw/photo/698808/))
