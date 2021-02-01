@@ -60,7 +60,8 @@ Now just have teach video，welcome PR
 - ~~4_play_sheet_video 考慮做在轉換影片中，如果該鍵盤正被播放，要給一個紅色框框提示~~
 - 4_play_sheet_video 要做音符時間輸出 每個行首一個
 - 4_play_sheet_video 要做自動換行，隔幾秒空白就一個
-- 新增 自動打包並替代所有 win x64 的東東(不想用複雜的環境，想一鍵解決)
+- 新增 自動打包並替代所有 win x64 的東東(不想用複雜的環境，想一鍵解決) 目前候選用 [PyUpdater](https://github.com/Digital-Sapphire/PyUpdater)
+- 新增 轉換格式的程式，讓user可以用於 "Sky Studio" or "Sky Music"
 
 ## 已知問題 issues
 
