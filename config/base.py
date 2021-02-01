@@ -110,6 +110,20 @@ def reverse_config():
             # kernel size
             # "kernel": [2, 2] # <- 沒作用 is not work
         },
+
+        # 對於在使用 "4_play_sheet_video.py" 時的特效設定
+        # set effect, when you use "4_play_sheet_video.py"
+        "play_effect_config": {
+            # 是否啟用鍵盤特效
+            # use use_keyboard_effect
+            "use_keyboard_effect": True,
+            # 鍵盤特效方法
+            # 目前有 "center"、"upper_left" 2種
+            # keyboard effect
+            # now have "center" and "upper_left"
+            "keyboard_effect": "upper_left"
+        }
+
     }
 
 

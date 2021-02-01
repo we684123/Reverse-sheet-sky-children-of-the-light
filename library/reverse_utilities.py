@@ -156,6 +156,30 @@ def split_keyboard(img, x, y):
     return keyboard
 
 
+def get_split_keyboard_area(img, x, y):
+    keyboard_area = []
+    w = img.shape[1]
+    h = img.shape[0]
+
+    # 定義方向上的分個線數量
+    split_line_x = (x)
+    split_line_y = (y)
+
+    # 定義一個鍵盤區塊大小
+    area_x = w / split_line_x
+    area_y = h / split_line_y
+    for i in range(1, y + 1):
+        for j in range(1, x + 1):
+            # print(f"i={i},j={j}")
+            rd = [int(j * area_x), int(i * area_y)]
+            lu = [int(rd[0] - area_x), int(rd[1] - area_y)]
+            # print(f"lu={lu},rd={rd}")
+            # print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
+            new_area = [lu[1], rd[1], lu[0], rd[0]]
+            keyboard_area.append(new_area)
+    return keyboard_area
+
+
 def get_img_number_count(keyboard):
     a = []
     for i in np.unique(keyboard):
