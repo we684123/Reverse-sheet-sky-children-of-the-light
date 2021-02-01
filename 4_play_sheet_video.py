@@ -66,7 +66,8 @@ feed_effect_frame = feed_effect_time * fps
 note_effect_time = 0.2
 note_effect_frame = note_effect_time * fps
 
-# 影片附加元素狀態器
+
+# 畫面附加效果狀態器
 # frame_count = 124
 # temp_state_list = []
 # o_s_4.append({'frame': 124, "type": "line_feed"})
@@ -93,8 +94,10 @@ def addition_to_video(img, frame_count, o_s):
         _e = temp_state_list[i]
         _ef = _e['frame']
         _et = _e['type']
+        width = 20 - int(frame_count - _ef)
+        logger.debug(width)
+        logger.debug(type(width))
         if _et == 'line_feed':
-            width = 20 - int(frame_count - _ef)
             # logger.debug(width)
             # logger.debug(type(width))
             if width > 3 and width < 13:
@@ -105,8 +108,6 @@ def addition_to_video(img, frame_count, o_s):
                     (255, 140, 0),
                     width
                 )
-            else:
-                temp_state_list[i]['display'] = False
         elif _et == 'note':
             pass
 
@@ -140,6 +141,7 @@ tsl = temp_state_list
 # 裁剪坐标为[y0:y1, x0:x1]
 left_upper = rc['left_upper']
 right_lower = rc['right_lower']
+
 # 處理影片
 while cap.isOpened():
 
