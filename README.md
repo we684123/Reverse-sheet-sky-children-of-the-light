@@ -12,8 +12,10 @@ This program can reverse the sheet from the sky video
 
 ## 教學影片 teach video
 
-[塞這 URL](http://bit.ly/3agGXdu)
-[![待補的URL](http://img.youtube.com/vi/E-ofS-MiVzs/0.jpg)](http://bit.ly/3agGXdu)
+⚠️⚠️⚠️拜託! 我決定之後重錄了 自己看就好 我不想讓黑歷史讓太多人知道qwq⚠️⚠️⚠️   
+⚠️⚠️⚠️plz don't share to other people, i know this video is very bad Orz , i will make a new⚠️⚠️⚠️    
+[https://youtu.be/8r4bcis4C_s](https://youtu.be/8r4bcis4C_s)    
+[![待補的URL](http://img.youtube.com/vi/8r4bcis4C_s/0.jpg)](https://youtu.be/8r4bcis4C_s)
 
 ## 譜面 sheets
 
