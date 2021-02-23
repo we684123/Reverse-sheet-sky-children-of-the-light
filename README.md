@@ -12,9 +12,9 @@ This program can reverse the sheet from the sky video
 
 ## 教學影片 teach video
 
-⚠️⚠️⚠️拜託! 我決定之後重錄了 自己看就好 我不想讓黑歷史讓太多人知道qwq⚠️⚠️⚠️   
-⚠️⚠️⚠️plz don't share to other people, i know this video is very bad Orz , i will make a new⚠️⚠️⚠️    
-[https://youtu.be/8r4bcis4C_s](https://youtu.be/8r4bcis4C_s)    
+⚠️⚠️⚠️ 拜託! 我決定之後重錄了 自己看就好 我不想讓黑歷史讓太多人知道 qwq⚠️⚠️⚠️  
+⚠️⚠️⚠️plz don't share to other people, i know this video is very bad Orz , i will make a new⚠️⚠️⚠️  
+[https://youtu.be/8r4bcis4C_s](https://youtu.be/8r4bcis4C_s)  
 [![待補的URL](http://img.youtube.com/vi/8r4bcis4C_s/0.jpg)](https://youtu.be/8r4bcis4C_s)
 
 ## 譜面 sheets
@@ -66,6 +66,7 @@ Now just have teach video，welcome PR
 - 新增 自動打包並替代所有 win x64 的東東(不想用複雜的環境，想一鍵解決) 目前候選用 [PyUpdater](https://github.com/Digital-Sapphire/PyUpdater)
 - 新增 轉換格式的程式，讓 user 可以用於 "Sky Studio" or "Sky Music"
 - analysis 要做極高峰植濾波
+- 增加短時間連續演奏符號 "-", ex:【B4-C4】
 
 ## 已知問題 issues
 
