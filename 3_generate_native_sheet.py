@@ -131,15 +131,17 @@ osl = original_sheet_len
 index = 0
 for i in range(0, osl):
     # i = 0
+    # i = 1
+    # i = 2
     for j in range(i, get_in_area(i, 15, osl)):
         # j = 0
+        # j = 1
+        # j = 2
         if j == (osl - 1):  # 防止 out of range
             break
         interval = original_sheet[j + 1]['time'] - original_sheet[i]['time']
         if interval * 1000 > sync_area_time:  # 高於差值的就直接下一個
             break
-        if 'index' in original_sheet[j]:  # 有 index 帶被被分類過了，下一個
-            continue
         else:
             if 'index' in original_sheet[i]:  # 初始 index 綁定
                 original_sheet[j + 1]['index'] = original_sheet[i]['index']
@@ -147,6 +149,7 @@ for i in range(0, osl):
                 original_sheet[i]['index'] = index
                 original_sheet[j + 1]['index'] = index
                 index += 1
+
 
 # 按照 index(同時) 分組
 sheet = ""
