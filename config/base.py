@@ -96,7 +96,7 @@ def reverse_config():
         # set binarization method
         "binarization": {
             # 閥值
-            "thresh": 127
+            "thresh": 127  # default 127
         },
 
         # 閉合方法設定
@@ -104,7 +104,7 @@ def reverse_config():
         "closing": {
             # 是否使用closing方法?
             # use closing?
-            "use": True,
+            "use": True,  # True False
             # ⚠️這個我就不用動態生成了，麻煩...
             # 遮罩大小
             # kernel size
@@ -116,7 +116,7 @@ def reverse_config():
         "play_effect_config": {
             # 是否啟用鍵盤特效
             # use use_keyboard_effect
-            "use_keyboard_effect": True,
+            "use_keyboard_effect": True,  # True False
             # 鍵盤特效方法
             # 目前有 "center"、"upper_left" 2種
             # keyboard effect
