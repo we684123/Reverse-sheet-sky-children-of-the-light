@@ -104,7 +104,7 @@ def reverse_config():
         "closing": {
             # 是否使用closing方法?
             # use closing?
-            "use": True,  # True False
+            "use": False,  # True False
             # ⚠️這個我就不用動態生成了，麻煩...
             # 遮罩大小
             # kernel size
