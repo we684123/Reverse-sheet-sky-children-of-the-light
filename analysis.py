@@ -127,25 +127,32 @@ if __name__ == '__main__':
     pixel_force = generate_pixel_force()
     note_st_ed_list = generate_note_st_ed()
     horizon_range = [0, len(kb_list[0])]
-    now_frame = 1
 
-    # kb_list_max = np.max(kb_list[0])
-    # track = 7
-    # image = check_graph(pixel_force, kb_list, note_st_ed_list,
-    #                     track, horizon_range, now_frame, kb_list_max)
-    # track = 6
-    # image = check_graph(pixel_force, kb_list, note_st_ed_list,
-    #                     track, horizon_range, now_frame, kb_list_max)
-    # track = 14
-    # image = check_graph(pixel_force, kb_list, note_st_ed_list,
-    #                     track, horizon_range, now_frame, kb_list_max)
+    # now_frame
+    now_frame = input('plz input now frame. 請輸入要觀察的frame時間.')
+    try:
+        now_frame = int(now_frame)
+        # kb_list_max = np.max(kb_list[0])
+        # track = 7
+        # image = check_graph(pixel_force, kb_list, note_st_ed_list,
+        #                     track, horizon_range, now_frame, kb_list_max)
+        # track = 6
+        # image = check_graph(pixel_force, kb_list, note_st_ed_list,
+        #                     track, horizon_range, now_frame, kb_list_max)
+        # track = 14
+        # image = check_graph(pixel_force, kb_list, note_st_ed_list,
+        #                     track, horizon_range, now_frame, kb_list_max)
 
-    for track in range(0, len(kb_list)):
-        # plt.figure(track)
-        # 第一張圖的第一張子圖，231 表示大小為 row:2 col:3 的第一張，index 從 1 開始
-        plt.subplot(3, 5, track + 1)
-        kb_list_max = np.max(kb_list[track])
-        check_graph(pixel_force, kb_list, note_st_ed_list,
-                    track, horizon_range, now_frame, kb_list_max)
-    plt.show()
+        for track in range(0, len(kb_list)):
+            # plt.figure(track)
+            # 第一張圖的第一張子圖，231 表示大小為 row:2 col:3 的第一張，index 從 1 開始
+            plt.subplot(3, 5, track + 1)
+            kb_list_max = np.max(kb_list[track])
+            check_graph(pixel_force, kb_list, note_st_ed_list,
+                        track, horizon_range, now_frame, kb_list_max)
+        plt.show()
+    except Exception as e:
+        raise IndexError('請輸入正確且範圍內的數值.')
+
+
 #
