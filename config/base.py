@@ -72,6 +72,8 @@ def reverse_config():
         "blank_symbol": " ",
         # 換行符號
         "line_feed_symbol": "\n",
+        # 自動由低到高排序音符
+        "auto_sort_sync_note": True,  # True False
         # 視為同步的時間區間
         # 單位 ms, unit ms
         "sync_area_time": 70,

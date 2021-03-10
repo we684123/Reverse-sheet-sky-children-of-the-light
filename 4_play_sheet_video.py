@@ -413,8 +413,21 @@ for i in range(0, osl):
                     _text_2 += str(sheet_formats[_a]) + blank_symbol
                 else:
                     break
+
+        # 處理自動排序音符
+        # _text_2 = 'B1 A4 C1 B2 '
+        if rc['auto_sort_sync_note']:
+            _k1 = _text_2[:-1].split(blank_symbol)
+            _k2 = sorted(_k1)
+            _k3 = ''
+            for _k in _k2:
+                _k3 += _k + blank_symbol
+            _text_3 = _k3[:-1]
+
+        else:
+            _text_3 = _text_2[:-1]
         # 組合完畢就用組合符號括起來(預設是 【 】)
-        note = f"{sync_symbol[0]}{_text_2[:-1]}{sync_symbol[1]}"
+        note = f"{sync_symbol[0]}{_text_3}{sync_symbol[1]}"
     else:
         # 沒有index的就直接按base要求組起來就好
         note = str(sheet_formats[int(o_s[i]['keyboard'])])
