@@ -152,6 +152,7 @@ if __name__ == '__main__':
                         track, horizon_range, now_frame, kb_list_max)
         plt.show()
     except Exception as e:
+        e
         raise IndexError('請輸入正確且範圍內的數值.')
 
 
