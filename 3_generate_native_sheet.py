@@ -35,21 +35,22 @@ for i in range(0, len(frame_keyboards[0])):
     kb_list.append([])
 
 # 再來要找區域的像素數量總和
-max_pixel_len = 0
+max_pixel_len_area = []
 for i in range(0, len(frame_keyboards[0])):
     # logger.debug(frame_keyboards[0][i])
+    max_pixel_len = 0
     try:
         b = frame_keyboards[0][i][0]
         k = frame_keyboards[0][i][1]
         max_pixel_len = b + k
-        break
+        max_pixel_len_area.append(max_pixel_len)
     except Exception as e:
         e
         pass
 
 for i in frame_keyboards:
     for j in range(0, len(i)):
-        kb_list[j].append(max_pixel_len - i[j][0])
+        kb_list[j].append(max_pixel_len_area[j] - i[j][0])
 
 
 # 狀態器初始化
