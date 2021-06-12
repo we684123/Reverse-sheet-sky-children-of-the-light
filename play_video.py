@@ -1,5 +1,6 @@
 from pathlib import Path
 import time
+import json
 
 import cv2
 
@@ -10,6 +11,14 @@ rc = reverse_config
 hsv = rc['hsv']
 binarization = rc['binarization']
 closing = rc['closing']
+aims_folder_path = Path(rc['aims_folder_path'])
+effect_config_path = \
+    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
+with open(effect_config_path, mode='r', encoding='utf-8') as f:
+    content = f.read()
+ec = json.loads(content)
+left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
 
 if __name__ == '__main__':
     video_path = Path(rc['video_path'])
@@ -38,9 +47,6 @@ if __name__ == '__main__':
             break
 
         # 僅取鍵盤畫面
-        # 裁剪坐标为[y0:y1, x0:x1]
-        left_upper = rc['left_upper']
-        right_lower = rc['right_lower']
         img = ru.get_crop_img(frame, left_upper, right_lower)
 
         # 轉灰階畫面顯示
