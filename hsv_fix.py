@@ -9,12 +9,16 @@ from library import logger_generate
 from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generate(base.logger_config())
+logger = logger_generate.generate(
+    base.logger_config(),
+    name='reverse_sheet_log'
+)
 
 hsv = rc['hsv']
 binarization = rc['binarization']
 closing = rc['closing']
-effect_config_path = f"{rc['aims_folder_path']}/config/effect_config_parameter.json"
+effect_config_path = \
+    f"{rc['aims_folder_path']}/config/effect_config_parameter.json"
 
 
 def ng(x):  # nothing
@@ -61,12 +65,15 @@ duration = count / fps
 minute = int(duration / 60)
 seconds = int(duration % 60)
 
-print(f'frame_count = {frame_count}')
-print(f'fps = {fps}')
-print(f'count= {count}')
-print(f'duration= {duration}')
-print(f'minute= {minute}')
-print(f'seconds= {seconds}')
+logger.info(f'frame_count = {frame_count}')
+logger.info(f'fps = {fps}')
+logger.info(f'count= {count}')
+logger.info(f'duration= {duration}')
+logger.info(f'minute= {minute}')
+logger.info(f'seconds= {seconds}')
+logger.info('---------------')
+logger.info("When you finish setting, plz input keyboard 's' to save config")
+logger.info('---------------')
 
 specify_minute = input('plz input specify "minute" = ')
 specify_seconds = input('plz input specify "seconds" = ')
@@ -91,7 +98,7 @@ cv2.setTrackbarMin('down', _wn, 1)
 cv2.createTrackbar('left', _wn, 0, frame_width, ng)
 cv2.createTrackbar('right', _wn, frame_width, frame_width, ng)
 cv2.setTrackbarMin('right', _wn, 1)
-cv2.createTrackbar('scale', _wn, 400, frame_width, ng)
+cv2.createTrackbar('scale', _wn, 250, frame_width, ng)
 cv2.setTrackbarMin('scale', _wn, 1)
 
 # RGB 顏色調整軸0~255
@@ -169,7 +176,7 @@ while cap.isOpened():
 
     key = cv2.waitKey(1)
     if key == ord('q'):
-        print('quit.')
+        logger.info('quit.')
         break
     elif key == ord('s'):
         effect_config = {
@@ -186,23 +193,9 @@ while cap.isOpened():
             "binarization_thresh": binarization_thresh,
             "use_closing": use_closing
         }
-        # effect_config = {'cv': 1}
-        # np.savez(
-        #     effect_config_path,
-        #     boundary_up=boundary_up,
-        #     boundary_down=boundary_down,
-        #     boundary_left=boundary_left,
-        #     boundary_right=boundary_right,
-        #     lower_yellow=lower_yellow,
-        #     upper_yellow=upper_yellow,
-        #     lower_rad=lower_rad,
-        #     upper_rad=upper_rad,
-        #     binarization_thresh=binarization_thresh,
-        #     use_closing=use_closing
-        # )
-        print(f'effect_config = \n{effect_config}')
+        logger.info(f'effect_config = \n{effect_config}')
         with open(effect_config_path, 'w', encoding='utf-8') as outfile:
             json.dump(effect_config, outfile)
-        print('config saved.')
+        logger.info('config saved.')
 
 #
