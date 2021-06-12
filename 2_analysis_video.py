@@ -10,7 +10,10 @@ from library import logger_generate
 from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generate(base.logger_config())
+logger = logger_generate.generate(
+    base.logger_config(),
+    name='reverse_sheet_log'
+)
 
 
 # 基礎資訊獲取
@@ -66,10 +69,10 @@ while cap.isOpened():
     ret, frame = cap.read()
     frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
     if frame_count == frame_end or frame_count == ed_specify_count:
-        print("影片讀取完畢")
+        logger.info("影片讀取完畢")
         break
     if not ret:
-        print("影片讀取失敗，請確認影片格式...")
+        logger.info("影片讀取失敗，請確認影片格式...")
         break
 
     # 畫面處理
@@ -118,7 +121,7 @@ logger.info('Please proceed to the next action.')
 # 播放音樂表示完結了~
 # 🎵╰(´꒳`⸝⸝⸝)╯🎵  ✧◝(⁰▿⁰)◜✧
 # 花媽廚房好囉~
-print('✧◝(⁰▿⁰)◜✧')
+logger.info('✧◝(⁰▿⁰)◜✧')
 sounds = ru.get_sounds()
 sounds[7].play()
 time.sleep(0.3)
