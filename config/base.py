@@ -10,14 +10,15 @@ def reverse_config():
         # 譜面輸出名稱
         "output_file_name": "output_sheet.txt",
 
-        # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最左上邊界位置 (可用小畫家看)
-        # use get_boundart.py conversion video to an image
-        # in the image ,keyboard far left and far upper point position
-        "left_upper": [556, 113],
-        # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最右下邊界位置 (可用小畫家看)
-        # use get_boundart.py conversion video to an image
-        # in the image ,keyboard far right and far lower point position
-        "right_lower": [1363, 578],
+        # 棄用，等待某天丟掉
+        # # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最左上邊界位置 (可用小畫家看)
+        # # use get_boundart.py conversion video to an image
+        # # in the image ,keyboard far left and far upper point position
+        # "left_upper": [556, 113],
+        # # 用 get_boundart.py 轉換出來的圖，整體鍵盤的最右下邊界位置 (可用小畫家看)
+        # # use get_boundart.py conversion video to an image
+        # # in the image ,keyboard far right and far lower point position
+        # "right_lower": [1363, 578],
 
         # 開始分析時間
         "start_minute": 0,  # 只接受整數 # only integer
