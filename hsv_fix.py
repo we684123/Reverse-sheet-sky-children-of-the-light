@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 import cv2
 import numpy as np
@@ -13,6 +14,7 @@ logger = logger_generate.generate(base.logger_config())
 hsv = rc['hsv']
 binarization = rc['binarization']
 closing = rc['closing']
+effect_config_path = f"{rc['aims_folder_path']}/config/effect_config_parameter.json"
 
 
 def ng(x):  # nothing
@@ -110,7 +112,6 @@ cv2.createTrackbar('use_closing', _wn, closing['use'], 1, ng)
 cv2.imshow(_wn, img_zeros)
 
 frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-
 while cap.isOpened():
     ret, frame = cap.read()
     frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
@@ -166,8 +167,42 @@ while cap.isOpened():
     img = img_resize(img, scale, frame_width)
     cv2.imshow('result', img)
 
-    if cv2.waitKey(1) == ord('q'):
+    key = cv2.waitKey(1)
+    if key == ord('q'):
+        print('quit.')
         break
-
+    elif key == ord('s'):
+        effect_config = {
+            "boundary_up": boundary_up,
+            "boundary_down": boundary_down,
+            "boundary_left": boundary_left,
+            "boundary_right": boundary_right,
+            "hsv": {
+                "lower_yellow": lower_yellow.tolist(),
+                "upper_yellow": upper_yellow.tolist(),
+                "lower_rad": lower_rad.tolist(),
+                "upper_rad": upper_rad.tolist()
+            },
+            "binarization_thresh": binarization_thresh,
+            "use_closing": use_closing
+        }
+        # effect_config = {'cv': 1}
+        # np.savez(
+        #     effect_config_path,
+        #     boundary_up=boundary_up,
+        #     boundary_down=boundary_down,
+        #     boundary_left=boundary_left,
+        #     boundary_right=boundary_right,
+        #     lower_yellow=lower_yellow,
+        #     upper_yellow=upper_yellow,
+        #     lower_rad=lower_rad,
+        #     upper_rad=upper_rad,
+        #     binarization_thresh=binarization_thresh,
+        #     use_closing=use_closing
+        # )
+        print(f'effect_config = \n{effect_config}')
+        with open(effect_config_path, 'w', encoding='utf-8') as outfile:
+            json.dump(effect_config, outfile)
+        print('config saved.')
 
 #

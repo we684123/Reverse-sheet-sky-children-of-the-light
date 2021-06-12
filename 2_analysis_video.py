@@ -3,6 +3,7 @@ import json
 import time
 
 import cv2
+import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
@@ -14,9 +15,25 @@ logger = logger_generate.generate(base.logger_config())
 
 # 基礎資訊獲取
 aims_folder_path = Path(rc['aims_folder_path'])
+effect_config_path = \
+    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
 video_path = aims_folder_path / Path(rc['video_path']).resolve()
-left_upper = rc['left_upper']
-right_lower = rc['right_lower']
+
+file = open(effect_config_path, 'r', encoding='utf-8')
+content = file.read()
+file.close()
+ec = json.loads(content)
+
+left_upper = [int(ec['boundary_up']), int(ec['boundary_left'])]
+right_lower = [int(ec['boundary_down']), int(ec['boundary_right'])]
+hsv = {
+    'lower_yellow': np.array(ec['hsv']['lower_yellow']),
+    'upper_yellow': np.array(ec['hsv']['upper_yellow']),
+    'lower_rad': np.array(ec['hsv']['lower_rad']),
+    'upper_rad': np.array(ec['hsv']['upper_rad']),
+}
+binarization_thresh = int(ec['binarization_thresh'])
+closing = bool(ec['use_closing'])
 
 if not video_path.exists():
     logger.warning('video_path is not exist!')
@@ -27,10 +44,6 @@ fps = int(cap.get(cv2.CAP_PROP_FPS))
 duration = frame_end / fps
 minute = int(duration / 60)
 seconds = int(duration % 60)
-hsv = rc['hsv']
-binarization = rc['binarization']
-closing = rc['closing']
-
 logger.info('base data got it!')
 
 # 先到達指定偵數
@@ -67,8 +80,8 @@ while cap.isOpened():
         hsv['upper_yellow'],
         hsv['lower_rad'],
         hsv['upper_rad'])
-    img = ru.get_binary_img(res, binarization['thresh'])
-    if closing['use']:
+    img = ru.get_binary_img(res, binarization_thresh)
+    if closing:
         img = ru.link_line(img)
     keyboards = ru.split_keyboard(
         img,
