@@ -72,7 +72,9 @@ logger.info(f'duration= {duration}')
 logger.info(f'minute= {minute}')
 logger.info(f'seconds= {seconds}')
 logger.info('---------------')
-logger.info("When you finish setting, plz input keyboard 's' to save config")
+logger.info("".join(("d(`･∀･)b When you finish setting,",
+                     " plz click 'result' window and",
+                     " input keyboard 's' to save config.")))
 logger.info('---------------')
 
 specify_minute = input('plz input specify "minute" = ')
