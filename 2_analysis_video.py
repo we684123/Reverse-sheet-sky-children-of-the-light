@@ -18,17 +18,15 @@ logger = logger_generate.generate(
 
 # 基礎資訊獲取
 aims_folder_path = Path(rc['aims_folder_path'])
+video_path = aims_folder_path / Path(rc['video_path']).resolve()
 effect_config_path = \
     f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
-video_path = aims_folder_path / Path(rc['video_path']).resolve()
-
-file = open(effect_config_path, 'r', encoding='utf-8')
-content = file.read()
-file.close()
+with open(effect_config_path, mode='r', encoding='utf-8') as f:
+    content = f.read()
 ec = json.loads(content)
 
-left_upper = [int(ec['boundary_up']), int(ec['boundary_left'])]
-right_lower = [int(ec['boundary_down']), int(ec['boundary_right'])]
+left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
 hsv = {
     'lower_yellow': np.array(ec['hsv']['lower_yellow']),
     'upper_yellow': np.array(ec['hsv']['upper_yellow']),

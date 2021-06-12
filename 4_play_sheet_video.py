@@ -67,6 +67,12 @@ note_effect_time = 0.2
 note_effect_frame = note_effect_time * fps
 
 
+effect_config_path = \
+    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
+with open(effect_config_path, mode='r', encoding='utf-8') as f:
+    content = f.read()
+ec = json.loads(content)
+
 # 畫面附加效果狀態器
 # frame_count = 124
 # temp_state_list = []
@@ -174,8 +180,8 @@ temp_state_list = []  # 狀態器陣列
 tsl = temp_state_list
 # 僅取鍵盤畫面
 # 裁剪坐标为[y0:y1, x0:x1]
-left_upper = rc['left_upper']
-right_lower = rc['right_lower']
+left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
 
 # 獲取畫面鍵盤分割座標
 ret, frame = cap.read()  # 這裡偷偷拿一
