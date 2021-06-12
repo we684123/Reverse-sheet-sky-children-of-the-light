@@ -3,20 +3,38 @@ import json
 import time
 
 import cv2
+import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
 from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
-logger = logger_generate.generate(base.logger_config())
+logger = logger_generate.generate(
+    base.logger_config(),
+    name='reverse_sheet_log'
+)
 
 
 # 基礎資訊獲取
 aims_folder_path = Path(rc['aims_folder_path'])
 video_path = aims_folder_path / Path(rc['video_path']).resolve()
-left_upper = rc['left_upper']
-right_lower = rc['right_lower']
+effect_config_path = \
+    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
+with open(effect_config_path, mode='r', encoding='utf-8') as f:
+    content = f.read()
+ec = json.loads(content)
+
+left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
+hsv = {
+    'lower_yellow': np.array(ec['hsv']['lower_yellow']),
+    'upper_yellow': np.array(ec['hsv']['upper_yellow']),
+    'lower_rad': np.array(ec['hsv']['lower_rad']),
+    'upper_rad': np.array(ec['hsv']['upper_rad']),
+}
+binarization_thresh = int(ec['binarization_thresh'])
+closing = bool(ec['use_closing'])
 
 if not video_path.exists():
     logger.warning('video_path is not exist!')
@@ -27,10 +45,6 @@ fps = int(cap.get(cv2.CAP_PROP_FPS))
 duration = frame_end / fps
 minute = int(duration / 60)
 seconds = int(duration % 60)
-hsv = rc['hsv']
-binarization = rc['binarization']
-closing = rc['closing']
-
 logger.info('base data got it!')
 
 # 先到達指定偵數
@@ -53,10 +67,10 @@ while cap.isOpened():
     ret, frame = cap.read()
     frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
     if frame_count == frame_end or frame_count == ed_specify_count:
-        print("影片讀取完畢")
+        logger.info("影片讀取完畢")
         break
     if not ret:
-        print("影片讀取失敗，請確認影片格式...")
+        logger.info("影片讀取失敗，請確認影片格式...")
         break
 
     # 畫面處理
@@ -67,8 +81,8 @@ while cap.isOpened():
         hsv['upper_yellow'],
         hsv['lower_rad'],
         hsv['upper_rad'])
-    img = ru.get_binary_img(res, binarization['thresh'])
-    if closing['use']:
+    img = ru.get_binary_img(res, binarization_thresh)
+    if closing:
         img = ru.link_line(img)
     keyboards = ru.split_keyboard(
         img,
@@ -105,7 +119,7 @@ logger.info('Please proceed to the next action.')
 # 播放音樂表示完結了~
 # 🎵╰(´꒳`⸝⸝⸝)╯🎵  ✧◝(⁰▿⁰)◜✧
 # 花媽廚房好囉~
-print('✧◝(⁰▿⁰)◜✧')
+logger.info('✧◝(⁰▿⁰)◜✧')
 sounds = ru.get_sounds()
 sounds[7].play()
 time.sleep(0.3)

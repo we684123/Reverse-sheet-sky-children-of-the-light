@@ -3,6 +3,7 @@ import time
 import json
 
 import cv2
+import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
@@ -66,6 +67,12 @@ feed_effect_frame = feed_effect_time * fps
 note_effect_time = 0.2
 note_effect_frame = note_effect_time * fps
 
+
+effect_config_path = \
+    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
+with open(effect_config_path, mode='r', encoding='utf-8') as f:
+    content = f.read()
+ec = json.loads(content)
 
 # 畫面附加效果狀態器
 # frame_count = 124
@@ -172,10 +179,18 @@ time_stop = False
 # 狀態器初始化
 temp_state_list = []  # 狀態器陣列
 tsl = temp_state_list
+
 # 僅取鍵盤畫面
-# 裁剪坐标为[y0:y1, x0:x1]
-left_upper = rc['left_upper']
-right_lower = rc['right_lower']
+left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
+hsv = {
+    'lower_yellow': np.array(ec['hsv']['lower_yellow']),
+    'upper_yellow': np.array(ec['hsv']['upper_yellow']),
+    'lower_rad': np.array(ec['hsv']['lower_rad']),
+    'upper_rad': np.array(ec['hsv']['upper_rad']),
+}
+binarization_thresh = int(ec['binarization_thresh'])
+closing = bool(ec['use_closing'])
 
 # 獲取畫面鍵盤分割座標
 ret, frame = cap.read()  # 這裡偷偷拿一
@@ -187,7 +202,6 @@ keyboard_area = ru.get_split_keyboard_area(_v,
 # 處理影片
 # TODO: 這裡要修成符合pep8 最少分2區 waitkey + frame_處理 (影像讀取)
 while cap.isOpened():
-
     if not time_stop:
         ret, frame = cap.read()
 
@@ -210,12 +224,12 @@ while cap.isOpened():
         # 轉灰階畫面顯示
         mask, res = ru.get_keyboard_by_hsv(
             video,
-            rc['hsv']['lower_yellow'],
-            rc['hsv']['upper_yellow'],
-            rc['hsv']['lower_rad'],
-            rc['hsv']['upper_rad'])
-        img = ru.get_binary_img(res, rc['binarization']['thresh'])
-        if rc['closing']['use']:
+            hsv['lower_yellow'],
+            hsv['upper_yellow'],
+            hsv['lower_rad'],
+            hsv['upper_rad'])
+        img = ru.get_binary_img(res, binarization_thresh)
+        if closing:
             img = ru.link_line(img)
 
         # # 接下來要上色，表 示音符觸發

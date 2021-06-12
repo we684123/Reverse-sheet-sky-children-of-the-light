@@ -10,35 +10,12 @@ This program can reverse the sheet from the sky video
 
 ---
 
-## 教學影片 teach video
+## 教學影片 teach video(這是舊的，還沒有時間錄新的)
 
 ⚠️⚠️⚠️ 拜託! 我決定之後重錄了 自己看就好 我不想讓黑歷史讓太多人知道 qwq⚠️⚠️⚠️  
 ⚠️⚠️⚠️plz don't share to other people, i know this video is very bad Orz , i will make a new⚠️⚠️⚠️  
 [https://youtu.be/8r4bcis4C_s](https://youtu.be/8r4bcis4C_s)  
 [![待補的URL](http://img.youtube.com/vi/8r4bcis4C_s/0.jpg)](https://youtu.be/8r4bcis4C_s)
-
-## 譜面 sheets
-
-這裡有一些已經轉好的譜面  
-Here have some sky sheet can play
-
-- http://bit.ly/3qy6aZ1 (from [不用登入 google](https://forms.gle/q11xptKWeZkbFU687))
-- http://bit.ly/38RwvuO (from [需要登入 google](https://forms.gle/cNgn23CM3FDkR5Tg7))
-
-## 貢獻譜面 contribute sheets
-
-**歡迎透過表單貢獻給所有光之子**  
-**Welcome to contribute to skykids through this form**
-
-如果可以的話還是希望你能夠提供有譜面檔的版本  
-如此一來對方可以輕鬆的將譜面轉成他所喜歡的格式  
-If possible, I hope you do provide the version with the score file.  
-In this way, the skykids can easily convert the score to his preferred format
-
-Need to login google. 需要登入 google  
-[https://forms.gle/PrwRa1BoavDcfvp77](https://forms.gle/PrwRa1BoavDcfvp77)  
-Not need to login google. 不用登入 google  
-[https://forms.gle/cNgn23CM3FDkR5Tg7](https://forms.gle/cNgn23CM3FDkR5Tg7)
 
 ## 程式執行環境安裝 environment install
 

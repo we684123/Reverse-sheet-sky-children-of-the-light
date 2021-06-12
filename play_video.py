@@ -1,15 +1,32 @@
 from pathlib import Path
 import time
+import json
 
 import cv2
+import numpy as np
 
 from library import reverse_utilities as ru
 from config import base
 reverse_config = base.reverse_config()
 rc = reverse_config
-hsv = rc['hsv']
-binarization = rc['binarization']
-closing = rc['closing']
+
+aims_folder_path = Path(rc['aims_folder_path'])
+effect_config_path = \
+    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
+with open(effect_config_path, mode='r', encoding='utf-8') as f:
+    content = f.read()
+ec = json.loads(content)
+
+left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
+hsv = {
+    'lower_yellow': np.array(ec['hsv']['lower_yellow']),
+    'upper_yellow': np.array(ec['hsv']['upper_yellow']),
+    'lower_rad': np.array(ec['hsv']['lower_rad']),
+    'upper_rad': np.array(ec['hsv']['upper_rad']),
+}
+binarization_thresh = int(ec['binarization_thresh'])
+closing = bool(ec['use_closing'])
 
 if __name__ == '__main__':
     video_path = Path(rc['video_path'])
@@ -38,20 +55,17 @@ if __name__ == '__main__':
             break
 
         # 僅取鍵盤畫面
-        # 裁剪坐标为[y0:y1, x0:x1]
-        left_upper = rc['left_upper']
-        right_lower = rc['right_lower']
         img = ru.get_crop_img(frame, left_upper, right_lower)
 
         # 轉灰階畫面顯示
         mask, res = ru.get_keyboard_by_hsv(
             img,
-            rc['hsv']['lower_yellow'],
-            rc['hsv']['upper_yellow'],
-            rc['hsv']['lower_rad'],
-            rc['hsv']['upper_rad'])
-        img = ru.get_binary_img(res, binarization['thresh'])
-        if closing['use']:
+            hsv['lower_yellow'],
+            hsv['upper_yellow'],
+            hsv['lower_rad'],
+            hsv['upper_rad'])
+        img = ru.get_binary_img(res, binarization_thresh)
+        if closing:
             img = ru.link_line(img)
 
         cv2.imshow('Video Player', img)
