@@ -84,7 +84,7 @@ def reverse_config():
         "cool_down_time": 330,
 
         # 譜面生成時，用於閥值的參數
-        "trigger_valve_parameter": 3,
+        "trigger_valve_parameter": 2.5,
 
         # hsv邊界參數
         # hsv boundary parameter
