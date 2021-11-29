@@ -202,3 +202,45 @@ def get_sounds():
     for p in sounds_path:
         sounds.append(pygame.mixer.Sound(p))
     return sounds
+
+
+def remove_irrelevant(img, left: int, up: int, right: int, down: int, _wn):
+    """移除不需要的影像區塊，輸出所需分析的影像區塊
+
+    Args:
+       img (img) :  欲處理的原始影像
+       left(int) :  擷取影像的左邊界()
+       up(int)   :  擷取影像的上邊界
+       right(int):  擷取影像的右邊界
+       down(int) :  擷取影像的下邊界
+
+    Returns:
+       img.  處理好的影像
+
+    >>> frame = remove_irrelevant(
+            frame,
+            boundary_left, boundary_up,
+            boundary_right, boundary_down
+        )
+    """
+    if up >= down:
+        cv2.setTrackbarPos('up', _wn, up - 1)
+        up = down - 1
+    if left >= right:
+        cv2.setTrackbarPos('left', _wn, left - 1)
+        left = right - 1
+    return get_crop_img(img, [left, up], [right, down])
+
+
+def img_resize(image, height_new, width_new):
+    height, width = image.shape[0], image.shape[1]
+    try:
+        if width / height >= width_new / height_new:
+            img_new = cv2.resize(
+                image, (width_new, int(height * width_new / width)))
+        else:
+            img_new = cv2.resize(
+                image, (int(width * height_new / height), height_new))
+    except Exception:
+        return image
+    return img_new
