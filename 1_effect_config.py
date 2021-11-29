@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import sys
 
 import cv2
 import numpy as np
@@ -7,18 +8,30 @@ import numpy as np
 from library import reverse_utilities as ru
 from library import logger_generate
 from config import base
-reverse_config = base.reverse_config()
-rc = reverse_config
+
+# ↓=====先處理設定檔=====↓
+
+# ↓↓ 被拖到這個程式的影片(或設定檔)
+# # NOTE: 需要驗證影片
+if len(sys.argv) == 0:
+    pass
+if len(sys.argv) == 2:
+    aims_video_file = sys.argv[1]
+
+# ↓嘗試在local端找設定檔，如果沒有找到就去Github專案中下載設定檔模板↓
+
+
+config = base.config()
 logger = logger_generate.generate(
     base.logger_config(),
     name='reverse_sheet_log'
 )
 
-hsv = rc['hsv']
-binarization = rc['binarization']
-closing = rc['closing']
+hsv = config['hsv']
+binarization = config['binarization']
+closing = config['closing']
 effect_config_path = \
-    f"{rc['aims_folder_path']}/config/effect_config_parameter.json"
+    f"{config['aims_folder_path']}/config/effect_config_parameter.json"
 
 
 def ng(x):  # nothing
@@ -49,7 +62,7 @@ def img_resize(image, height_new, width_new):
     return img_new
 
 
-video_path = Path(rc['video_path'])
+video_path = Path(config['video_path'])
 if not video_path.exists():
     logger.warning('video_path is not exist!')
     exit()
