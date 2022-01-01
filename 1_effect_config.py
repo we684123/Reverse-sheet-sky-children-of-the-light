@@ -96,10 +96,11 @@ img_zeros = np.zeros((300, 512, 3), np.uint8)
 # 邊界、比例控制
 cv2.createTrackbar('up', _wn, 0, frame_height, ng)
 cv2.createTrackbar('down', _wn, frame_height, frame_height, ng)
-cv2.setTrackbarMin('down', _wn, 1)
+# cv2.setTrackbarMin('down', _wn, 1)
 cv2.createTrackbar('left', _wn, 0, frame_width, ng)
 cv2.createTrackbar('right', _wn, frame_width, frame_width, ng)
-cv2.setTrackbarMin('right', _wn, 1)
+# cv2.setTrackbarMin('right', _wn, 1)
+# cv2.setTrackbarMax('right', _wn, frame_width)
 cv2.createTrackbar('scale', _wn, 250, frame_width, ng)
 cv2.setTrackbarMin('scale', _wn, 1)
 
