@@ -334,14 +334,18 @@ while cap.isOpened():
         print('s tigger')
         print(frame_count)
         rt = list(filter(lambda x: x['type'] == 'line_feed', o_s.copy()))
-        _k = []
-        for i in range(0, len(rt)):
-            _k.append(int(rt[i]['frame']) - frame_count)
-        print(f"_k = {_k}")
-        print(f"max _k = {max(_k)}")
-        print(f"rt[_k.index(max(_k))]  = {rt[_k.index(max(_k))]}")
-        # rt[_k.index(max(_k))]
-        del o_s[o_s.index(rt[_k.index(max(_k))])]
+        print(f"rt = {rt}")
+        if len(rt) == 0:
+            print('s鍵刪除無效，因為已經沒有分界線可以刪除了')
+        else:
+            _k = []
+            for i in range(0, len(rt)):
+                _k.append(int(rt[i]['frame']) - frame_count)
+            print(f"_k = {_k}")
+            print(f"max _k = {max(_k)}")
+            print(f"rt[_k.index(max(_k))]  = {rt[_k.index(max(_k))]}")
+            # rt[_k.index(max(_k))]
+            del o_s[o_s.index(rt[_k.index(max(_k))])]
 
     if input_key == ord('j'):  # a == 'line_feed'
         print('j tigger')
