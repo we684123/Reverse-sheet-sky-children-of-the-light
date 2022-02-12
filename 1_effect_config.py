@@ -154,7 +154,7 @@ _wn = 'effect_config'
 cv2.namedWindow(_wn, 0)
 _wn2 = 'hsv_color_config'
 cv2.namedWindow(_wn2, 0)
-img_zeros = np.zeros((300, 512, 3), np.uint8)
+img_zeros = np.zeros((100, 512, 3), np.uint8)
 
 # 邊界、比例控制
 cv2.createTrackbar('up', _wn, 0, frame_height, ng)
@@ -168,6 +168,7 @@ cv2.createTrackbar('scale', _wn, 250, frame_width, ng)
 # cv2.setTrackbarMin('scale', _wn, 1)
 cv2.createTrackbar('binarization_thresh', _wn, binarization['thresh'], 255, ng)
 cv2.createTrackbar('closing', _wn, closing['use'], 1, ng)
+cv2.createTrackbar('original', _wn, 0, 1, ng)
 cv2.imshow(_wn, img_zeros)
 
 # RGB 顏色調整軸0~255
@@ -206,6 +207,7 @@ while cap.isOpened():
     scale = cv2.getTrackbarPos('scale', _wn)
     binarization_thresh = cv2.getTrackbarPos('binarization_thresh', _wn)
     closing = cv2.getTrackbarPos('closing', _wn)
+    show_original = cv2.getTrackbarPos('original', _wn)
     H_1_0 = cv2.getTrackbarPos('H_1_0', _wn2)
     S_1_0 = cv2.getTrackbarPos('S_1_0', _wn2)
     V_1_0 = cv2.getTrackbarPos('V_1_0', _wn2)
@@ -242,6 +244,8 @@ while cap.isOpened():
 
     img = ru.img_resize(img, scale, frame_width)
     cv2.imshow('result', img)
+    if show_original:
+        cv2.imshow('result_original', frame)
 
     key = cv2.waitKey(1)
     if key == ord('q'):
