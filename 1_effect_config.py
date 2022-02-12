@@ -154,6 +154,8 @@ _wn = 'effect_config'
 cv2.namedWindow(_wn, 0)
 _wn2 = 'hsv_color_config'
 cv2.namedWindow(_wn2, 0)
+_wn3 = 'Sheet Player'
+cv2.namedWindow(_wn3, 0)
 img_zeros = np.zeros((100, 512, 3), np.uint8)
 
 # 邊界、比例控制
@@ -184,6 +186,13 @@ cv2.createTrackbar('V_2_0', _wn2, hsv['lower_rad'][2], 255, ng)
 cv2.createTrackbar('H_2_1', _wn2, hsv['upper_rad'][0], 179, ng)
 cv2.createTrackbar('S_2_1', _wn2, hsv['upper_rad'][1], 255, ng)
 cv2.createTrackbar('V_2_1', _wn2, hsv['upper_rad'][2], 255, ng)
+cv2.imshow(_wn2, img_zeros)
+
+cv2.createTrackbar('replay_st', _wn3, 0, count, ng)
+cv2.createTrackbar('replay_end', _wn3, count, count, ng)
+cv2.createTrackbar('progress', _wn3, 0, count, ng)
+
+
 cv2.imshow(_wn2, img_zeros)
 
 
@@ -247,11 +256,12 @@ while cap.isOpened():
     if show_original:
         cv2.imshow('result_original', frame)
 
-    key = cv2.waitKey(1)
-    if key == ord('q'):
+    # ===== 處理keyboard輸入 =====
+    input_key = cv2.waitKey(1)
+    if input_key == ord('q'):  # 離開 BJ4
         logger.info('quit.')
         break
-    elif key == ord('s'):
+    elif input_key == ord('s'):
         effect_config = {
             "aims_video_file": aims_video_file,
             "boundary_up": boundary_up,
@@ -276,5 +286,18 @@ while cap.isOpened():
             json.dump(effect_config, outfile)
         logger.info(f'📝✨ creat "{str(effect_config_path)}"✅.')
         logger.info('config saved.')
+    # 處理進度
+    if input_key == ord('w'):
+        print('w tigger')
+        cv2.setTrackbarPos('change', _wn3, 1)
+        change_Time = 1
+
+    if input_key == ord('e'):
+        print('e tigger')
+        if change_Time == 1:
+            aims_frame = cv2.getTrackbarPos('Time_line', _wn3)
+            cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
+            cv2.setTrackbarPos('change', _wn3, 0)
+            change_Time = 0
 
 #
