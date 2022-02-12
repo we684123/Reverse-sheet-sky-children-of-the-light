@@ -7,67 +7,112 @@ import numpy as np
 
 from library import reverse_utilities as ru
 from library import logger_generate
+from library import input_then_exit as ite
 from config import base
 
-# ↓=====先處理設定檔=====↓
-
-# ↓↓ 被拖到這個程式的影片(或設定檔)
-# # NOTE: 需要驗證影片
-if len(sys.argv) == 0:
-    pass
-if len(sys.argv) == 2:
-    aims_video_file = sys.argv[1]
-
-# ↓嘗試在local端找設定檔，如果沒有找到就去Github專案中下載設定檔模板↓
-
-
-config = base.config()
-logger = logger_generate.generate(
-    base.logger_config(),
-    name='reverse_sheet_log'
-)
-
-hsv = config['hsv']
-binarization = config['binarization']
-closing = config['closing']
-effect_config_path = \
-    f"{config['aims_folder_path']}/config/effect_config_parameter.json"
+"""
+☆    　  ∧＿∧
+  　　 (´・ω・｀)
+　　　 /つ¶つ¶
+( ((　／￣￣￣￣＼
+　    |) ○ ○ ○ (|
+　  ／″ 　　ν.　　＼
+  ／＿＿＿＿＿＿＿＿＼
+    ＼＿＼＿_／＿／
+"""
 
 
 def ng(x):  # nothing
     pass
 
 
-def remove_irrelevant(img, left: int, up: int, right: int, down: int):
-    if up >= down:
-        cv2.setTrackbarPos('up', _wn, up - 1)
-        up = down - 1
-    if left >= right:
-        cv2.setTrackbarPos('left', _wn, left - 1)
-        left = right - 1
-    return ru.get_crop_img(img, [left, up], [right, down])
+# ↓=====先處理設定檔=====↓
+# ↓ 嘗試在 local 端找設定檔
+# ↓↓ 先把基本的東西訂好，並且從 base 中取基本的 config、logger
+this_py_path = Path().absolute()
+video_is_ready = False
+config = base.config()
+logger = logger_generate.generate(
+    base.logger_config(),
+    name='reverse_sheet_log'
+)
+# ↓↓ 再從 config 取得預設參數
+hsv = config['hsv']
+binarization = config['binarization']
+closing = config['closing']
 
-
-def img_resize(image, height_new, width_new):
-    height, width = image.shape[0], image.shape[1]
+# ↓↓ 處理被拖到這個程式的影片
+if len(sys.argv) == 3 and sys.argv[1] == '-f':
+    # 如果是在 IDE(Hydrogen)下的話則自動覆蓋 sys.argv
+    # ps'影片如果改了的話，請記得改下面的影片名稱
+    sys.argv = [
+        str(this_py_path / './test.py'),
+        str(this_py_path / '能看見海的街道.mp4')
+    ]
+# sys.argv = [
+#     str(this_py_path / './test.py'),
+#     str(this_py_path / 'requirements.txt')
+# ]
+# print(sys.argv)
+if len(sys.argv) == 0:
+    # 代表是直接點執行檔
+    logger.info((
+        "🔎🈚Did not drag videon to here,"
+        "📗so will use tmp effect_config_parameter"
+    ))
+    pass
+if len(sys.argv) == 2:
+    # 代表是拖影片檔到執行檔，此時需要驗證是否為影片
+    aims_video_file = Path(sys.argv[1])
+    logger.debug(sys.argv)
     try:
-        if width / height >= width_new / height_new:
-            img_new = cv2.resize(
-                image, (width_new, int(height * width_new / width)))
-        else:
-            img_new = cv2.resize(
-                image, (int(width * height_new / height), height_new))
+        cap = cv2.VideoCapture(str(aims_video_file))
+        # 如果是影片那應該可以直接跑 read 而不出錯
+        for i in range(0, 2):
+            ret, frame = cap.read()
+        if not ret:
+            logger.error(f'🎞️❌ "{str(aims_video_file)}" not a Video.')
+            ite.input_then_exix()
+        video_is_ready = True
+        del cap
+        logger.info(f'🎞️✅ "{str(aims_video_file)}" is a video, and can use.')
     except Exception:
-        return image
-    return img_new
+        logger.error(f'🎞️❌ "{str(aims_video_file)}" not a Video.')
+        ite.input_then_exix()
+if len(sys.argv) > 2:
+    logger.error(
+        "🈵 sorry, but you only can drag a video to here, can't too more😅")
+    ite.input_then_exix()
+# ↓↓之後從 effect_config 中找到調好的臨時設定檔，並從裡面取值覆蓋
+effect_config_path = Path(
+    f"{this_py_path}/config/effect_config_parameter.json")
+if effect_config_path.exists():
+    # 如果存在就開始動作
+    logger.info(f'📝✅ "{str(effect_config_path)}" exists.')
 
+    with open(effect_config_path, mode='r', encoding='utf-8') as f:
+        content = f.read()
+    ec = json.loads(content)
 
-video_path = Path(config['video_path'])
-if not video_path.exists():
-    logger.warning('video_path is not exist!')
-    exit()
-cap = cv2.VideoCapture(str(video_path))
+    left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
+    right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
+    hsv = {
+        'lower_yellow': np.array(ec['hsv']['lower_yellow']),
+        'upper_yellow': np.array(ec['hsv']['upper_yellow']),
+        'lower_rad': np.array(ec['hsv']['lower_rad']),
+        'upper_rad': np.array(ec['hsv']['upper_rad']),
+    }
+    binarization_thresh = int(ec['binarization_thresh'])
+    closing = bool(ec['use_closing'])
+    start_minute = int(ec['start_minute'])
+    start_second = int(ec['start_second'])
+    end_minute = int(ec['end_minute'])
+    end_second = int(ec['end_second'])
+else:
+    logger.warning(f'📝🈚 "{str(effect_config_path)}" not exists.')
 
+# ↓=====開始處理影片=====↓
+cap = cv2.VideoCapture(str(aims_video_file))
 frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -167,7 +212,7 @@ while cap.isOpened():
     binarization_thresh = cv2.getTrackbarPos('binarization_thresh', _wn)
     use_closing = cv2.getTrackbarPos('use_closing', _wn)
 
-    frame = remove_irrelevant(
+    frame = ru.remove_irrelevant(
         frame,
         boundary_left, boundary_up,
         boundary_right, boundary_down
@@ -187,7 +232,7 @@ while cap.isOpened():
     if int(use_closing) == 1:
         img = ru.link_line(img)
 
-    img = img_resize(img, scale, frame_width)
+    img = ru.img_resize(img, scale, frame_width)
     cv2.imshow('result', img)
 
     key = cv2.waitKey(1)
@@ -196,6 +241,7 @@ while cap.isOpened():
         break
     elif key == ord('s'):
         effect_config = {
+            "aims_video_file": aims_video_file,
             "boundary_up": boundary_up,
             "boundary_down": boundary_down,
             "boundary_left": boundary_left,
@@ -207,11 +253,16 @@ while cap.isOpened():
                 "upper_rad": upper_rad.tolist()
             },
             "binarization_thresh": binarization_thresh,
-            "use_closing": use_closing
+            "use_closing": use_closing,
+            "start_minute": start_minute,
+            "start_second": start_second,
+            "end_minute": end_minute,
+            "end_second": end_second
         }
         logger.info(f'effect_config = \n{effect_config}')
         with open(effect_config_path, 'w', encoding='utf-8') as outfile:
             json.dump(effect_config, outfile)
+        logger.info(f'📝✨ creat "{str(effect_config_path)}"✅.')
         logger.info('config saved.')
 
 #

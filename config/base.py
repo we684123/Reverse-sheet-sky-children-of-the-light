@@ -15,12 +15,13 @@ def config():
         # # in the image ,keyboard far right and far lower point position
         # "right_lower": [1363, 578],
 
-        # 開始分析時間
-        "start_minute": 0,  # 只接受整數 # only integer
-        "start_second": 1,  # 只接受整數 # only integer
-        # 結束分析時間
-        "end_minute": 1,  # 只接受整數 # only integer
-        "end_second": 39,  # 只接受整數 # only integer
+        # 棄用，等待某天丟掉
+        # # 開始分析時間
+        # "start_minute": 0,  # 只接受整數 # only integer
+        # "start_second": 1,  # 只接受整數 # only integer
+        # # 結束分析時間
+        # "end_minute": 1,  # 只接受整數 # only integer
+        # "end_second": 39,  # 只接受整數 # only integer
 
         # 鍵盤格式。通常是5*3，像是鋼琴，少數是4*2，像是鼓
         # keyboards format, like to piano is 5*3, and drum is 4*2
