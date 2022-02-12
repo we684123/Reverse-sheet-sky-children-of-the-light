@@ -60,7 +60,6 @@ if len(sys.argv) == 0:
         "🔎🈚Did not drag videon to here,"
         "📗so will use tmp effect_config_parameter"
     ))
-    pass
 if len(sys.argv) == 2:
     # 代表是拖影片檔到執行檔，此時需要驗證是否為影片
     aims_video_file = Path(sys.argv[1])
@@ -94,6 +93,10 @@ if effect_config_path.exists():
         content = f.read()
     ec = json.loads(content)
 
+    # 如果是用拖影片進來的，那就依拖的為主，如果是點的就拿 effect_config_path 覆蓋
+    if len(sys.argv) == 0:  # ←這是點的
+        aims_video_file = str(ec['aims_video_file'])
+
     left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
     right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
     hsv = {
@@ -103,7 +106,7 @@ if effect_config_path.exists():
         'upper_rad': np.array(ec['hsv']['upper_rad']),
     }
     binarization_thresh = int(ec['binarization_thresh'])
-    closing = bool(ec['use_closing'])
+    closing = bool(ec['closing'])
     start_minute = int(ec['start_minute'])
     start_second = int(ec['start_second'])
     end_minute = int(ec['end_minute'])
@@ -149,6 +152,8 @@ return_frame = int(lasting_seconds) * fps + specify_count
 # 調整視窗的名稱
 _wn = 'effect_config'
 cv2.namedWindow(_wn, 0)
+_wn2 = 'hsv_color_config'
+cv2.namedWindow(_wn2, 0)
 img_zeros = np.zeros((300, 512, 3), np.uint8)
 
 # 邊界、比例控制
@@ -160,24 +165,26 @@ cv2.createTrackbar('right', _wn, frame_width, frame_width, ng)
 # cv2.setTrackbarMin('right', _wn, 1)
 # cv2.setTrackbarMax('right', _wn, frame_width)
 cv2.createTrackbar('scale', _wn, 250, frame_width, ng)
-cv2.setTrackbarMin('scale', _wn, 1)
+# cv2.setTrackbarMin('scale', _wn, 1)
+cv2.createTrackbar('binarization_thresh', _wn, binarization['thresh'], 255, ng)
+cv2.createTrackbar('closing', _wn, closing['use'], 1, ng)
+cv2.imshow(_wn, img_zeros)
 
 # RGB 顏色調整軸0~255
-cv2.createTrackbar('H_1_0', _wn, hsv['lower_yellow'][0], 179, ng)
-cv2.createTrackbar('S_1_0', _wn, hsv['lower_yellow'][1], 255, ng)
-cv2.createTrackbar('V_1_0', _wn, hsv['lower_yellow'][2], 255, ng)
-cv2.createTrackbar('H_1_1', _wn, hsv['upper_yellow'][0], 179, ng)
-cv2.createTrackbar('S_1_1', _wn, hsv['upper_yellow'][1], 255, ng)
-cv2.createTrackbar('V_1_1', _wn, hsv['upper_yellow'][2], 255, ng)
-cv2.createTrackbar('H_2_0', _wn, hsv['lower_rad'][0], 179, ng)
-cv2.createTrackbar('S_2_0', _wn, hsv['lower_rad'][1], 255, ng)
-cv2.createTrackbar('V_2_0', _wn, hsv['lower_rad'][2], 255, ng)
-cv2.createTrackbar('H_2_1', _wn, hsv['upper_rad'][0], 179, ng)
-cv2.createTrackbar('S_2_1', _wn, hsv['upper_rad'][1], 255, ng)
-cv2.createTrackbar('V_2_1', _wn, hsv['upper_rad'][2], 255, ng)
-cv2.createTrackbar('binarization_thresh', _wn, binarization['thresh'], 255, ng)
-cv2.createTrackbar('use_closing', _wn, closing['use'], 1, ng)
-cv2.imshow(_wn, img_zeros)
+cv2.createTrackbar('H_1_0', _wn2, hsv['lower_yellow'][0], 179, ng)
+cv2.createTrackbar('S_1_0', _wn2, hsv['lower_yellow'][1], 255, ng)
+cv2.createTrackbar('V_1_0', _wn2, hsv['lower_yellow'][2], 255, ng)
+cv2.createTrackbar('H_1_1', _wn2, hsv['upper_yellow'][0], 179, ng)
+cv2.createTrackbar('S_1_1', _wn2, hsv['upper_yellow'][1], 255, ng)
+cv2.createTrackbar('V_1_1', _wn2, hsv['upper_yellow'][2], 255, ng)
+cv2.createTrackbar('H_2_0', _wn2, hsv['lower_rad'][0], 179, ng)
+cv2.createTrackbar('S_2_0', _wn2, hsv['lower_rad'][1], 255, ng)
+cv2.createTrackbar('V_2_0', _wn2, hsv['lower_rad'][2], 255, ng)
+cv2.createTrackbar('H_2_1', _wn2, hsv['upper_rad'][0], 179, ng)
+cv2.createTrackbar('S_2_1', _wn2, hsv['upper_rad'][1], 255, ng)
+cv2.createTrackbar('V_2_1', _wn2, hsv['upper_rad'][2], 255, ng)
+cv2.imshow(_wn2, img_zeros)
+
 
 frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 while cap.isOpened():
@@ -197,25 +204,26 @@ while cap.isOpened():
     boundary_left = cv2.getTrackbarPos('left', _wn)
     boundary_right = cv2.getTrackbarPos('right', _wn)
     scale = cv2.getTrackbarPos('scale', _wn)
-    H_1_0 = cv2.getTrackbarPos('H_1_0', _wn)
-    S_1_0 = cv2.getTrackbarPos('S_1_0', _wn)
-    V_1_0 = cv2.getTrackbarPos('V_1_0', _wn)
-    H_1_1 = cv2.getTrackbarPos('H_1_1', _wn)
-    S_1_1 = cv2.getTrackbarPos('S_1_1', _wn)
-    V_1_1 = cv2.getTrackbarPos('V_1_1', _wn)
-    H_2_0 = cv2.getTrackbarPos('H_2_0', _wn)
-    S_2_0 = cv2.getTrackbarPos('S_2_0', _wn)
-    V_2_0 = cv2.getTrackbarPos('V_2_0', _wn)
-    H_2_1 = cv2.getTrackbarPos('H_2_1', _wn)
-    S_2_1 = cv2.getTrackbarPos('S_2_1', _wn)
-    V_2_1 = cv2.getTrackbarPos('V_2_1', _wn)
     binarization_thresh = cv2.getTrackbarPos('binarization_thresh', _wn)
-    use_closing = cv2.getTrackbarPos('use_closing', _wn)
+    closing = cv2.getTrackbarPos('closing', _wn)
+    H_1_0 = cv2.getTrackbarPos('H_1_0', _wn2)
+    S_1_0 = cv2.getTrackbarPos('S_1_0', _wn2)
+    V_1_0 = cv2.getTrackbarPos('V_1_0', _wn2)
+    H_1_1 = cv2.getTrackbarPos('H_1_1', _wn2)
+    S_1_1 = cv2.getTrackbarPos('S_1_1', _wn2)
+    V_1_1 = cv2.getTrackbarPos('V_1_1', _wn2)
+    H_2_0 = cv2.getTrackbarPos('H_2_0', _wn2)
+    S_2_0 = cv2.getTrackbarPos('S_2_0', _wn2)
+    V_2_0 = cv2.getTrackbarPos('V_2_0', _wn2)
+    H_2_1 = cv2.getTrackbarPos('H_2_1', _wn2)
+    S_2_1 = cv2.getTrackbarPos('S_2_1', _wn2)
+    V_2_1 = cv2.getTrackbarPos('V_2_1', _wn2)
 
     frame = ru.remove_irrelevant(
         frame,
         boundary_left, boundary_up,
-        boundary_right, boundary_down
+        boundary_right, boundary_down,
+        _wn
     )
 
     lower_yellow = np.array([H_1_0, S_1_0, V_1_0])
@@ -229,7 +237,7 @@ while cap.isOpened():
 
     img = ru.get_binary_img(res, binarization_thresh)
 
-    if int(use_closing) == 1:
+    if int(closing) == 1:
         img = ru.link_line(img)
 
     img = ru.img_resize(img, scale, frame_width)
@@ -253,7 +261,7 @@ while cap.isOpened():
                 "upper_rad": upper_rad.tolist()
             },
             "binarization_thresh": binarization_thresh,
-            "use_closing": use_closing,
+            "closing": closing,
             "start_minute": start_minute,
             "start_second": start_second,
             "end_minute": end_minute,
