@@ -1,6 +1,6 @@
 import os
 
 
-def input_then_exix(txt='input any word to exit.') -> None:
+def input_then_exix(txt='input enter to exit.') -> None:
     input(txt)
-    os.exit(0)
+    os._exit(0)
