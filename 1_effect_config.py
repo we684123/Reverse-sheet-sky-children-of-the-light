@@ -54,7 +54,8 @@ if len(sys.argv) == 3 and sys.argv[1] == '-f':
 #     str(this_py_path / 'requirements.txt')
 # ]
 # print(sys.argv)
-if len(sys.argv) == 0:
+logger.debug(f"sys.argv = {len(sys.argv)}")
+if len(sys.argv) == 1:
     # 代表是直接點執行檔
     logger.info((
         "🔎🈚Did not drag videon to here,"
