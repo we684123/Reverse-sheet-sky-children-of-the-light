@@ -7,13 +7,13 @@ import numpy as np
 from library import logger_generate
 from config import base
 
-reverse_config = base.reverse_config()
+reverse_config = base.config()
 rc = reverse_config
 logger = logger_generate.generate(base.logger_config())
 # ====基礎準備完畢====
 
 
-aims_folder_path = Path(rc['aims_folder_path'])
+aims_folder_path = Path().absolute()
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / './analysis_from_video.json'
@@ -58,7 +58,7 @@ for i in frame_keyboards:
 # ===== 以上像素點分析 =====
 
 # =====讀譜用以畫線=====
-aims_folder_path = Path(rc['aims_folder_path'])
+aims_folder_path = Path().absolute()
 output_sheet_path = (aims_folder_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / './native_sheet.json'
