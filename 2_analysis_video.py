@@ -8,7 +8,7 @@ import numpy as np
 from library import reverse_utilities as ru
 from library import logger_generate
 from config import base
-reverse_config = base.reverse_config()
+reverse_config = base.config()
 rc = reverse_config
 logger = logger_generate.generate(
     base.logger_config(),
@@ -17,13 +17,14 @@ logger = logger_generate.generate(
 
 
 # 基礎資訊獲取
-aims_folder_path = Path(rc['aims_folder_path'])
-video_path = aims_folder_path / Path(rc['video_path']).resolve()
-effect_config_path = \
-    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
-with open(effect_config_path, mode='r', encoding='utf-8') as f:
+this_py_path = Path().absolute()
+
+effect_config_path = this_py_path / './config/effect_config_parameter.json'
+with open(str(effect_config_path), mode='r', encoding='utf-8') as f:
     content = f.read()
 ec = json.loads(content)
+
+video_path = Path(ec['aims_video_file'])
 
 left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
 right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
@@ -34,7 +35,7 @@ hsv = {
     'upper_rad': np.array(ec['hsv']['upper_rad']),
 }
 binarization_thresh = int(ec['binarization_thresh'])
-closing = bool(ec['use_closing'])
+closing = bool(ec['closing'])
 
 if not video_path.exists():
     logger.warning('video_path is not exist!')
@@ -48,13 +49,10 @@ seconds = int(duration % 60)
 logger.info('base data got it!')
 
 # 先到達指定偵數
-st_specify_count = fps * \
-    (60 * int(rc['start_minute']) + int(rc['start_second']))
-
-cap.set(cv2.CAP_PROP_POS_FRAMES, st_specify_count)
+cap.set(cv2.CAP_PROP_POS_FRAMES, ec['frame_start'])
 ret, frame = cap.read()
 
-ed_specify_count = fps * (60 * int(rc['end_minute']) + int(rc['end_second']))
+ed_specify_count = ec['frame_end']
 
 # 再處理剩下的
 # 生成 frame_keyboards
@@ -98,7 +96,7 @@ logger.info('now to save data...')
 
 
 # 生成完後要儲存資料
-output_sheet_path = (aims_folder_path /
+output_sheet_path = (this_py_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / './analysis_from_video.json'
 with open(str(_temp), mode='w', encoding='utf-8') as f:
@@ -109,8 +107,8 @@ with open(str(_temp), mode='w', encoding='utf-8') as f:
         "duration": duration,
         "minute": minute,
         "seconds": seconds,
-        "st_specify_count": st_specify_count,
-        "ed_specify_count": ed_specify_count,
+        "st_specify_count": ec['frame_start'],
+        "ed_specify_count": ec['frame_end'],
     }
     f.write(json.dumps(data))
 logger.info('save data done.')
