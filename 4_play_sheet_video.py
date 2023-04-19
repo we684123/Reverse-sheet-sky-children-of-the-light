@@ -9,16 +9,21 @@ from library import reverse_utilities as ru
 from library import logger_generate
 from config import base
 
-reverse_config = base.reverse_config()
+reverse_config = base.config()
 rc = reverse_config
 logger = logger_generate.generate(base.logger_config())
 
 
 # 讀取譜面
-logger.info('Loading  sheet...')
-aims_folder_path = Path(rc['aims_folder_path'])
-output_sheet_path = (aims_folder_path /
-                     Path(rc['output_sheet_path'])).resolve()
+logger.info('Loading sheet...')
+this_py_path = Path().absolute()
+
+effect_config_path = this_py_path / './config/effect_config_parameter.json'
+with open(str(effect_config_path), mode='r', encoding='utf-8') as f:
+    content = f.read()
+ec = json.loads(content)
+
+output_sheet_path = this_py_path / rc['output_sheet_path']
 _temp = output_sheet_path / './native_sheet.json'
 
 _temp2 = output_sheet_path / './enhance_sheet.json'
@@ -45,7 +50,7 @@ fps = data['fps']
 sounds = ru.get_sounds()
 
 # 影片基礎
-video_path = Path(rc['video_path'])
+video_path = Path(ec['aims_video_file'])
 cap = cv2.VideoCapture(str(video_path))
 frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
@@ -56,8 +61,7 @@ area_time = 0
 now_time = time.time()
 
 # 處理聲音延遲問題
-st_specify_count = fps * \
-    (60 * int(rc['start_minute']) + int(rc['start_second']))
+st_specify_count = ec['frame_start']
 
 # 處理附加動畫時間
 max_effect_time = 0.4
@@ -69,7 +73,7 @@ note_effect_frame = note_effect_time * fps
 
 
 effect_config_path = \
-    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
+    f"{str(this_py_path / './config/effect_config_parameter.json')}"
 with open(effect_config_path, mode='r', encoding='utf-8') as f:
     content = f.read()
 ec = json.loads(content)
@@ -190,7 +194,7 @@ hsv = {
     'upper_rad': np.array(ec['hsv']['upper_rad']),
 }
 binarization_thresh = int(ec['binarization_thresh'])
-closing = bool(ec['use_closing'])
+closing = bool(ec['closing'])
 
 # 獲取畫面鍵盤分割座標
 ret, frame = cap.read()  # 這裡偷偷拿一
@@ -452,7 +456,7 @@ for i in range(0, osl):
     sheet += note + blank_symbol
 # ======================================================================
 logger.info('generating output_sheet.')
-output_sheet_path = (aims_folder_path /
+output_sheet_path = (this_py_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / rc['output_file_name']
 with open(_temp, mode='w', encoding='utf-8') as f:

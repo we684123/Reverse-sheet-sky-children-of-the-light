@@ -6,15 +6,15 @@ import numpy as np
 from library import logger_generate
 from config import base
 
-reverse_config = base.reverse_config()
+reverse_config = base.config()
 rc = reverse_config
 logger = logger_generate.generate(base.logger_config())
 # ===== 環境OK =====
 
 logger.info("Loading analysis_from_video.json ...")
-aims_folder_path = Path(rc['aims_folder_path'])
-output_sheet_path = (aims_folder_path /
-                     Path(rc['output_sheet_path'])).resolve()
+
+this_py_path = Path().absolute()
+output_sheet_path = this_py_path / rc['output_sheet_path']
 _temp = output_sheet_path / './analysis_from_video.json'
 
 with open(_temp, mode='r', encoding='utf-8') as f:
@@ -211,7 +211,7 @@ logger.info('generated native sheet done.')
 
 # 先存 output_sheet
 logger.info('generating output_sheet.')
-output_sheet_path = (aims_folder_path /
+output_sheet_path = (this_py_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / "penultimate_sheet.txt"
 with open(_temp, mode='w', encoding='utf-8') as f:
@@ -220,7 +220,7 @@ logger.info('generated output_sheet done.')
 
 # 再存 original_sheet
 logger.info('generating native_sheet.')
-output_sheet_path = (aims_folder_path /
+output_sheet_path = (this_py_path /
                      Path(rc['output_sheet_path'])).resolve()
 _temp = output_sheet_path / 'native_sheet.json'
 _afv = analysis_from_video
