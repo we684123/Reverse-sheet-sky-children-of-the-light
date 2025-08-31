@@ -1,0 +1,234 @@
+[project]
+name = "reverse-sheet-sky-children-of-the-light-main"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+
+dependencies = [
+  # Core
+  "coloredlogs>=15.0.1",
+  "numpy>=2.2.6",
+  "opencv-python>=4.12.0.88",
+  "pygame>=2.6.1",
+
+  # CLI
+  "typer>=0.24.1",
+
+  # Shared Utilities
+  "pydantic>=2.12.5",
+  "pydantic-settings>=2.13.1",
+  "python-dateutil>=2.9.0.post0",
+  "python-dotenv>=1.2.2",
+  "rich>=14.3.3",
+]
+
+[dependency-groups]
+dev = []
+dev_pin = []
+
+order_pin = [
+  "prek==0.3.10",
+  "ruff==0.15.11",
+  "mypy==1.20.2",
+  "ty==0.0.32",
+  "basedpyright==1.39.3",
+]
+
+types = [
+  "types-python-dateutil>=2.9.0.20260323",
+  "types-toml>=0.10.8.20240310",
+]
+
+test = [
+  "httpx>=0.28.1",
+  "pytest>=9.0.2",
+  "pytest-asyncio>=1.3.0",
+  "pytest-cov>=7.1.0",
+  "pytest-mock>=3.15.1",
+  "pytest-ordering>=0.6",
+  "pytest-modern>=0.7.4",
+]
+
+otel = [
+  "opentelemetry-api>=1.40.0",
+  "opentelemetry-exporter-otlp>=1.40.0",
+  "opentelemetry-instrumentation-fastapi>=0.61b0",
+  "opentelemetry-instrumentation-logging>=0.61b0",
+  "opentelemetry-instrumentation-sqlalchemy>=0.61b0",
+  "opentelemetry-sdk>=1.40.0",
+]
+otel_pin = [
+  "pyroscope-io==1.0.4; sys_platform == 'linux'",
+  "pyroscope-otel==1.0.0; sys_platform == 'linux'",
+]
+
+[tool.ruff]
+# https://docs.astral.sh/ruff/settings/#top-level
+exclude = ["**/.venv/", ".git_hooks/*"]
+line-length = 120
+required-version = ">=0.15.11"
+
+[tool.ruff.format]
+# https://docs.astral.sh/ruff/settings/#format
+quote-style = "double"
+
+[tool.ruff.lint]
+# https://docs.astral.sh/ruff/rules/
+ignore = [
+  "TRY003", # 避免錯誤訊息文字過長
+  "TRY301", # 避免 raise Exception 時無法重用錯誤訊息
+  "TRY300", # 避免使用 try/except 還要用 else (增加縮排反而醜)
+  "RUF001", # 不檢查字串中是否存在歧義的 Unicode 字元 (中文標點符號會被誤會)
+  "RUF002", # 不檢查說明中是否存在歧義的 Unicode 字元 (中文標點符號會被誤會)
+  "RUF003", # 不檢查註解中是否存在歧義的 Unicode 字元 (中文標點符號會被誤會)
+  "RET504", # 為了可讀性，允許 return 前的變數賦值
+]
+select = [
+  "N", # pep8-naming
+  "E", # pycodestyle errors
+  "W", # pycodestyle warnings
+  "UP", # pyupgrade
+  "F", # pyflakes
+  "I", # isort
+  "PL", # Pylint
+  "TRY", # tryceratops
+  "ISC", # 隱式字串連接 (implicit str concat)
+  "ICN", # import 約定規則 (import conventions)
+  "LOG", # logging 規則
+  # "G",    # logging-format 規則
+  # "INP",  # no PEP 420 import 規則
+  "PIE", # flake8-pie 規則
+  "T20", # print 規則
+  "PYI", # pyi 檔案規則
+  "PT", # pytest-style 規則
+  "Q", # 引號風格規則
+  "RSE", # raise 規則
+  "RET", # return 規則
+  "SLF", # self 規則
+  "SIM", # simplify / 重構建議
+  "SLOT", # slots 規則
+  "TID", # tidy imports 規則
+  "TD", # todos / TODOs 規則
+  "TC", # type-checking import 規則
+  "ARG", # unused arguments 規則
+  "PTH", # use pathlib 規則
+  "FLY", # flynt 規則
+  "C90", # mccabe 複雜度檢查
+  # "DOC",  # pydoclint 規則
+  # "D",    # pydocstyle 規則 (docstring / documentation)
+  "PGH", # pygrep-hooks 規則
+  "FURB", # refurb 規則 (語法清理)
+  "RUF", # Ruff 特有規則
+]
+
+# [tool.ruff.lint.per-file-ignores]
+# "app/tests/conftest.py" = ["UP043"]
+
+
+# [tool.ruff.lint.flake8-type-checking]
+# runtime-evaluated-base-classes = [
+# ]
+# runtime-evaluated-decorators = []
+
+[tool.mypy]
+strict = true # 啟動嚴格模式
+
+allow_untyped_calls = true # 允許未註解型態的函數呼叫
+check_untyped_defs = true # 檢查未註解型態的函數
+disallow_incomplete_defs = true # 當函數或方法的型態註解不完整時產生錯誤
+disallow_untyped_defs = true # 當定義函數或方法沒有型態註解時產生錯誤
+ignore_missing_imports = true # 當無法找到模組的型態註解時不產生錯誤
+warn_redundant_casts = true # 當類型轉換是多餘時產生警告
+warn_return_any = true # 當函數或方法的回傳型態註解為 Any 時產生警告
+warn_unreachable = true # 當程式碼不可達時產生警告
+warn_unused_configs = true # 當設定選項未被使用時產生警告
+warn_unused_ignores = true # 當忽略的錯誤實際上不存在時產生警告
+
+# 忽略指定資料夹
+exclude = '''(?x)(
+    ^app/models/    # 忽略 app/models 資料夹
+    | ^migrations/  # 忽略 migrations 資料夹
+    | ^\.venv/      # 忽略 .venv 資料夹
+    | ^\.mypy_cache/ # 忽略 .mypy_cache 資料夹
+    | ^\.tox/       # 忽略 .tox 資料夹
+    | ^\.coverage/  # 忽略 .coverage 資料夹
+    | ^\.pytest_cache/ # 忽略 .pytest_cache 資料夹
+    | ^build/       # 忽略 build 資料夹
+)'''
+
+[tool.ty.environment]
+python = ".venv"
+python-version = "3.13"
+
+[tool.ty.src]
+include = [
+  "app",
+  "command",
+  "common",
+  "main.py",
+]
+exclude = [
+  "app/tests",
+  "app/models",
+  "migrations",
+]
+
+[tool.basedpyright]
+pythonPlatform = "All"
+pythonVersion = "3.13"
+typeCheckingMode = "standard"
+venv = ".venv"
+venvPath = "."
+
+include = [
+  "app",
+  "migrations",
+  "command",
+  "common",
+  "main.py",
+]
+
+reportDeprecated = "warning"
+
+[tool.pytest.ini_options]
+addopts = [
+  "-s",
+  "-vv",
+  "--cov",
+  "--cov-report=term", # 顯示在終端機
+  "--cov-report=html", # 產生 html 檔案
+]
+filterwarnings = [
+  "ignore:Support for class-based `config` is deprecated:DeprecationWarning:pydantic._internal._config",
+]
+testpaths = [
+  "app/tests",
+]
+
+[tool.coverage.run]
+omit = [
+  "*/__init__.py",
+  "*/migrations/*",
+  "*/tests/*",
+  "*/.vscode/*",
+  "*/.git/*",
+  "*/.idea/*",
+  "*/.pytest_cache/*",
+  "*/.venv/*",
+  "*/.mypy_cache/*",
+  "*/.tox/*",
+  "*/.coverage/*",
+  "*/.pytest_cache/*",
+  "app/models/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "def __str__",
+  "raise NotImplementedError",
+  "if 0:",
+  "if __name__ == .__main__:",
+]

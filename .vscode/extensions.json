@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "matangover.mypy",
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "wayou.vscode-todo-highlight",
+        "gruntfuggly.todo-tree",
+        "be5invis.toml",
+        "gitlab.gitlab-workflow",
+        "streetsidesoftware.code-spell-checker",
+        "pkief.material-icon-theme",
+        "astral-sh.ty",
+        "detachhead.basedpyright"
+    ]
+}

@@ -10,20 +10,48 @@ This program can reverse the sheet from the sky video
 
 ---
 
+## Getting Started
+
+**⚠️python version require >= 3.5⚠️**
+
+1. **[安裝 uv](https://docs.astral.sh/uv/getting-started/installation/) (如果尚未安裝)**
+
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
+2. **安裝專案相依性**
+
+   ```bash
+   uv sync --all-groups
+   ```
+
+   這會一併安裝 `ty`、`mypy`、`basedpyright` 等開發工具。
+
+3. **安裝並更新 git hook**
+
+   ```bash
+   uv tool install prek
+   ```
+
+   (如果前面已經先裝了)
+
+   ```bash
+   uv run prek autoupdate
+   ```
+
+   (如果前面沒裝)
+
+   ```bash
+   uv run prek install --hook-type pre-commit; prek install --hook-type prepare-commit-msg; prek install --hook-type pre-push;
+   ```
+
 ## 教學影片 teach video(這是舊的，還沒有時間錄新的)
 
 ⚠️⚠️⚠️ 拜託! 我決定之後重錄了 自己看就好 我不想讓黑歷史讓太多人知道 qwq⚠️⚠️⚠️  
 ⚠️⚠️⚠️plz don't share to other people, i know this video is very bad Orz , i will make a new⚠️⚠️⚠️  
 [https://youtu.be/8r4bcis4C_s](https://youtu.be/8r4bcis4C_s)  
 [![待補的URL](http://img.youtube.com/vi/8r4bcis4C_s/0.jpg)](https://youtu.be/8r4bcis4C_s)
-
-## 程式執行環境安裝 environment install
-
-**⚠️python version require >= 3.5⚠️**
-
-```allowEmpty
-pip install -r requirements.txt
-```
 
 ## 如何使用 How to use
 

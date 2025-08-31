@@ -1,0 +1,53 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: (?i)\.csv$
+      - id: check-ast
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.11
+    hooks:
+      - id: ruff
+        args:
+          - --fix
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.20.2
+    hooks:
+      - id: mypy
+        entry: uv run mypy
+        language: system
+        stages:
+          - pre-push
+        args: [ --config-file=./pyproject.toml ]
+
+  - repo: https://github.com/DetachHead/basedpyright-prek-mirror
+    rev: 1.39.3
+    hooks:
+      - id: basedpyright
+
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty
+        entry: uv run ty check
+        language: system
+        pass_filenames: false
+        stages: [ pre-push ]
+      - id: gitmoji-merge-commit-msg
+        name: Gitmoji Merge Commit Message Modifier
+        description: This hook automatically prepends the 🔀 emoji to merge commit
+          messages to comply with gitmoji standards.
+        entry: python .git_hooks/add_merge_prefix.py
+        language: python
+        stages: [ prepare-commit-msg ]

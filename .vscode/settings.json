@@ -1,0 +1,40 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[toml]": {
+        "editor.formatOnSave": false
+    },
+    "ruff.configuration": "${workspaceFolder}/pyproject.toml",
+    "mypy.dmypyExecutable": "${workspaceFolder}/.venv/Scripts/dmypy.exe",
+    "mypy.configFile": "./pyproject.toml",
+    "ty.importStrategy": "fromEnvironment",
+    "ty.interpreter": [
+        "${workspaceFolder}/.venv/Scripts/python.exe"
+    ],
+    "python.analysis.typeCheckingMode": "off",
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "cSpell.words": [
+        "asyncio",
+        "basedpyright",
+        "gitmoji",
+        "healthcheck",
+        "mypy",
+        "noqa",
+        "NOSONAR",
+        "prek",
+        "ffpyplayer",
+        "imshow",
+        "Trackbar"
+    ]
+}
