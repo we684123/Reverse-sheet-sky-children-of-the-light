@@ -1,11 +1,12 @@
 import json
 import uuid
+from collections import Counter
 
 # Input file
 input_file = "native_sheet.json"
 
 # Output file
-output_file = "converted_song.txt"
+output_file = "converted_song.json"
 
 # Read the original JSON from file
 with open(input_file, 'r') as f:
@@ -17,9 +18,31 @@ data = json.loads(original_json)
 # Extract the original_sheet
 original_sheet = data["original_sheet"]
 
-# Calculate BPM based on original file: 60 * fps / frame_diff_per_beat
-# From the data, initial frame diff between indices is 11 frames
-frame_diff_per_beat = 11
+# Calculate frame_diff_per_beat dynamically
+index_frames = {}
+for note in original_sheet:
+    if "index" in note:
+        idx = note["index"]
+        frame = note["frame"]
+        if idx not in index_frames or frame < index_frames[idx]:
+            index_frames[idx] = frame
+
+# Sort indices
+sorted_indices = sorted(index_frames.keys())
+
+# Compute diffs
+diffs = []
+for i in range(1, len(sorted_indices)):
+    diff = index_frames[sorted_indices[i]] - index_frames[sorted_indices[i-1]]
+    diffs.append(diff)
+
+# Find the most common diff (mode)
+if diffs:
+    frame_diff_per_beat = Counter(diffs).most_common(1)[0][0]
+else:
+    frame_diff_per_beat = 11  # Fallback
+
+# Calculate BPM
 fps = data["fps"]
 bpm = round(60 * fps / frame_diff_per_beat)
 
@@ -98,4 +121,4 @@ target_object = {
 with open(output_file, 'w') as f:
     json.dump([target_object], f, indent=4)
 
-print(f"Conversion complete. Output saved to {output_file}. Calculated BPM: {bpm}")
+print(f"Conversion complete. Output saved to {output_file}. Calculated BPM: {bpm}, Frame diff per beat: {frame_diff_per_beat}")
