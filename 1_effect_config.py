@@ -81,11 +81,55 @@ specify_minute = input('plz input specify "minute" = ')
 specify_seconds = input('plz input specify "seconds" = ')
 lasting_seconds = input('plz input Lasting "seconds" = ')
 
+# Calculate end time from start time + lasting duration
+specify_minute_int = int(specify_minute)
+specify_seconds_int = int(specify_seconds)
+lasting_seconds_int = int(lasting_seconds)
 
-specify_count = int(specify_minute) * 60 * fps + int(specify_seconds) * fps
+# Total seconds from start
+total_end_seconds = specify_minute_int * 60 + specify_seconds_int + lasting_seconds_int
+end_minute = total_end_seconds // 60
+end_second = total_end_seconds % 60
+
+specify_count = specify_minute_int * 60 * fps + specify_seconds_int * fps
 cap.set(cv2.CAP_PROP_POS_FRAMES, specify_count)
 
-return_frame = int(lasting_seconds) * fps + specify_count
+return_frame = lasting_seconds_int * fps + specify_count
+
+# Auto-update base.py with the correct start/end times
+try:
+    base_path = Path(rc['aims_folder_path']) / 'config' / 'base.py'
+    with open(base_path, 'r', encoding='utf-8') as f:
+        base_content = f.read()
+    # Replace start_minute, start_second, end_minute, end_second
+    import re
+    base_content = re.sub(
+        r'"start_minute":\s*\d+',
+        f'"start_minute": {specify_minute_int}',
+        base_content
+    )
+    base_content = re.sub(
+        r'"start_second":\s*\d+',
+        f'"start_second": {specify_seconds_int}',
+        base_content
+    )
+    base_content = re.sub(
+        r'"end_minute":\s*\d+',
+        f'"end_minute": {end_minute}',
+        base_content
+    )
+    base_content = re.sub(
+        r'"end_second":\s*\d+',
+        f'"end_second": {end_second}',
+        base_content
+    )
+    with open(base_path, 'w', encoding='utf-8') as f:
+        f.write(base_content)
+    logger.info(f'✓ base.py updated:')
+    logger.info(f'  start_minute={specify_minute_int}, start_second={specify_seconds_int}')
+    logger.info(f'  end_minute={end_minute}, end_second={end_second}')
+except Exception as e:
+    logger.error(f'Failed to update base.py: {e}')
 
 
 # 調整視窗的名稱
