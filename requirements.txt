@@ -2,3 +2,4 @@ opencv-python==4.8.1.78
 numpy==1.22.0
 pygame==2.0.1
 coloredlogs==14.0
+pyautogui==0.9.53
