@@ -18,3 +18,5 @@ note_songs/change_ext.py
 dev/
 
 testfile/
+
+.coverage
