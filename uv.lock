@@ -257,6 +257,20 @@ wheels = [
 ]
 
 [[package]]
+name = "ffpyplayer"
+version = "4.5.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/04/bbb7a314c526d1aa055057c243de36ebce8d2828dabe1f2b96a9e3c53157/ffpyplayer-4.5.3.tar.gz", hash = "sha256:8b9623e04997ba7bbf5476313aa8d9eae2665c65f403b5deff4ac51f16155e7e", size = 89089, upload-time = "2025-06-11T02:14:10.525Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1f/70/1f3d79162dffd0832d092756fb5bf36f6e91ea11a8c5f9c58d4ab0b11daf/ffpyplayer-4.5.3-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:441888f42b76dbd7c3005f44d7145f713a1d8ce23351bbc480b9fa05e4662afb", size = 38304193, upload-time = "2025-06-11T03:09:14.358Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/ad/42ef5792179d57b8a70e0129bdb41a741ed0865bf0ddb134c34dfe89b630/ffpyplayer-4.5.3-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:549151bb125c9f2a6d7ebddf62290459a1624cf1a9562e78ff07ead537fdbbae", size = 20321309, upload-time = "2025-06-11T03:09:18.496Z" },
+    { url = "https://files.pythonhosted.org/packages/39/58/aa5a1e54e371d70f05c84d4f25a7fd19efd791a9b71d18fafee48756a67d/ffpyplayer-4.5.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:50917a4b25fd648ed76991d1703cd5940bcce9b3b0e824108483b2f4fce244f9", size = 18066417, upload-time = "2025-06-11T03:09:20.804Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/62/8bd52cce95d8844208003c8141cf945861249fef6349e2576dc00378013f/ffpyplayer-4.5.3-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3e012cc1c943570009fad024a675bdf43b31e8e1d0c0709715e611bdf5ab3959", size = 28053629, upload-time = "2025-06-11T02:46:48.52Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/ab/2fc7817e12e0498a17b3fd86710ff32252df73e32cce8cbb5c4780063875/ffpyplayer-4.5.3-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:586b04cd59b1bc3a759d9772de281172480e166778693474249ae1e1254a427f", size = 29933608, upload-time = "2025-06-11T02:49:07.319Z" },
+    { url = "https://files.pythonhosted.org/packages/98/c3/6ee450f9a27be85be648f46b38997b3942f513e14c0959cd203ab11bacf0/ffpyplayer-4.5.3-cp313-cp313-win_amd64.whl", hash = "sha256:2dc1dc9dc6fddc7812c8451e14544aa01ecdaaee8c2ca705187925c3ff75d12d", size = 61009190, upload-time = "2025-06-11T02:14:07.227Z" },
+]
+
+[[package]]
 name = "googleapis-common-protos"
 version = "1.74.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1093,6 +1107,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "coloredlogs" },
+    { name = "ffpyplayer" },
     { name = "numpy" },
     { name = "opencv-python" },
     { name = "pydantic" },
@@ -1141,6 +1156,7 @@ types = [
 [package.metadata]
 requires-dist = [
     { name = "coloredlogs", specifier = ">=15.0.1" },
+    { name = "ffpyplayer", specifier = ">=4.5.3" },
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "opencv-python", specifier = ">=4.12.0.88" },
     { name = "pydantic", specifier = ">=2.12.5" },
