@@ -1,35 +1,35 @@
-from pathlib import Path
-import time
 import json
+import time
+from pathlib import Path
 
 import cv2
 import numpy as np
 
-from library import reverse_utilities as ru
 from config import base
-reverse_config = base.reverse_config()
+from library import reverse_utilities as ru
+
+reverse_config = base.config()
 rc = reverse_config
 
-aims_folder_path = Path(rc['aims_folder_path'])
-effect_config_path = \
-    f"{str(aims_folder_path / './config/effect_config_parameter.json')}"
-with open(effect_config_path, mode='r', encoding='utf-8') as f:
+aims_folder_path = Path(rc["aims_folder_path"])
+effect_config_path = f"{aims_folder_path / './config/effect_config_parameter.json'!s}"
+with open(effect_config_path, encoding="utf-8") as f:
     content = f.read()
 ec = json.loads(content)
 
-left_upper = [int(ec['boundary_left']), int(ec['boundary_up'])]
-right_lower = [int(ec['boundary_right']), int(ec['boundary_down'])]
+left_upper = [int(ec["boundary_left"]), int(ec["boundary_up"])]
+right_lower = [int(ec["boundary_right"]), int(ec["boundary_down"])]
 hsv = {
-    'lower_yellow': np.array(ec['hsv']['lower_yellow']),
-    'upper_yellow': np.array(ec['hsv']['upper_yellow']),
-    'lower_rad': np.array(ec['hsv']['lower_rad']),
-    'upper_rad': np.array(ec['hsv']['upper_rad']),
+    "lower_yellow": np.array(ec["hsv"]["lower_yellow"]),
+    "upper_yellow": np.array(ec["hsv"]["upper_yellow"]),
+    "lower_rad": np.array(ec["hsv"]["lower_rad"]),
+    "upper_rad": np.array(ec["hsv"]["upper_rad"]),
 }
-binarization_thresh = int(ec['binarization_thresh'])
-closing = bool(ec['use_closing'])
+binarization_thresh = int(ec["binarization_thresh"])
+closing = bool(ec["use_closing"])
 
-if __name__ == '__main__':
-    video_path = Path(rc['video_path'])
+if __name__ == "__main__":
+    video_path = Path(rc["video_path"])
     cap = cv2.VideoCapture(str(video_path))
     frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
@@ -42,7 +42,6 @@ if __name__ == '__main__':
 
     # 再處理剩下的
     while cap.isOpened():
-
         ret, frame = cap.read()
 
         # 正確讀取影像時 ret 回傳 True
@@ -59,16 +58,13 @@ if __name__ == '__main__':
 
         # 轉灰階畫面顯示
         mask, res = ru.get_keyboard_by_hsv(
-            img,
-            hsv['lower_yellow'],
-            hsv['upper_yellow'],
-            hsv['lower_rad'],
-            hsv['upper_rad'])
+            img, hsv["lower_yellow"], hsv["upper_yellow"], hsv["lower_rad"], hsv["upper_rad"]
+        )
         img = ru.get_binary_img(res, binarization_thresh)
         if closing:
             img = ru.link_line(img)
 
-        cv2.imshow('Video Player', img)
+        cv2.imshow("Video Player", img)
 
         # frame_time
         area_time = time.time() - now_time
@@ -76,15 +72,13 @@ if __name__ == '__main__':
         time.sleep(wait_time)
         now_time = time.time()
 
-        # print(f"area_time = {area_time} wait_time = {wait_time}")
+        # logger.info(f"area_time = {area_time} wait_time = {wait_time}")
         # if frame_count >= 500:
-        #     print(area_time)
+        #     logger.info(area_time)
         #     break
 
-        if cv2.waitKey(1) == ord('q'):
+        if cv2.waitKey(1) == ord("q"):
             break
 
     cap.release()
     cv2.destroyAllWindows()
-
-#

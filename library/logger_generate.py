@@ -1,13 +1,13 @@
-import sys
+import logging.handlers
 import random
 import string
-import logging.handlers
+import sys
 from pathlib import Path
 
 import coloredlogs
 
 
-def generate(logger_config, name='', need_serial=False, **kwargs):
+def generate(logger_config, name="", need_serial=False, **kwargs):
     """
     logger_config is like to
     {
@@ -22,36 +22,35 @@ def generate(logger_config, name='', need_serial=False, **kwargs):
     if True, will generate have serial logger
     """
 
-    if 'need_serial' in kwargs:
-        need_serial = kwargs['need_serial']
+    if "need_serial" in kwargs:
+        need_serial = kwargs["need_serial"]
 
-    if not Path(logger_config['log_file_path']).exists():
+    if not Path(logger_config["log_file_path"]).exists():
         try:
-            Path(logger_config['log_file_path']).parents[0].mkdir()
+            Path(logger_config["log_file_path"]).parents[0].mkdir()
         except Exception as e:
             e  # 應付 pep8
 
-    if name == '':
+    if name == "":
         name = __name__
     if need_serial:
         rdt_len = 5
-        rdt = ''.join(random.choice(string.ascii_letters + string.digits)
-                      for x in range(rdt_len))
-        logger = logging.getLogger(name + '_' + rdt)
+        rdt = "".join(random.choice(string.ascii_letters + string.digits) for x in range(rdt_len))
+        logger = logging.getLogger(name + "_" + rdt)
     else:
         logger = logging.getLogger(name)
     handler1 = logging.StreamHandler(sys.stdout)
     handler2 = logging.handlers.TimedRotatingFileHandler(
-        filename=logger_config['log_file_path'],
-        when=logger_config['when'],
-        encoding=logger_config['encoding'],
-        backupCount=logger_config['backupCount'],
+        filename=logger_config["log_file_path"],
+        when=logger_config["when"],
+        encoding=logger_config["encoding"],
+        backupCount=logger_config["backupCount"],
     )
-    formatter = logging.Formatter(logger_config['log_format'])
+    formatter = logging.Formatter(logger_config["log_format"])
     handler1.setFormatter(formatter)
     handler2.setFormatter(formatter)
 
-    logging_level = logger_config['logging_level']
+    logging_level = logger_config["logging_level"]
     logger.setLevel(logging_level)
     handler1.setLevel(logging_level)
     handler2.setLevel(logging_level)

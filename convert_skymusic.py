@@ -9,7 +9,7 @@ input_file = "output/native_sheet.json"
 output_file = "output/converted_song.txt"
 
 # Read the original JSON from file
-with open(input_file, 'r') as f:
+with open(input_file) as f:
     original_json = f.read()
 
 # Parse the JSON
@@ -33,7 +33,7 @@ sorted_indices = sorted(index_frames.keys())
 # Compute diffs
 diffs = []
 for i in range(1, len(sorted_indices)):
-    diff = index_frames[sorted_indices[i]] - index_frames[sorted_indices[i-1]]
+    diff = index_frames[sorted_indices[i]] - index_frames[sorted_indices[i - 1]]
     diffs.append(diff)
 
 # Find the most common diff (mode)
@@ -57,7 +57,7 @@ for note in original_sheet:
     time_ms = int(note["time"] * 1000)
     key = f"1Key{note['keyboard']}"
     songNotes.append({"key": key, "time": time_ms})
-    
+
     # Calculate column index
     column_index = round(time_ms / beat_ms)
     if column_index not in column_notes:
@@ -89,11 +89,7 @@ target_object = {
     "pitch": "C",
     "version": 3,
     "folderId": None,
-    "data": {
-        "isComposed": True,
-        "isComposedVersion": True,
-        "appName": "Sky"
-    },
+    "data": {"isComposed": True, "isComposedVersion": True, "appName": "Sky"},
     "reverb": False,
     "breakpoints": [0],
     "instruments": [
@@ -105,7 +101,7 @@ target_object = {
             "icon": "circle",
             "alias": "",
             "muted": False,
-            "reverbOverride": None
+            "reverbOverride": None,
         }
     ],
     "columns": columns,
@@ -114,11 +110,13 @@ target_object = {
     "isComposed": True,
     "bitsPerPage": 16,
     "isEncrypted": False,
-    "songNotes": songNotes
+    "songNotes": songNotes,
 }
 
 # Output the converted object as JSON to file
-with open(output_file, 'w') as f:
+with open(output_file, "w") as f:
     json.dump([target_object], f, indent=4)
 
-print(f"Conversion complete. Output saved to {output_file}. Calculated BPM: {bpm}, Frame diff per beat: {frame_diff_per_beat}")
+print(
+    f"Conversion complete. Output saved to {output_file}. Calculated BPM: {bpm}, Frame diff per beat: {frame_diff_per_beat}"
+)

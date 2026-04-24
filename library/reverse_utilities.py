@@ -5,11 +5,9 @@ import numpy as np
 import pygame
 
 
-def get_keyboard_by_hsv(img,
-                        lower_yellow=[0, 11, 89],
-                        upper_yellow=[39, 89, 255],
-                        lower_rad=[148, 10, 72],
-                        upper_rad=[255, 150, 255]):
+def get_keyboard_by_hsv(
+    img, lower_yellow=[0, 11, 89], upper_yellow=[39, 89, 255], lower_rad=[148, 10, 72], upper_rad=[255, 150, 255]
+):
 
     # lower_yellow = [0, 0, 0]
     # upper_yellow = [75, 255, 255]
@@ -56,14 +54,13 @@ def get_binary_img(img, thresh):
 
 
 def get_do_contour_by_binary(binary):
-    contours, hierarchy = cv2.findContours(
-        binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
 
 def get_crop_area(do_rt, template):
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
-    # print(do_rt)
+    # logger.info(do_rt)
     x = []
     y = []
     for i in do_rt:
@@ -85,7 +82,7 @@ def get_crop_img(img, upper_left, lower_right):
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     ul = upper_left
     lr = lower_right
-    crop_img = img[ul[1]:lr[1], ul[0]:lr[0]]
+    crop_img = img[ul[1] : lr[1], ul[0] : lr[0]]
     return crop_img
 
 
@@ -97,7 +94,7 @@ def get_matchTemplate_rt(img, template):
     loc = np.where(res >= threshold)
     do_rt = []  # x,y
     for pt in zip(*loc[::-1]):
-        # print(pt)
+        # logger.info(pt)
         list_pt = list(pt)
         do_rt.append(list_pt)
 
@@ -126,8 +123,8 @@ def split_keyboard(img, x, y):
     h = img.shape[0]
 
     # 定義方向上的分個線數量
-    split_line_x = (x)
-    split_line_y = (y)
+    split_line_x = x
+    split_line_y = y
 
     # 定義一個鍵盤區塊大小
     area_x = w / split_line_x
@@ -146,12 +143,12 @@ def split_keyboard(img, x, y):
 
     for i in range(1, y + 1):
         for j in range(1, x + 1):
-            # print(f"i={i},j={j}")
+            # logger.info(f"i={i},j={j}")
             rd = [int(j * area_x), int(i * area_y)]
             lu = [int(rd[0] - area_x), int(rd[1] - area_y)]
-            # print(f"lu={lu},rd={rd}")
-            # print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
-            new_img = img[lu[1]:rd[1], lu[0]:rd[0]]
+            # logger.info(f"lu={lu},rd={rd}")
+            # logger.info(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
+            new_img = img[lu[1] : rd[1], lu[0] : rd[0]]
             keyboard.append(new_img)
     return keyboard
 
@@ -162,19 +159,19 @@ def get_split_keyboard_area(img, x, y):
     h = img.shape[0]
 
     # 定義方向上的分個線數量
-    split_line_x = (x)
-    split_line_y = (y)
+    split_line_x = x
+    split_line_y = y
 
     # 定義一個鍵盤區塊大小
     area_x = w / split_line_x
     area_y = h / split_line_y
     for i in range(1, y + 1):
         for j in range(1, x + 1):
-            # print(f"i={i},j={j}")
+            # logger.info(f"i={i},j={j}")
             rd = [int(j * area_x), int(i * area_y)]
             lu = [int(rd[0] - area_x), int(rd[1] - area_y)]
-            # print(f"lu={lu},rd={rd}")
-            # print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
+            # logger.info(f"lu={lu},rd={rd}")
+            # logger.info(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
             new_area = [lu[1], rd[1], lu[0], rd[0]]
             keyboard_area.append(new_area)
     return keyboard_area
@@ -190,9 +187,9 @@ def get_img_number_count(keyboard):
 # TODO: 這裡之後要看看要不要支援其他樂器的聲音
 def get_sounds():
     # load 聲音路徑
-    note_songs_path = Path('./note_songs')
+    note_songs_path = Path("./note_songs")
     sounds_path = []
-    for i in range(0, 15):
+    for i in range(15):
         sounds_path.append(note_songs_path / f"{i}.ogg")
 
     # 載入聲音
@@ -224,10 +221,10 @@ def remove_irrelevant(img, left: int, up: int, right: int, down: int, _wn):
         )
     """
     if up >= down:
-        cv2.setTrackbarPos('up', _wn, up - 1)
+        cv2.setTrackbarPos("up", _wn, up - 1)
         up = down - 1
     if left >= right:
-        cv2.setTrackbarPos('left', _wn, left - 1)
+        cv2.setTrackbarPos("left", _wn, left - 1)
         left = right - 1
     return get_crop_img(img, [left, up], [right, down])
 
@@ -236,11 +233,9 @@ def img_resize(image, height_new, width_new):
     height, width = image.shape[0], image.shape[1]
     try:
         if width / height >= width_new / height_new:
-            img_new = cv2.resize(
-                image, (width_new, int(height * width_new / width)))
+            img_new = cv2.resize(image, (width_new, int(height * width_new / width)))
         else:
-            img_new = cv2.resize(
-                image, (int(width * height_new / height), height_new))
+            img_new = cv2.resize(image, (int(width * height_new / height), height_new))
     except Exception:
         return image
     return img_new
