@@ -12,7 +12,7 @@ This program can reverse the sheet from the sky video
 
 ## Getting Started
 
-**⚠️python version require >= 3.5⚠️**
+ℹ️ python version require >= 3.13
 
 1. **[安裝 uv](https://docs.astral.sh/uv/getting-started/installation/) (如果尚未安裝)**
 
@@ -86,7 +86,7 @@ Now just have teach video，welcome PR
 
 ## 作者 Author
 
-![](https://avatars3.githubusercontent.com/u/22027801?s=460&v=4)
+![不知道為什麼想放的大頭貼](https://avatars3.githubusercontent.com/u/22027801?s=460&v=4)
 
 [永格天](https://we684123.carrd.co/)  
 一個~~中二病~~水瓶座男子  
