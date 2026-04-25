@@ -51,6 +51,13 @@ IS_DRAG_VIDEO_TO_HERE: bool = len_sys_argv == 2  # noqa: PLR2004
 IS_DRAG_VIDEO_TO_HERE_BY_IDE: bool = len_sys_argv == 3 and sys.argv[1] == "-f"  # noqa: PLR2004
 IS_TOO_MUCH_ARGS: bool = len_sys_argv > 2  # noqa: PLR2004
 
+# 處理初始參數
+init_frame_up = 0
+init_frame_down = 0
+init_frame_left = 0
+init_frame_right = 0
+init_frame_scale = 250
+
 # ↓↓ 處理被拖到這個程式的影片
 if IS_DRAG_VIDEO_TO_HERE_BY_IDE:  # TODO(we684123): 這個之後移除
     # 如果是在 IDE(Hydrogen)下的話則自動覆蓋 sys.argv
@@ -81,6 +88,8 @@ if IS_DRAG_VIDEO_TO_HERE:
 if IS_TOO_MUCH_ARGS:
     logger.error("🈵 sorry, but you only can drag a video to here, can't too more😅")
     ite.input_then_exit()
+
+
 # ↓↓之後從 effect_config 中找到調好的臨時設定檔，並從裡面取值覆蓋
 effect_config_path = Path(f"{this_py_path}/config/effect_config_parameter.json")
 if effect_config_path.exists():
@@ -97,7 +106,11 @@ if effect_config_path.exists():
         aims_video_file = Path(ec["aims_video_file"])
 
     left_upper = [int(ec["boundary_left"]), int(ec["boundary_up"])]
+    init_frame_up = int(ec["boundary_up"])
+    init_frame_down = int(ec["boundary_down"])
     right_lower = [int(ec["boundary_right"]), int(ec["boundary_down"])]
+    init_frame_left = int(ec["boundary_left"])
+    init_frame_right = int(ec["boundary_right"])
     hsv = {
         "lower_yellow": np.array(ec["hsv"]["lower_yellow"]),
         "upper_yellow": np.array(ec["hsv"]["upper_yellow"]),
@@ -155,14 +168,14 @@ cv2.namedWindow(_wn3, 0)
 img_zeros = np.zeros((100, 512, 3), np.uint8)
 
 # 邊界、比例控制
-cv2.createTrackbar("up", _wn, 0, frame_height, ng)
-cv2.createTrackbar("down", _wn, frame_height, frame_height, ng)
+cv2.createTrackbar("up", _wn, init_frame_up, frame_height, ng)
+cv2.createTrackbar("down", _wn, init_frame_down, frame_height, ng)
 # cv2.setTrackbarMin('down', _wn, 1)
-cv2.createTrackbar("left", _wn, 0, frame_width, ng)
-cv2.createTrackbar("right", _wn, frame_width, frame_width, ng)
+cv2.createTrackbar("left", _wn, init_frame_left, frame_width, ng)
+cv2.createTrackbar("right", _wn, init_frame_right, frame_width, ng)
 # cv2.setTrackbarMin('right', _wn, 1)
 # cv2.setTrackbarMax('right', _wn, frame_width)
-cv2.createTrackbar("scale", _wn, 250, frame_width, ng)
+cv2.createTrackbar("scale", _wn, init_frame_scale, frame_width, ng)
 # cv2.setTrackbarMin('scale', _wn, 1)
 cv2.createTrackbar("binarization_thresh", _wn, binarization["thresh"], 255, ng)
 cv2.createTrackbar("closing", _wn, closing, 1, ng)
