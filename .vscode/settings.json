@@ -35,14 +35,24 @@
     "cSpell.words": [
         "asyncio",
         "basedpyright",
+        "boundart",
+        "CCOEFF",
+        "fafc",
+        "fffc",
+        "ffpyplayer",
+        "flffc",
+        "fsfc",
         "gitmoji",
         "healthcheck",
+        "imread",
+        "imshow",
+        "linestyle",
         "mypy",
         "noqa",
         "NOSONAR",
         "prek",
-        "ffpyplayer",
-        "imshow",
-        "Trackbar"
+        "pyautogui",
+        "Trackbar",
+        "waitkey"
     ]
 }
