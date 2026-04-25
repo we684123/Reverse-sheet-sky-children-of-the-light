@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,13 +29,13 @@ cool_down_frame = round((cool_down_time / 1000) / (1 / fps))  # 冷卻時間(單
 
 
 # 先來定義一下 kb_list 格式
-kb_list = []
+kb_list: list[list[int]] = []
 for i in range(len(frame_keyboards[0])):
     # logger.info(frame_keyboards[0][i])
     kb_list.append([])
 
 # 再來要找區域的像素數量總和
-max_pixel_len_area = []
+max_pixel_len_area: list[int] = []
 for i in range(len(frame_keyboards[0])):
     # logger.debug(frame_keyboards[0][i])
     max_pixel_len = 0
@@ -62,30 +63,29 @@ _temp = output_sheet_path / "./native_sheet.json"
 with _temp.open(encoding="utf-8") as f:
     _native_sheet = f.read()
 native_sheet = json.loads(_native_sheet)
-original_sheet = native_sheet["original_sheet"]
-trigger_valve = native_sheet["trigger_valve"]
+original_sheet: list[dict[str, Any]] = native_sheet["original_sheet"]
+trigger_valve: list[float] = native_sheet["trigger_valve"]
 len_track = int(rc["keyboards_X_format"]) * int(rc["keyboards_y_format"])
 # ===== 準備完畢 =====
 
 
-def generate_pixel_force():
+def generate_pixel_force() -> Any:
     # 因為 np.shape(kb_list) 結果會一樣，故直接用 0 取代
     pixel_force = np.linspace(0, len(kb_list[0]), len(kb_list[0]))
     return pixel_force
 
 
-def generate_note_st_ed():
+def generate_note_st_ed() -> list[Any]:
     # 生出起始觸發時間 + 冷卻時間
-    note_st_ed_list = []
+    note_st_ed_list: list[Any] = []
     for track in range(len_track):
 
-        def is_note_from_track(x):
+        def is_note_from_track(x: dict[str, Any]) -> dict[str, Any] | None:
             if x["keyboard"] == track and x["type"] == "note":
                 return x
             return None
 
-        rt = filter(is_note_from_track, original_sheet.copy())
-        rt = list(rt)
+        rt = [item for item in original_sheet.copy() if is_note_from_track(item) is not None]
         note_st_ed = np.zeros(len(kb_list[track]))
         for _i in rt:
             _index = _i["frame"]
@@ -98,7 +98,15 @@ def generate_note_st_ed():
 # horizon_range = [280, 400]
 # now_frame = 300
 # index_height = 800
-def check_graph(pixel_force, kb_list, note_st_ed, track, horizon_range, now_frame, index_height):  # noqa: PLR0913
+def check_graph(  # noqa: PLR0913
+    pixel_force: Any,
+    kb_list: list[list[int]],
+    note_st_ed: list[Any],
+    track: int,
+    horizon_range: list[int],
+    now_frame: int,
+    index_height: Any,
+) -> None:
     hr = horizon_range
 
     now_index = np.zeros(len(kb_list[track]))
@@ -123,9 +131,9 @@ if __name__ == "__main__":
     horizon_range = [0, len(kb_list[0])]
 
     # now_frame
-    now_frame = input("plz input now frame. 請輸入要觀察的frame時間.")
+    now_frame_text = input("plz input now frame. 請輸入要觀察的frame時間.")
     try:
-        now_frame = int(now_frame)
+        now_frame = int(now_frame_text)
         # kb_list_max = np.max(kb_list[0])
         # track = 7
         # image = check_graph(pixel_force, kb_list, note_st_ed_list,

@@ -2,6 +2,7 @@ import json
 import logging
 import sys
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -24,7 +25,7 @@ from library import reverse_utilities as ru
 """
 
 
-def ng(x):  # nothing
+def ng(x: Any) -> None:  # nothing
     pass
 
 
@@ -40,7 +41,7 @@ hsv = config["hsv"]
 binarization = config["binarization"]
 closing = int(config["closing"]["use"])
 
-aims_video_file = None
+aims_video_file: Path | None = None
 
 len_sys_argv = len(sys.argv)
 logger.debug(f"{sys.argv=}")
@@ -93,7 +94,7 @@ if effect_config_path.exists():
     # 如果是用拖影片進來的，那就依拖的為主，如果是點的就拿 effect_config_path 覆蓋
     logger.debug(f"len(sys.argv) = {len_sys_argv}")
     if len_sys_argv == 1:  # ←這是點的
-        aims_video_file = str(ec["aims_video_file"])
+        aims_video_file = Path(ec["aims_video_file"])
 
     left_upper = [int(ec["boundary_left"]), int(ec["boundary_up"])]
     right_lower = [int(ec["boundary_right"]), int(ec["boundary_down"])]
@@ -189,7 +190,7 @@ cv2.createTrackbar("progress", _wn3, 0, count, ng)
 cv2.imshow(_wn2, img_zeros)
 
 
-frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+frame_end = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 replay_st = int(cv2.getTrackbarPos("replay_st", _wn3))
 replay_end = int(cv2.getTrackbarPos("replay_end", _wn3))
 

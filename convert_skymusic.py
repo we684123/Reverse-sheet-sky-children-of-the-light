@@ -2,6 +2,7 @@ import json
 import uuid
 from collections import Counter
 from pathlib import Path
+from typing import Any
 
 from config import base
 from library import logger_generate
@@ -21,13 +22,13 @@ with input_file.open(encoding="utf-8") as f:
     original_json = f.read()
 
 # Parse the JSON
-data = json.loads(original_json)
+data: dict[str, Any] = json.loads(original_json)
 
 # Extract the original_sheet
 original_sheet = data["original_sheet"]
 
 # Calculate frame_diff_per_beat dynamically
-index_frames = {}
+index_frames: dict[int, int] = {}
 for note in original_sheet:
     if "index" in note:
         idx = note["index"]
@@ -39,7 +40,7 @@ for note in original_sheet:
 sorted_indices = sorted(index_frames.keys())
 
 # Compute diffs
-diffs = []
+diffs: list[int] = []
 for i in range(1, len(sorted_indices)):
     diff = index_frames[sorted_indices[i]] - index_frames[sorted_indices[i - 1]]
     diffs.append(diff)
@@ -55,8 +56,8 @@ bpm = round(60 * fps / frame_diff_per_beat)
 beat_ms = 60 / bpm * 1000
 
 # Convert notes to songNotes format
-song_notes = []
-column_notes = {}  # Dict to group notes by column index
+song_notes: list[dict[str, str | int]] = []
+column_notes: dict[int, list[list[int | str]]] = {}
 
 for note in original_sheet:
     time_ms = int(note["time"] * 1000)
@@ -73,7 +74,7 @@ for note in original_sheet:
 max_column = max(column_notes.keys()) if column_notes else 0
 
 # Create columns list
-columns = []
+columns: list[list[int | list[list[int | str]]]] = []
 for i in range(max_column + 1):
     if i in column_notes:
         columns.append([0, column_notes[i]])

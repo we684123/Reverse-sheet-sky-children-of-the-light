@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any, TypedDict
 
 import numpy as np
 
@@ -29,13 +30,13 @@ logger.info("Loaded analysis_from_video.json.")
 
 logger.info("generating original sheet...")
 # 先來定義一下 kb_list 格式
-kb_list = []
+kb_list: list[list[int]] = []
 for i in range(len(frame_keyboards[0])):
     # logger.debug(frame_keyboards[0][i])
     kb_list.append([])
 
 # 再來要找區域的像素數量總和
-max_pixel_len_area = []
+max_pixel_len_area: list[int] = []
 for i in range(len(frame_keyboards[0])):
     # i = 0
     # logger.debug(frame_keyboards[0][i])
@@ -56,22 +57,27 @@ for i in frame_keyboards:
         kb_list[j].append(max_pixel_len_area[j] - i[j][0])
 
 
+class TempState(TypedDict):
+    st_frame: int
+    refractory: bool
+
+
 # 狀態器初始化
-temp_state_list = []  # 狀態器陣列
+temp_state_list: list[TempState] = []  # 狀態器陣列
 for i in range(len(frame_keyboards[0])):
-    temp_state = {"st_frame": 0, "refractory": False}
+    temp_state: TempState = {"st_frame": 0, "refractory": False}
     temp_state_list.append(temp_state)
 
 # 生成閥值陣列
-trigger_valve = []
-for i in kb_list:
-    mean = int(np.mean(i))
+trigger_valve: list[float] = []
+for keyboard_values in kb_list:
+    mean = int(np.mean(keyboard_values))
     # logger.debug(mean)
     trigger_valve.append(mean / rc["trigger_valve_parameter"])
 
 
 # 譜面生成
-sheet = [].copy()
+sheet_entries: list[dict[str, Any]] = []
 for track in range(len(kb_list)):
     # track = 1
     for m in range(len(frame_keyboards)):
@@ -84,9 +90,9 @@ for track in range(len(kb_list)):
             # logger.debug('.')
             temp_state_list[track]["st_frame"] = m
             temp_state_list[track]["refractory"] = True
-            sheet.append({"type": "note", "frame": m, "keyboard": track})
+            sheet_entries.append({"type": "note", "frame": m, "keyboard": track})
 
-sort_sheet = sorted(sheet, key=lambda s: s["frame"])
+sort_sheet = sorted(sheet_entries, key=lambda s: int(s["frame"]))
 
 
 # 加個正確時間(frame -> time)
@@ -115,14 +121,14 @@ blank_symbol = rc["blank_symbol"]
 
 
 # 為了防止 list 在最後倒數14個搜尋 out of range 用的
-def get_in_area(n, a, max):
+def get_in_area(n: int, a: int, max_value: int) -> int:
     # n = 6
     # a = 15
     # max = 20
     d = 0
     # max += 1
-    if (n + a) > max:
-        d = max - (n + a)
+    if (n + a) > max_value:
+        d = max_value - (n + a)
     return n + a + d
 
 
@@ -153,7 +159,7 @@ for i in range(osl):
 
 # 按照 index(同時) 分組
 sheet = ""
-index_st = ""
+index_st: int | None = None
 for i in range(osl):
     # i = 0
     # i = 9

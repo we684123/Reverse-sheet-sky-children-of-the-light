@@ -1,4 +1,6 @@
+from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -6,18 +8,22 @@ import pygame
 
 
 def get_keyboard_by_hsv(
-    img, lower_yellow=[0, 11, 89], upper_yellow=[39, 89, 255], lower_rad=[148, 10, 72], upper_rad=[255, 150, 255]
-):
+    img: Any,
+    lower_yellow: Any = (0, 11, 89),
+    upper_yellow: Any = (39, 89, 255),
+    lower_rad: Any = (148, 10, 72),
+    upper_rad: Any = (255, 150, 255),
+) -> tuple[Any, Any]:
 
     # lower_yellow = [0, 0, 0]
     # upper_yellow = [75, 255, 255]
     # lower_rad = [150, 0, 0]
     # upper_rad = [255, 255, 255]
 
-    lower_yellow = np.array(lower_yellow)
-    upper_yellow = np.array(upper_yellow)
-    lower_rad = np.array(lower_rad)
-    upper_rad = np.array(upper_rad)
+    lower_yellow_arr = np.array(lower_yellow)
+    upper_yellow_arr = np.array(upper_yellow)
+    lower_rad_arr = np.array(lower_rad)
+    upper_rad_arr = np.array(upper_rad)
 
     img_1 = img.copy()
     img_2 = img.copy()
@@ -25,10 +31,10 @@ def get_keyboard_by_hsv(
     hsv1 = cv2.cvtColor(img_1, cv2.COLOR_BGR2HSV)
     hsv2 = cv2.cvtColor(img_2, cv2.COLOR_BGR2HSV)
 
-    mask1 = cv2.inRange(hsv1, lower_yellow, upper_yellow)
+    mask1 = cv2.inRange(hsv1, lower_yellow_arr, upper_yellow_arr)
     res1 = cv2.bitwise_and(img_1, img_1, mask=mask1)
 
-    mask2 = cv2.inRange(hsv2, lower_rad, upper_rad)
+    mask2 = cv2.inRange(hsv2, lower_rad_arr, upper_rad_arr)
     res2 = cv2.bitwise_and(img_2, img_2, mask=mask2)
 
     mask = cv2.add(mask1, mask2)
@@ -36,7 +42,7 @@ def get_keyboard_by_hsv(
     return mask, res
 
 
-def link_line(img):
+def link_line(img: Any) -> Any:
     kernel = np.ones((2, 2), np.uint8)
     erosion = cv2.erode(img, kernel, iterations=1)
     img = erosion
@@ -47,18 +53,18 @@ def link_line(img):
     return img
 
 
-def get_binary_img(img, thresh):
+def get_binary_img(img: Any, thresh: int) -> Any:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
     return binary
 
 
-def get_do_contour_by_binary(binary):
+def get_do_contour_by_binary(binary: Any) -> Any:
     contours, _ = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
 
-def get_crop_area(do_rt, template):
+def get_crop_area(do_rt: Sequence[Sequence[int]], template: Any) -> tuple[list[int], list[int]]:
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     # logger.info(do_rt)
     x = []
@@ -78,7 +84,7 @@ def get_crop_area(do_rt, template):
     return upper_left, lower_right
 
 
-def get_crop_img(img, upper_left, lower_right):
+def get_crop_img(img: Any, upper_left: Sequence[int], lower_right: Sequence[int]) -> Any:
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     ul = upper_left
     lr = lower_right
@@ -86,7 +92,7 @@ def get_crop_img(img, upper_left, lower_right):
     return crop_img
 
 
-def get_match_template_rt(img, template):
+def get_match_template_rt(img: Any, template: Any) -> list[list[int]]:
     # w = template.shape[1]
     # h = template.shape[0]
     res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
@@ -102,13 +108,13 @@ def get_match_template_rt(img, template):
     return do_rt
 
 
-def get_template_binary_img(template_img_path):
-    template = cv2.imread(template_img_path)
+def get_template_binary_img(template_img_path: str | Path) -> Any:
+    template = cv2.imread(str(template_img_path))
     template_binary = get_binary_img(template, 127)
     return template_binary
 
 
-def split_keyboard(img, x, y):
+def split_keyboard(img: Any, x: int, y: int) -> list[Any]:
     # area = [0,1,2...(x*y-1)] 一維的喔!
     # 對應
     # [0, 1, 2, 3, 4,
@@ -153,7 +159,7 @@ def split_keyboard(img, x, y):
     return keyboard
 
 
-def get_split_keyboard_area(img, x, y):
+def get_split_keyboard_area(img: Any, x: int, y: int) -> list[list[int]]:
     keyboard_area = []
     w = img.shape[1]
     h = img.shape[0]
@@ -177,7 +183,7 @@ def get_split_keyboard_area(img, x, y):
     return keyboard_area
 
 
-def get_img_number_count(keyboard):
+def get_img_number_count(keyboard: Any) -> list[Any]:
     a = []
     for i in np.unique(keyboard):
         a.append(np.sum(keyboard == i))
@@ -185,7 +191,7 @@ def get_img_number_count(keyboard):
 
 
 # TODO(we684123): 這裡之後要看看要不要支援其他樂器的聲音
-def get_sounds():
+def get_sounds() -> list[Any]:
     # load 聲音路徑
     note_songs_path = Path("./note_songs")
     sounds_path = []
@@ -201,7 +207,7 @@ def get_sounds():
     return sounds
 
 
-def remove_irrelevant(img, left: int, up: int, right: int, down: int, _wn):
+def remove_irrelevant(img: Any, left: int, up: int, right: int, down: int, _wn: str) -> Any:
     """移除不需要的影像區塊，輸出所需分析的影像區塊
 
     Args:
@@ -229,7 +235,7 @@ def remove_irrelevant(img, left: int, up: int, right: int, down: int, _wn):
     return get_crop_img(img, [left, up], [right, down])
 
 
-def img_resize(image, height_new, width_new):
+def img_resize(image: Any, height_new: int, width_new: int) -> Any:
     height, width = image.shape[0], image.shape[1]
     try:
         if width / height >= width_new / height_new:

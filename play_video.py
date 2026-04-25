@@ -38,8 +38,8 @@ if __name__ == "__main__":
     # 控制播放速度用
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     frame_time = 1 / fps
-    wait_time = 0
-    area_time = 0
+    wait_time = 0.0
+    area_time = 0.0
     now_time = time.time()
 
     # 再處理剩下的

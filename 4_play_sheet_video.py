@@ -38,8 +38,8 @@ with _temp.open(encoding="utf-8") as f:
     _data = f.read()
 
 data = json.loads(_data)
-original_sheet = data["original_sheet"]
-o_s = original_sheet
+original_sheet: list[dict[str, Any]] = data["original_sheet"]
+o_s: list[dict[str, Any]] = original_sheet
 o_s_2 = o_s.copy()
 o_s_3 = o_s.copy()
 o_s_4 = o_s.copy()
@@ -56,8 +56,8 @@ frame_end = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
 # 控制播放速度用
 frame_time = 1 / fps
-wait_time = 0
-area_time = 0
+wait_time = 0.0
+area_time = 0.0
 now_time = time.time()
 
 # 處理聲音延遲問題
@@ -84,7 +84,7 @@ ec = json.loads(content)
 # o_s_4.append({'frame': 124, "type": "line_feed"})
 
 
-def addition_to_video(img, frame_count, o_s):
+def addition_to_video(img: Any, frame_count: float, o_s: list[dict[str, Any]]) -> Any:
     # def addition_lf():  # 換行效果登記
     #     # 這裡可以寫的效能更好一點，用指標跟狀態器達成
     #     # 但先不要，要沒時間了
@@ -98,12 +98,12 @@ def addition_to_video(img, frame_count, o_s):
     _for_addition_frame_count = frame_count - st_specify_count
     _fafc = _for_addition_frame_count
 
-    def ld_to_lf(x) -> Any | None:
+    def ld_to_lf(x: dict[str, Any]) -> dict[str, Any] | None:
         if (abs(int(_fafc) - x["frame"]) < max_effect_frame) and (x["type"] in ("line_feed", "note")):
             return x
         return None
 
-    temp_state_list = list(filter(ld_to_lf, o_s.copy()))
+    temp_state_list: list[dict[str, Any]] = [item for item in o_s.copy() if ld_to_lf(item) is not None]
 
     for i in range(len(temp_state_list)):
         _e = temp_state_list[i]
@@ -150,7 +150,7 @@ def addition_to_video(img, frame_count, o_s):
 
 
 # 這給 createTrackbar 用的
-def nothing(x):
+def nothing(x: int) -> None:
     pass
 
 
@@ -169,7 +169,7 @@ CHANGE_TIME = 0
 time_stop = False
 
 # 狀態器初始化
-temp_state_list = []  # 狀態器陣列
+temp_state_list: list[dict[str, Any]] = []  # 狀態器陣列
 tsl = temp_state_list
 
 # 僅取鍵盤畫面
@@ -234,8 +234,7 @@ while cap.isOpened():
         # 播放對應的聲音用
         _for_sound_frame_count = frame_count - st_specify_count
         _fsfc = int(_for_sound_frame_count)
-        rt = filter(lambda x: x["frame"] == _fsfc, o_s_2)
-        rt = list(rt)
+        rt = [item for item in o_s_2 if item["frame"] == _fsfc]
         for note in rt:
             if "keyboard" in note:
                 sounds[note["keyboard"]].play()
@@ -272,7 +271,7 @@ while cap.isOpened():
         cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
 
     # 處理進度
-    _d = None
+    _d: dict[str, Any] | None = None
     if input_key == ord("w"):
         logger.info("w trigger")
         cv2.setTrackbarPos("change", "Sheet Player", 1)
@@ -291,9 +290,8 @@ while cap.isOpened():
         _for_flag_frame_count = int(frame_count - st_specify_count)
         _fffc = int(_for_flag_frame_count)
         while 1:
-            rt = filter(lambda x: x["frame"] == _fffc, o_s_3)
-            rt = list(rt)
-            if rt == []:
+            rt = [item for item in o_s_3 if item["frame"] == _fffc]
+            if not rt:
                 _d = {
                     "frame": frame_count,
                     "type": "flag",
@@ -301,16 +299,16 @@ while cap.isOpened():
                 break
             else:
                 _fffc += 1
-        o_s.append(_d)
+        if _d is not None:
+            o_s.append(_d)
     if input_key == ord("a"):  # a == 'line_feed'
         logger.info("a trigger")
         logger.info(frame_count)
         _for_line_feed_frame_count = int(frame_count - st_specify_count)
         _flffc = int(_for_line_feed_frame_count)
         while 1:
-            rt = filter(lambda x: x["frame"] == _flffc, o_s_5)
-            rt = list(rt)
-            if rt == []:
+            rt = [item for item in o_s_5 if item["frame"] == _flffc]
+            if not rt:
                 _d = {
                     "frame": frame_count,
                     "type": "line_feed",
@@ -319,27 +317,27 @@ while cap.isOpened():
                 break
             else:
                 _flffc += 1
-        o_s.append(_d)
+        if _d is not None:
+            o_s.append(_d)
     if input_key == ord("s"):  # a == 'line_feed'
         logger.info("s trigger")
         logger.info(frame_count)
-        rt = list(filter(lambda x: x["type"] == "line_feed", o_s.copy()))
+        rt = [item for item in o_s.copy() if item["type"] == "line_feed"]
         logger.info(f"rt = {rt}")
         if len(rt) == 0:
             logger.info("s鍵刪除無效，因為已經沒有分界線可以刪除了")
         else:
-            _k = []
+            frame_deltas: list[int | float] = []
             for i in range(len(rt)):
-                _k.append(int(rt[i]["frame"]) - frame_count)
-            logger.info(f"_k = {_k}")
-            logger.info(f"max _k = {max(_k)}")
-            logger.info(f"rt[_k.index(max(_k))]  = {rt[_k.index(max(_k))]}")
-            # rt[_k.index(max(_k))]
-            del o_s[o_s.index(rt[_k.index(max(_k))])]
+                frame_deltas.append(int(rt[i]["frame"]) - frame_count)
+            logger.info(f"_k = {frame_deltas}")
+            logger.info(f"max _k = {max(frame_deltas)}")
+            logger.info(f"rt[_k.index(max(_k))]  = {rt[frame_deltas.index(max(frame_deltas))]}")
+            del o_s[o_s.index(rt[frame_deltas.index(max(frame_deltas))])]
 
     if input_key == ord("j"):  # a == 'line_feed'
         logger.info("j trigger")
-        rt = list(filter(lambda x: x["type"] == "line_feed", o_s.copy()))
+        rt = [item for item in o_s.copy() if item["type"] == "line_feed"]
         logger.info(rt)
 cap.release()
 cv2.destroyAllWindows()
@@ -370,14 +368,14 @@ with _temp.open(mode="w", encoding="utf-8") as f:
 # 為了防止 list 在最後倒數14個搜尋 out of range 用的
 
 
-def get_in_area(n, a, max):
+def get_in_area(n: int, a: int, max_value: int) -> int:
     # n = 6
     # a = 15
     # max = 20
     d = 0
     # max += 1
-    if (n + a) > max:
-        d = max - (n + a)
+    if (n + a) > max_value:
+        d = max_value - (n + a)
     return n + a + d
 
 
@@ -389,7 +387,7 @@ blank_symbol = rc["blank_symbol"]
 line_feed_symbol = rc["line_feed_symbol"]
 
 sheet = ""
-index_st = ""
+index_st: int | None = None
 osl = len(o_s)
 for i in range(osl):
     # i = 0
@@ -411,13 +409,13 @@ for i in range(osl):
         # (這已被index標註，所以換句話說找接下來15個有沒有跟開頭的index一樣的)
         # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
         # TODO(we684123): 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
-        for k in range(i, get_in_area(i, 15, osl)):
+        for note_idx in range(i, get_in_area(i, 15, osl)):
             # 如果有的話看看index一不一樣
-            if "index" in o_s[k]:
+            if "index" in o_s[note_idx]:
                 # 一樣就標起來，組合字串
-                if o_s[k]["index"] == index_st:
+                if o_s[note_idx]["index"] == index_st:
                     # 按他base中的譜面格式設定生成要被組合的字串
-                    _a = o_s[k]["keyboard"]
+                    _a = o_s[note_idx]["keyboard"]
                     _text_2 += str(sheet_formats[_a]) + blank_symbol
                 else:
                     break
@@ -428,18 +426,18 @@ for i in range(osl):
             _k1 = _text_2[:-1].split(blank_symbol)
             _k2 = sorted(_k1)
             _k3 = ""
-            for _k in _k2:
-                _k3 += _k + blank_symbol
+            for note_text in _k2:
+                _k3 += note_text + blank_symbol
             _text_3 = _k3[:-1]
 
         else:
             _text_3 = _text_2[:-1]
         # 組合完畢就用組合符號括起來(預設是 【 】)
-        note = f"{sync_symbol[0]}{_text_3}{sync_symbol[1]}"
+        note_text = f"{sync_symbol[0]}{_text_3}{sync_symbol[1]}"
     else:
         # 沒有index的就直接按base要求組起來就好
-        note = str(sheet_formats[int(o_s[i]["keyboard"])])
-    sheet += note + blank_symbol
+        note_text = str(sheet_formats[int(o_s[i]["keyboard"])])
+    sheet += note_text + blank_symbol
 # ======================================================================
 logger.info("generating output_sheet.")
 output_sheet_path = (this_py_path / Path(rc["output_sheet_path"])).resolve()

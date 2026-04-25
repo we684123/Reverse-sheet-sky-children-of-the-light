@@ -3,6 +3,7 @@ import sys
 import time
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 import pyautogui
 
@@ -49,7 +50,7 @@ click_positions = {
 
 
 # PERFECT mapping: keyboard 0=Q, 1=W, 2=E, 3=R, 4=T, 5=A, 6=S, 7=D, etc.
-def get_key_from_keyboard_idx(idx):
+def get_key_from_keyboard_idx(idx: int) -> str:
     mapping = {
         0: "Q",
         1: "W",
@@ -71,7 +72,7 @@ def get_key_from_keyboard_idx(idx):
 
 
 # FRAME-BASED GROUPING (PERFECT chord detection)
-groups = defaultdict(list)
+groups: defaultdict[Any, list[str]] = defaultdict(list)
 for note in original_sheet:
     if note["type"] == "note":
         frame_key = note["frame"]  # EXACT frame = perfect simultaneous notes
@@ -80,7 +81,7 @@ for note in original_sheet:
         groups[frame_key].append(key_letter)
 
 # Convert to time-sorted groups (calculate time from first note in frame)
-time_groups = []
+time_groups: list[tuple[float, list[str]]] = []
 frame = None
 for frame, keys in sorted(groups.items()):
     # Get time from first note in this frame
@@ -103,7 +104,7 @@ for i in range(3, 0, -1):
 logger.info("\rStarting NOW!      \n")
 
 # PERFECT timing playback using frame-based grouping
-prev_time = 0
+prev_time = 0.0
 try:
     for time_pos, keys in time_groups:
         # Exact timing between frames

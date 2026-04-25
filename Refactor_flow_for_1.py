@@ -1,6 +1,7 @@
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -21,7 +22,7 @@ from library import logger_generate
 """
 
 
-def ng(x):  # nothing
+def ng(x: Any) -> None:  # nothing
     pass
 
 
