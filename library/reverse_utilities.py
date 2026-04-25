@@ -1,25 +1,28 @@
+from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
-import pygame
 
 
-def get_keyboard_by_hsv(img,
-                        lower_yellow=[0, 11, 89],
-                        upper_yellow=[39, 89, 255],
-                        lower_rad=[148, 10, 72],
-                        upper_rad=[255, 150, 255]):
+def get_keyboard_by_hsv(
+    img: Any,
+    lower_yellow: Any = (0, 11, 89),
+    upper_yellow: Any = (39, 89, 255),
+    lower_rad: Any = (148, 10, 72),
+    upper_rad: Any = (255, 150, 255),
+) -> tuple[Any, Any]:
 
     # lower_yellow = [0, 0, 0]
     # upper_yellow = [75, 255, 255]
     # lower_rad = [150, 0, 0]
     # upper_rad = [255, 255, 255]
 
-    lower_yellow = np.array(lower_yellow)
-    upper_yellow = np.array(upper_yellow)
-    lower_rad = np.array(lower_rad)
-    upper_rad = np.array(upper_rad)
+    lower_yellow_arr = np.array(lower_yellow)
+    upper_yellow_arr = np.array(upper_yellow)
+    lower_rad_arr = np.array(lower_rad)
+    upper_rad_arr = np.array(upper_rad)
 
     img_1 = img.copy()
     img_2 = img.copy()
@@ -27,10 +30,10 @@ def get_keyboard_by_hsv(img,
     hsv1 = cv2.cvtColor(img_1, cv2.COLOR_BGR2HSV)
     hsv2 = cv2.cvtColor(img_2, cv2.COLOR_BGR2HSV)
 
-    mask1 = cv2.inRange(hsv1, lower_yellow, upper_yellow)
+    mask1 = cv2.inRange(hsv1, lower_yellow_arr, upper_yellow_arr)
     res1 = cv2.bitwise_and(img_1, img_1, mask=mask1)
 
-    mask2 = cv2.inRange(hsv2, lower_rad, upper_rad)
+    mask2 = cv2.inRange(hsv2, lower_rad_arr, upper_rad_arr)
     res2 = cv2.bitwise_and(img_2, img_2, mask=mask2)
 
     mask = cv2.add(mask1, mask2)
@@ -38,7 +41,7 @@ def get_keyboard_by_hsv(img,
     return mask, res
 
 
-def link_line(img):
+def link_line(img: Any) -> Any:
     kernel = np.ones((2, 2), np.uint8)
     erosion = cv2.erode(img, kernel, iterations=1)
     img = erosion
@@ -49,21 +52,20 @@ def link_line(img):
     return img
 
 
-def get_binary_img(img, thresh):
+def get_binary_img(img: Any, thresh: int) -> Any:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
+    _, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
     return binary
 
 
-def get_do_contour_by_binary(binary):
-    contours, hierarchy = cv2.findContours(
-        binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+def get_do_contour_by_binary(binary: Any) -> Any:
+    contours, _ = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
 
-def get_crop_area(do_rt, template):
+def get_crop_area(do_rt: Sequence[Sequence[int]], template: Any) -> tuple[list[int], list[int]]:
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
-    # print(do_rt)
+    # logger.info(do_rt)
     x = []
     y = []
     for i in do_rt:
@@ -81,15 +83,15 @@ def get_crop_area(do_rt, template):
     return upper_left, lower_right
 
 
-def get_crop_img(img, upper_left, lower_right):
+def get_crop_img(img: Any, upper_left: Sequence[int], lower_right: Sequence[int]) -> Any:
     # img[127:432+w, 165:773+h]  # 裁剪坐标为[y0:y1, x0:x1]
     ul = upper_left
     lr = lower_right
-    crop_img = img[ul[1]:lr[1], ul[0]:lr[0]]
+    crop_img = img[ul[1] : lr[1], ul[0] : lr[0]]
     return crop_img
 
 
-def get_matchTemplate_rt(img, template):
+def get_match_template_rt(img: Any, template: Any) -> list[list[int]]:
     # w = template.shape[1]
     # h = template.shape[0]
     res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
@@ -97,7 +99,7 @@ def get_matchTemplate_rt(img, template):
     loc = np.where(res >= threshold)
     do_rt = []  # x,y
     for pt in zip(*loc[::-1]):
-        # print(pt)
+        # logger.info(pt)
         list_pt = list(pt)
         do_rt.append(list_pt)
 
@@ -105,13 +107,13 @@ def get_matchTemplate_rt(img, template):
     return do_rt
 
 
-def get_Template_binary_img(template_img_path):
-    template = cv2.imread(template_img_path)
+def get_template_binary_img(template_img_path: str | Path) -> Any:
+    template = cv2.imread(str(template_img_path))
     template_binary = get_binary_img(template, 127)
     return template_binary
 
 
-def split_keyboard(img, x, y):
+def split_keyboard(img: Any, x: int, y: int) -> list[Any]:
     # area = [0,1,2...(x*y-1)] 一維的喔!
     # 對應
     # [0, 1, 2, 3, 4,
@@ -126,8 +128,8 @@ def split_keyboard(img, x, y):
     h = img.shape[0]
 
     # 定義方向上的分個線數量
-    split_line_x = (x)
-    split_line_y = (y)
+    split_line_x = x
+    split_line_y = y
 
     # 定義一個鍵盤區塊大小
     area_x = w / split_line_x
@@ -146,53 +148,55 @@ def split_keyboard(img, x, y):
 
     for i in range(1, y + 1):
         for j in range(1, x + 1):
-            # print(f"i={i},j={j}")
+            # logger.info(f"i={i},j={j}")
             rd = [int(j * area_x), int(i * area_y)]
             lu = [int(rd[0] - area_x), int(rd[1] - area_y)]
-            # print(f"lu={lu},rd={rd}")
-            # print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
-            new_img = img[lu[1]:rd[1], lu[0]:rd[0]]
+            # logger.info(f"lu={lu},rd={rd}")
+            # logger.info(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
+            new_img = img[lu[1] : rd[1], lu[0] : rd[0]]
             keyboard.append(new_img)
     return keyboard
 
 
-def get_split_keyboard_area(img, x, y):
+def get_split_keyboard_area(img: Any, x: int, y: int) -> list[list[int]]:
     keyboard_area = []
     w = img.shape[1]
     h = img.shape[0]
 
     # 定義方向上的分個線數量
-    split_line_x = (x)
-    split_line_y = (y)
+    split_line_x = x
+    split_line_y = y
 
     # 定義一個鍵盤區塊大小
     area_x = w / split_line_x
     area_y = h / split_line_y
     for i in range(1, y + 1):
         for j in range(1, x + 1):
-            # print(f"i={i},j={j}")
+            # logger.info(f"i={i},j={j}")
             rd = [int(j * area_x), int(i * area_y)]
             lu = [int(rd[0] - area_x), int(rd[1] - area_y)]
-            # print(f"lu={lu},rd={rd}")
-            # print(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
+            # logger.info(f"lu={lu},rd={rd}")
+            # logger.info(f"{lu[1]}:{rd[1]}, {lu[0]}:{rd[0]}")
             new_area = [lu[1], rd[1], lu[0], rd[0]]
             keyboard_area.append(new_area)
     return keyboard_area
 
 
-def get_img_number_count(keyboard):
-    a = []
+def get_img_number_count(keyboard: Any) -> list[int]:
+    a: list[int] = []
     for i in np.unique(keyboard):
-        a.append(np.sum(keyboard == i))
+        a.append(int(np.sum(keyboard == i)))
     return a
 
 
-# TODO: 這裡之後要看看要不要支援其他樂器的聲音
-def get_sounds():
+# TODO(we684123): 這裡之後要看看要不要支援其他樂器的聲音
+def get_sounds() -> list[Any]:
+    import pygame  # noqa: PLC0415
+
     # load 聲音路徑
-    note_songs_path = Path('./note_songs')
+    note_songs_path = Path("./note_songs")
     sounds_path = []
-    for i in range(0, 15):
+    for i in range(15):
         sounds_path.append(note_songs_path / f"{i}.ogg")
 
     # 載入聲音
@@ -202,3 +206,43 @@ def get_sounds():
     for p in sounds_path:
         sounds.append(pygame.mixer.Sound(p))
     return sounds
+
+
+def remove_irrelevant(img: Any, left: int, up: int, right: int, down: int, _wn: str) -> Any:
+    """移除不需要的影像區塊，輸出所需分析的影像區塊
+
+    Args:
+       img (img) :  欲處理的原始影像
+       left(int) :  擷取影像的左邊界()
+       up(int)   :  擷取影像的上邊界
+       right(int):  擷取影像的右邊界
+       down(int) :  擷取影像的下邊界
+
+    Returns:
+       img.  處理好的影像
+
+    >>> frame = remove_irrelevant(
+            frame,
+            boundary_left, boundary_up,
+            boundary_right, boundary_down
+        )
+    """
+    if up >= down:
+        cv2.setTrackbarPos("up", _wn, up - 1)
+        up = down - 1
+    if left >= right:
+        cv2.setTrackbarPos("left", _wn, left - 1)
+        left = right - 1
+    return get_crop_img(img, [left, up], [right, down])
+
+
+def img_resize(image: Any, height_new: int, width_new: int) -> Any:
+    height, width = image.shape[0], image.shape[1]
+    try:
+        if width / height >= width_new / height_new:
+            img_new = cv2.resize(image, (width_new, int(height * width_new / width)))
+        else:
+            img_new = cv2.resize(image, (int(width * height_new / height), height_new))
+    except Exception:
+        return image
+    return img_new

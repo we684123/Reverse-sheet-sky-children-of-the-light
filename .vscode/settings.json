@@ -1,0 +1,58 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[toml]": {
+        "editor.formatOnSave": false
+    },
+    "ruff.configuration": "${workspaceFolder}/pyproject.toml",
+    "mypy.dmypyExecutable": "${workspaceFolder}/.venv/Scripts/dmypy.exe",
+    "mypy.configFile": "./pyproject.toml",
+    "ty.importStrategy": "fromEnvironment",
+    "ty.interpreter": [
+        "${workspaceFolder}/.venv/Scripts/python.exe"
+    ],
+    "ty.inlayHints.callArgumentNames": false,
+    "ty.inlayHints.variableTypes": false,
+    "basedpyright.analysis.inlayHints.callArgumentNames": true,
+    "basedpyright.analysis.inlayHints.variableTypes": true,
+    "basedpyright.analysis.inlayHints.functionReturnTypes": true,
+    "basedpyright.analysis.inlayHints.genericTypes": true,
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.inlayHints.callArgumentNames": "off",
+    "python.analysis.inlayHints.variableTypes": false,
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "cSpell.words": [
+        "asyncio",
+        "basedpyright",
+        "boundart",
+        "CCOEFF",
+        "fafc",
+        "fffc",
+        "ffpyplayer",
+        "flffc",
+        "fsfc",
+        "gitmoji",
+        "healthcheck",
+        "imread",
+        "imshow",
+        "linestyle",
+        "mypy",
+        "noqa",
+        "NOSONAR",
+        "prek",
+        "pyautogui",
+        "Trackbar",
+        "waitkey"
+    ]
+}

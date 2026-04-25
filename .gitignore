@@ -18,3 +18,9 @@ note_songs/change_ext.py
 dev/
 
 testfile/
+
+.coverage
+
+*.mkv
+
+config/effect_config_parameter.json
