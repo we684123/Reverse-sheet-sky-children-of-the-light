@@ -85,6 +85,7 @@ ignore = [
   "RUF002", # 不檢查說明中是否存在歧義的 Unicode 字元 (中文標點符號會被誤會)
   "RUF003", # 不檢查註解中是否存在歧義的 Unicode 字元 (中文標點符號會被誤會)
   "RET504", # 為了可讀性，允許 return 前的變數賦值
+  "TD003" , # 允許 TODO 中沒有對應的 issue 連結
 ]
 select = [
   "N", # pep8-naming
