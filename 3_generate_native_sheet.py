@@ -169,7 +169,7 @@ for i in range(osl):
         # 接下來在15個音符中搜尋哪個是同時按的
         # (這已被index標註，所以換句話說找接下來15個有沒有跟開頭的index一樣的)
         # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
-        # TODO(we684123): 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤  # noqa: TD003
+        # TODO(we684123): 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
         for k in range(i, get_in_area(i, 15, osl)):
             # 如果有的話看看index一不一樣
             if "index" in original_sheet[k]:

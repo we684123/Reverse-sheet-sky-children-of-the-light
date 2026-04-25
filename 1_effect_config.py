@@ -51,7 +51,7 @@ IS_DRAG_VIDEO_TO_HERE_BY_IDE: bool = len_sys_argv == 3 and sys.argv[1] == "-f"  
 IS_TOO_MUCH_ARGS: bool = len_sys_argv > 2  # noqa: PLR2004
 
 # ↓↓ 處理被拖到這個程式的影片
-if IS_DRAG_VIDEO_TO_HERE_BY_IDE:  # TODO(we684123): 這個之後移除  # noqa: TD003
+if IS_DRAG_VIDEO_TO_HERE_BY_IDE:  # TODO(we684123): 這個之後移除
     # 如果是在 IDE(Hydrogen)下的話則自動覆蓋 sys.argv
     # ps'影片如果改了的話，請記得改下面的影片名稱
     sys.argv = [str(this_py_path / "./test.py"), str(this_py_path / "能看見海的街道.mp4")]
