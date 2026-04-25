@@ -3,11 +3,12 @@ import random
 import string
 import sys
 from pathlib import Path
+from typing import Any
 
 import coloredlogs
 
 
-def generate(logger_config, name="", need_serial=False, **kwargs):
+def generate(logger_config: dict[str, Any], name: str = "", need_serial: bool = False, **kwargs: Any) -> logging.Logger:
     """
     logger_config is like to
     {
