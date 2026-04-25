@@ -56,7 +56,7 @@ ed_specify_count = ec["frame_end"]
 # 再處理剩下的
 # 生成 frame_keyboards
 frame_keyboards = []
-logger.info(("analysis_from_video.json now is generating, need more times,", "maybe eat something, for wait time?"))
+logger.info("analysis_from_video.json now is generating, need more times, maybe eat something, for wait time?")
 while cap.isOpened():
     ret, frame = cap.read()
     frame_count: int | float = cap.get(cv2.CAP_PROP_POS_FRAMES)
