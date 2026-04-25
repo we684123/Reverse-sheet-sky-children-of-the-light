@@ -1,6 +1,7 @@
 import json
 import time
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -13,14 +14,15 @@ reverse_config = base.config()
 rc = reverse_config
 logger = logger_generate.generate(base.logger_config())
 
+CHOOSE_ENHANCE_SHEET = 2
 
 # 讀取譜面
 logger.info("Loading sheet...")
 this_py_path = Path().absolute()
 
-effect_config_path = this_py_path / "./config/effect_config_parameter.json"
-with open(str(effect_config_path), encoding="utf-8") as f:
-    content = f.read()
+effect_config_path: Path = this_py_path / "./config/effect_config_parameter.json"
+with effect_config_path.open(encoding="utf-8") as f:
+    content: str = f.read()
 ec = json.loads(content)
 
 output_sheet_path = this_py_path / rc["output_sheet_path"]
@@ -29,10 +31,10 @@ _temp = output_sheet_path / "./native_sheet.json"
 _temp2 = output_sheet_path / "./enhance_sheet.json"
 if _temp2.exists():
     k = input("plz choose a file load.\n1 native_sheet.json\n2 enhance_sheet.json\n")
-    if int(k) == 2:
+    if int(k) == CHOOSE_ENHANCE_SHEET:
         _temp = _temp2
 
-with open(_temp, encoding="utf-8") as f:
+with _temp.open(encoding="utf-8") as f:
     _data = f.read()
 
 data = json.loads(_data)
@@ -68,10 +70,11 @@ feed_effect_time = 0.4
 feed_effect_frame = feed_effect_time * fps
 note_effect_time = 0.2
 note_effect_frame = note_effect_time * fps
+KEYBOARD_EFFECT_MAX_WIDTH = 20
+KEYBOARD_EFFECT_MIN_VISIBLE_WIDTH = 3
 
 
-effect_config_path = f"{this_py_path / './config/effect_config_parameter.json'!s}"
-with open(effect_config_path, encoding="utf-8") as f:
+with effect_config_path.open(encoding="utf-8") as f:
     content = f.read()
 ec = json.loads(content)
 
@@ -95,10 +98,10 @@ def addition_to_video(img, frame_count, o_s):
     _for_addition_frame_count = frame_count - st_specify_count
     _fafc = _for_addition_frame_count
 
-    def ld_to_lf(x):
-        if abs(int(_fafc) - x["frame"]) < max_effect_frame:
-            if x["type"] == "line_feed" or x["type"] == "note":
-                return x
+    def ld_to_lf(x) -> Any | None:
+        if (abs(int(_fafc) - x["frame"]) < max_effect_frame) and (x["type"] in ("line_feed", "note")):
+            return x
+        return None
 
     temp_state_list = list(filter(ld_to_lf, o_s.copy()))
 
@@ -106,11 +109,11 @@ def addition_to_video(img, frame_count, o_s):
         _e = temp_state_list[i]
         _ef = _e["frame"]
         _et = _e["type"]
-        width = 20 - int(_fafc - _ef)
+        width = KEYBOARD_EFFECT_MAX_WIDTH - int(_fafc - _ef)
         # logger.debug(f"width = {width}")
         # logger.debug(type(width))
 
-        _width_in_area = width > 3 and width < 20
+        _width_in_area = width > KEYBOARD_EFFECT_MIN_VISIBLE_WIDTH and width < KEYBOARD_EFFECT_MAX_WIDTH
         use_keyboard_effect = rc["play_effect_config"]["use_keyboard_effect"]
         _run_keyboard_effect = _width_in_area and use_keyboard_effect
 
@@ -155,7 +158,7 @@ cv2.namedWindow("Sheet Player")
 # 加個進度條
 cv2.createTrackbar("Time_line", "Sheet Player", 0, int(frame_end), nothing)
 # # 加個觀察的目標鍵盤
-# # # TODO: 14要改成可變動
+# # # TODO(we684123): 14要改成可變動
 # cv2.createTrackbar('listen_key', 'Sheet Player', 0, 14, nothing)
 # change_key = 0
 # 改變開關
@@ -187,7 +190,7 @@ _v = ru.get_crop_img(frame, left_upper, right_lower)
 keyboard_area = ru.get_split_keyboard_area(_v, rc["keyboards_X_format"], rc["keyboards_y_format"])
 
 # 處理影片
-# TODO: 這裡要修成符合pep8 最少分2區 waitkey + frame_處理 (影像讀取)
+# TODO(we684123): 這裡要修成符合pep8 最少分2區 waitkey + frame_處理 (影像讀取)
 while cap.isOpened():
     frame_count: int | float = 0
     if not time_stop:
@@ -344,7 +347,7 @@ cv2.destroyAllWindows()
 
 # 最後把 enhance_sheet 譜面輸出
 _temp = output_sheet_path / "./enhance_sheet.json"
-with open(str(_temp), mode="w", encoding="utf-8") as f:
+with _temp.open(mode="w", encoding="utf-8") as f:
     new_data = {
         "original_sheet": sorted(o_s, key=lambda s: s["frame"]),
         "frame_end": data["frame_end"],
@@ -362,7 +365,7 @@ with open(str(_temp), mode="w", encoding="utf-8") as f:
 # ======================================================================
 # 這裡做一下 output_sheet 生成
 # 對了 這裡是直接複製 3_generate_native_sheet 的部分，之後看要不要修整
-# # TODO: 如上
+# # TODO(we684123): 如上
 
 # 為了防止 list 在最後倒數14個搜尋 out of range 用的
 
@@ -407,7 +410,7 @@ for i in range(osl):
         # 接下來在15個音符中搜尋哪個是同時按的
         # (這已被index標註，所以換句話說找接下來15個有沒有跟開頭的index一樣的)
         # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
-        # TODO: 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
+        # TODO(we684123): 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
         for k in range(i, get_in_area(i, 15, osl)):
             # 如果有的話看看index一不一樣
             if "index" in o_s[k]:
@@ -441,5 +444,5 @@ for i in range(osl):
 logger.info("generating output_sheet.")
 output_sheet_path = (this_py_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / rc["output_file_name"]
-with open(_temp, mode="w", encoding="utf-8") as f:
+with _temp.open(mode="w", encoding="utf-8") as f:
     f.write(str(sheet))
