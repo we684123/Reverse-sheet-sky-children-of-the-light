@@ -19,7 +19,7 @@ logger = logger_generate.generate(base.logger_config())
 aims_folder_path = Path(rc["aims_folder_path"])
 output_sheet_path = (aims_folder_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "./native_sheet.json"
-with open(_temp, encoding="utf-8") as f:
+with _temp.open(encoding="utf-8") as f:
     _original_sheet = f.read()
 original_sheet = json.loads(_original_sheet)["original_sheet"]
 

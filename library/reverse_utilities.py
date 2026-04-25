@@ -49,12 +49,12 @@ def link_line(img):
 
 def get_binary_img(img, thresh):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
+    _, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
     return binary
 
 
 def get_do_contour_by_binary(binary):
-    contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
 
@@ -86,7 +86,7 @@ def get_crop_img(img, upper_left, lower_right):
     return crop_img
 
 
-def get_matchTemplate_rt(img, template):
+def get_match_template_rt(img, template):
     # w = template.shape[1]
     # h = template.shape[0]
     res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
@@ -102,7 +102,7 @@ def get_matchTemplate_rt(img, template):
     return do_rt
 
 
-def get_Template_binary_img(template_img_path):
+def get_template_binary_img(template_img_path):
     template = cv2.imread(template_img_path)
     template_binary = get_binary_img(template, 127)
     return template_binary
@@ -184,7 +184,7 @@ def get_img_number_count(keyboard):
     return a
 
 
-# TODO: 這裡之後要看看要不要支援其他樂器的聲音
+# TODO(we684123): 這裡之後要看看要不要支援其他樂器的聲音
 def get_sounds():
     # load 聲音路徑
     note_songs_path = Path("./note_songs")

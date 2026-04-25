@@ -8,14 +8,12 @@ requires-python = ">=3.13"
 dependencies = [
   # CLI
   "typer>=0.24.1",
-
   # Shared Utilities
   "pydantic>=2.12.5",
   "pydantic-settings>=2.13.1",
   "python-dateutil>=2.9.0.post0",
   "python-dotenv>=1.2.2",
   "rich>=14.3.3",
-
   # Core
   "coloredlogs>=15.0.1",
   "numpy>=2.2.6",

@@ -17,7 +17,7 @@ aims_folder_path = Path().absolute()
 output_sheet_path = (aims_folder_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "./analysis_from_video.json"
 
-with open(_temp, encoding="utf-8") as f:
+with _temp.open(encoding="utf-8") as f:
     _analysis_from_video = f.read()
 
 analysis_from_video = json.loads(_analysis_from_video)
@@ -42,13 +42,12 @@ for i in range(len(frame_keyboards[0])):
         b = frame_keyboards[0][i][0]
         try:
             k = frame_keyboards[0][i][1]
-        except Exception as e:
-            e
+        except Exception:
             k = 0
         max_pixel_len = b + k
         max_pixel_len_area.append(max_pixel_len)
-    except Exception as e:
-        e
+    except Exception:
+        pass
 
 for i in frame_keyboards:
     for j in range(len(i)):
@@ -60,7 +59,7 @@ aims_folder_path = Path().absolute()
 output_sheet_path = (aims_folder_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "./native_sheet.json"
 
-with open(_temp, encoding="utf-8") as f:
+with _temp.open(encoding="utf-8") as f:
     _native_sheet = f.read()
 native_sheet = json.loads(_native_sheet)
 original_sheet = native_sheet["original_sheet"]
@@ -83,6 +82,7 @@ def generate_note_st_ed():
         def is_note_from_track(x):
             if x["keyboard"] == track and x["type"] == "note":
                 return x
+            return None
 
         rt = filter(is_note_from_track, original_sheet.copy())
         rt = list(rt)
@@ -98,7 +98,7 @@ def generate_note_st_ed():
 # horizon_range = [280, 400]
 # now_frame = 300
 # index_height = 800
-def check_graph(pixel_force, kb_list, note_st_ed, track, horizon_range, now_frame, index_height):
+def check_graph(pixel_force, kb_list, note_st_ed, track, horizon_range, now_frame, index_height):  # noqa: PLR0913
     hr = horizon_range
 
     now_index = np.zeros(len(kb_list[track]))
@@ -144,6 +144,5 @@ if __name__ == "__main__":
             kb_list_max = np.max(kb_list[track])
             check_graph(pixel_force, kb_list, note_st_ed_list, track, horizon_range, now_frame, kb_list_max)
         plt.show()
-    except Exception as e:
-        e
+    except Exception:
         raise IndexError("請輸入正確且範圍內的數值.")

@@ -25,11 +25,8 @@ def generate(logger_config, name="", need_serial=False, **kwargs):
     if "need_serial" in kwargs:
         need_serial = kwargs["need_serial"]
 
-    if not Path(logger_config["log_file_path"]).exists():
-        try:
-            Path(logger_config["log_file_path"]).parents[0].mkdir()
-        except Exception as e:
-            e  # 應付 pep8
+    log_file_path = Path(logger_config["log_file_path"])
+    log_file_path.parent.mkdir(parents=True, exist_ok=True)
 
     if name == "":
         name = __name__
@@ -41,7 +38,7 @@ def generate(logger_config, name="", need_serial=False, **kwargs):
         logger = logging.getLogger(name)
     handler1 = logging.StreamHandler(sys.stdout)
     handler2 = logging.handlers.TimedRotatingFileHandler(
-        filename=logger_config["log_file_path"],
+        filename=log_file_path,
         when=logger_config["when"],
         encoding=logger_config["encoding"],
         backupCount=logger_config["backupCount"],

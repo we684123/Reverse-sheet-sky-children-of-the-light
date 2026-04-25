@@ -1,15 +1,23 @@
 import json
 import uuid
 from collections import Counter
+from pathlib import Path
+
+from config import base
+from library import logger_generate
+
+reverse_config = base.config()
+rc = reverse_config
+logger = logger_generate.generate(base.logger_config())
 
 # Input file
-input_file = "output/native_sheet.json"
+input_file = Path("output/native_sheet.json")
 
 # Output file
-output_file = "output/converted_song.txt"
+output_file = Path("output/converted_song.txt")
 
 # Read the original JSON from file
-with open(input_file) as f:
+with input_file.open(encoding="utf-8") as f:
     original_json = f.read()
 
 # Parse the JSON
@@ -37,10 +45,7 @@ for i in range(1, len(sorted_indices)):
     diffs.append(diff)
 
 # Find the most common diff (mode)
-if diffs:
-    frame_diff_per_beat = Counter(diffs).most_common(1)[0][0]
-else:
-    frame_diff_per_beat = 11  # Fallback
+frame_diff_per_beat = Counter(diffs).most_common(1)[0][0] if diffs else 11  # Fallback
 
 # Calculate BPM
 fps = data["fps"]
@@ -50,13 +55,13 @@ bpm = round(60 * fps / frame_diff_per_beat)
 beat_ms = 60 / bpm * 1000
 
 # Convert notes to songNotes format
-songNotes = []
+song_notes = []
 column_notes = {}  # Dict to group notes by column index
 
 for note in original_sheet:
     time_ms = int(note["time"] * 1000)
     key = f"1Key{note['keyboard']}"
-    songNotes.append({"key": key, "time": time_ms})
+    song_notes.append({"key": key, "time": time_ms})
 
     # Calculate column index
     column_index = round(time_ms / beat_ms)
@@ -65,10 +70,7 @@ for note in original_sheet:
     column_notes[column_index].append([note["keyboard"], "1"])
 
 # Find the maximum column index
-if column_notes:
-    max_column = max(column_notes.keys())
-else:
-    max_column = 0
+max_column = max(column_notes.keys()) if column_notes else 0
 
 # Create columns list
 columns = []
@@ -110,13 +112,14 @@ target_object = {
     "isComposed": True,
     "bitsPerPage": 16,
     "isEncrypted": False,
-    "songNotes": songNotes,
+    "songNotes": song_notes,
 }
 
 # Output the converted object as JSON to file
-with open(output_file, "w") as f:
+with output_file.open("w", encoding="utf-8") as f:
     json.dump([target_object], f, indent=4)
 
-print(
-    f"Conversion complete. Output saved to {output_file}. Calculated BPM: {bpm}, Frame diff per beat: {frame_diff_per_beat}"
+logger.info(
+    f"Conversion complete. Output saved to {output_file}. "
+    f"Calculated BPM: {bpm}, Frame diff per beat: {frame_diff_per_beat}"
 )

@@ -6,14 +6,16 @@ import cv2
 import numpy as np
 
 from config import base
+from library import logger_generate
 from library import reverse_utilities as ru
 
 reverse_config = base.config()
 rc = reverse_config
+logger = logger_generate.generate(base.logger_config())
 
 aims_folder_path = Path(rc["aims_folder_path"])
-effect_config_path = f"{aims_folder_path / './config/effect_config_parameter.json'!s}"
-with open(effect_config_path, encoding="utf-8") as f:
+effect_config_path = aims_folder_path / "./config/effect_config_parameter.json"
+with effect_config_path.open(encoding="utf-8") as f:
     content = f.read()
 ec = json.loads(content)
 
@@ -47,10 +49,10 @@ if __name__ == "__main__":
         # 正確讀取影像時 ret 回傳 True
         frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
         if frame_count == frame_end:
-            print("影片讀取完畢")
+            logger.info("影片讀取完畢")
             break
         if not ret:
-            print("影片讀取失敗，請確認影片格式...")
+            logger.error("影片讀取失敗，請確認影片格式...")
             break
 
         # 僅取鍵盤畫面

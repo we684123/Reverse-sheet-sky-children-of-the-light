@@ -37,8 +37,16 @@ hsv = config["hsv"]
 binarization = config["binarization"]
 closing = config["closing"]
 
+len_sys_argv = len(sys.argv)
+logger.debug(f"{sys.argv=}")
+logger.debug(f"{len_sys_argv=}")
+IS_CHECK_PYTHON_FILE: bool = len_sys_argv == 1
+IS_DRAG_VIDEO_TO_HERE: bool = len_sys_argv == 2  # noqa: PLR2004
+IS_DRAG_VIDEO_TO_HERE_BY_IDE: bool = len_sys_argv == 3 and sys.argv[1] == "-f"  # noqa: PLR2004
+IS_TOO_MUCH_ARGS: bool = len_sys_argv > 2  # noqa: PLR2004
+
 # ↓↓ 處理被拖到這個程式的影片
-if len(sys.argv) == 3 and sys.argv[1] == "-f":
+if IS_DRAG_VIDEO_TO_HERE_BY_IDE:
     # 如果是在 IDE(Hydrogen)下的話則自動覆蓋 sys.argv
     # ps'影片如果改了的話，請記得改下面的影片名稱
     sys.argv = [str(this_py_path / "./test.py"), str(this_py_path / "能看見海的街道.mp4")]
@@ -47,10 +55,10 @@ if len(sys.argv) == 3 and sys.argv[1] == "-f":
 #     str(this_py_path / 'requirements.txt')
 # ]
 # logger.info(sys.argv)
-if len(sys.argv) == 0:
+if IS_CHECK_PYTHON_FILE:
     # 代表是直接點執行檔
-    logger.info("🔎🈚Did not drag videon to here,📗so will use tmp effect_config_parameter")
-if len(sys.argv) == 2:
+    logger.info("🔎🈚Did not drag video to here,📗so will use tmp effect_config_parameter")
+if IS_DRAG_VIDEO_TO_HERE:
     # 代表是拖影片檔到執行檔，此時需要驗證是否為影片
     aims_video_file = Path(sys.argv[1])
     logger.debug(sys.argv)
@@ -66,9 +74,9 @@ if len(sys.argv) == 2:
         video_is_ready = True
         logger.info(f'🎞️✅ "{aims_video_file!s}" is a video, and can use.')
     except Exception:
-        logger.error(f'🎞️❌ "{aims_video_file!s}" not a Video.')
+        logger.exception(f'🎞️❌ "{aims_video_file!s}" not a Video.')
         ite.input_then_exit()
-if len(sys.argv) > 2:
+if IS_TOO_MUCH_ARGS:
     logger.error("🈵 sorry, but you only can drag a video to here, can't too more😅")
     ite.input_then_exit()
 # ↓↓之後從 effect_config 中找到調好的臨時設定檔，並從裡面取值覆蓋
@@ -77,7 +85,7 @@ if effect_config_path.exists():
     # 如果存在就開始動作
     logger.info(f'📝✅ "{effect_config_path!s}" exists.')
 
-    with open(effect_config_path, encoding="utf-8") as f:
+    with effect_config_path.open(encoding="utf-8") as f:
         content = f.read()
     ec = json.loads(content)
 
