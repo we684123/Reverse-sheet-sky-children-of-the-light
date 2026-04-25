@@ -1,4 +1,5 @@
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -18,8 +19,8 @@ logger = logger_generate.generate(base.logger_config(), name="reverse_sheet_log"
 this_py_path = Path().absolute()
 
 effect_config_path = this_py_path / "./config/effect_config_parameter.json"
-with open(str(effect_config_path), encoding="utf-8") as f:
-    content = f.read()
+with effect_config_path.open(encoding="utf-8") as f:
+    content: str = f.read()
 ec = json.loads(content)
 
 video_path = Path(ec["aims_video_file"])
@@ -37,7 +38,7 @@ closing = bool(ec["closing"])
 
 if not video_path.exists():
     logger.warning("video_path is not exist!")
-    exit()
+    sys.exit()
 cap = cv2.VideoCapture(str(video_path))
 frame_end = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -58,8 +59,8 @@ frame_keyboards = []
 logger.info(("analysis_from_video.json now is generating, need more times,", "maybe eat something, for wait time?"))
 while cap.isOpened():
     ret, frame = cap.read()
-    frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)
-    if frame_count == frame_end or frame_count == ed_specify_count:
+    frame_count: int | float = cap.get(cv2.CAP_PROP_POS_FRAMES)
+    if frame_count in (frame_end, ed_specify_count):
         logger.info("影片讀取完畢")
         break
     if not ret:
@@ -86,8 +87,8 @@ logger.info("now to save data...")
 # 生成完後要儲存資料
 output_sheet_path = (this_py_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "./analysis_from_video.json"
-with open(str(_temp), mode="w", encoding="utf-8") as f:
-    data = {
+with _temp.open(mode="w", encoding="utf-8") as f:
+    data: dict[str, str | int | float] = {
         "notes": str(frame_keyboards),
         "frame_end": frame_end,
         "fps": fps,
