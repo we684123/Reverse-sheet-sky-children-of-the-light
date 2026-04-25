@@ -17,7 +17,10 @@
     "ty.interpreter": [
         "${workspaceFolder}/.venv/Scripts/python.exe"
     ],
+    "ty.inlayHints.callArgumentNames": true,
+    "basedpyright.analysis.inlayHints.callArgumentNames": false,
     "python.analysis.typeCheckingMode": "off",
+    "python.analysis.inlayHints.callArgumentNames": "off",
     "python.testing.pytestArgs": [
         "."
     ],
