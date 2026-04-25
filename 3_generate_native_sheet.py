@@ -17,7 +17,7 @@ this_py_path = Path().absolute()
 output_sheet_path = this_py_path / rc["output_sheet_path"]
 _temp = output_sheet_path / "./analysis_from_video.json"
 
-with open(_temp, encoding="utf-8") as f:
+with _temp.open(encoding="utf-8") as f:
     _analysis_from_video = f.read()
 
 analysis_from_video = json.loads(_analysis_from_video)
@@ -44,13 +44,12 @@ for i in range(len(frame_keyboards[0])):
         b = frame_keyboards[0][i][0]
         try:
             k = frame_keyboards[0][i][1]
-        except Exception as e:
-            e
+        except Exception:
             k = 0
         max_pixel_len = b + k
         max_pixel_len_area.append(max_pixel_len)
-    except Exception as e:
-        e
+    except Exception:
+        pass
 
 for i in frame_keyboards:
     for j in range(len(i)):
@@ -88,7 +87,7 @@ for track in range(len(kb_list)):
             sheet.append({"type": "note", "frame": m, "keyboard": track})
 
 sort_sheet = sorted(sheet, key=lambda s: s["frame"])
-sort_sheet
+
 
 # 加個正確時間(frame -> time)
 # 順便給個編號
@@ -170,7 +169,7 @@ for i in range(osl):
         # 接下來在15個音符中搜尋哪個是同時按的
         # (這已被index標註，所以換句話說找接下來15個有沒有跟開頭的index一樣的)
         # ps 設15個是因為鍵盤最多15個，如果之後有增加數量要再改
-        # TODO: 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤
+        # TODO(we684123): 看看要不要把這個用base設定的鍵盤數動態生成，畢竟有8個的鍵盤  # noqa: TD003
         for k in range(i, get_in_area(i, 15, osl)):
             # 如果有的話看看index一不一樣
             if "index" in original_sheet[k]:
@@ -208,7 +207,7 @@ logger.info("generated native sheet done.")
 logger.info("generating output_sheet.")
 output_sheet_path = (this_py_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "penultimate_sheet.txt"
-with open(_temp, mode="w", encoding="utf-8") as f:
+with _temp.open(mode="w", encoding="utf-8") as f:
     f.write(str(sheet))
 logger.info("generated output_sheet done.")
 
@@ -217,7 +216,7 @@ logger.info("generating native_sheet.")
 output_sheet_path = (this_py_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "native_sheet.json"
 _afv = analysis_from_video
-with open(_temp, mode="w", encoding="utf-8") as f:
+with _temp.open(mode="w", encoding="utf-8") as f:
     new_data = {
         "original_sheet": original_sheet,
         "frame_end": _afv["frame_end"],
