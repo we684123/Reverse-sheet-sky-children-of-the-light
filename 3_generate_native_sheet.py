@@ -22,7 +22,8 @@ with _temp.open(encoding="utf-8") as f:
     _analysis_from_video = f.read()
 
 analysis_from_video = json.loads(_analysis_from_video)
-frame_keyboards = json.loads(analysis_from_video["notes"])
+raw_notes = analysis_from_video["notes"]
+frame_keyboards = json.loads(raw_notes) if isinstance(raw_notes, str) else raw_notes
 fps = analysis_from_video["fps"]
 cool_down_time = rc["cool_down_time"]  # 冷卻時間(單位 ms)
 cool_down_frame = round((cool_down_time / 1000) / (1 / fps))  # 冷卻時間(單位 偵數)

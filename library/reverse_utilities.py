@@ -182,10 +182,10 @@ def get_split_keyboard_area(img: Any, x: int, y: int) -> list[list[int]]:
     return keyboard_area
 
 
-def get_img_number_count(keyboard: Any) -> list[Any]:
-    a = []
+def get_img_number_count(keyboard: Any) -> list[int]:
+    a: list[int] = []
     for i in np.unique(keyboard):
-        a.append(np.sum(keyboard == i))
+        a.append(int(np.sum(keyboard == i)))
     return a
 
 

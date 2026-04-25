@@ -55,7 +55,7 @@ ed_specify_count = ec["frame_end"]
 
 # 再處理剩下的
 # 生成 frame_keyboards
-frame_keyboards = []
+frame_keyboards: list[list[list[int]]] = []
 logger.info("analysis_from_video.json now is generating, need more times, maybe eat something, for wait time?")
 while cap.isOpened():
     ret, frame = cap.read()
@@ -76,7 +76,7 @@ while cap.isOpened():
     if closing:
         img = ru.link_line(img)
     keyboards = ru.split_keyboard(img, rc["keyboards_X_format"], rc["keyboards_y_format"])
-    keyboards_count = []
+    keyboards_count: list[list[int]] = []
     for k in keyboards:
         keyboards_count.append(ru.get_img_number_count(k))
     frame_keyboards.append(keyboards_count)
@@ -88,8 +88,8 @@ logger.info("now to save data...")
 output_sheet_path = (this_py_path / Path(rc["output_sheet_path"])).resolve()
 _temp = output_sheet_path / "./analysis_from_video.json"
 with _temp.open(mode="w", encoding="utf-8") as f:
-    data: dict[str, str | int | float] = {
-        "notes": str(frame_keyboards),
+    data: dict[str, list[list[list[int]]] | int | float] = {
+        "notes": frame_keyboards,
         "frame_end": frame_end,
         "fps": fps,
         "duration": duration,
