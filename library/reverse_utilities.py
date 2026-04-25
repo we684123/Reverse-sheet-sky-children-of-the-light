@@ -4,7 +4,6 @@ from typing import Any
 
 import cv2
 import numpy as np
-import pygame
 
 
 def get_keyboard_by_hsv(
@@ -192,6 +191,8 @@ def get_img_number_count(keyboard: Any) -> list[Any]:
 
 # TODO(we684123): 這裡之後要看看要不要支援其他樂器的聲音
 def get_sounds() -> list[Any]:
+    import pygame  # noqa: PLC0415
+
     # load 聲音路徑
     note_songs_path = Path("./note_songs")
     sounds_path = []
