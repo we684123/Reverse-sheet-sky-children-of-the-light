@@ -1,4 +1,7 @@
-def config():
+from typing import Any
+
+
+def config() -> dict[str, Any]:
     return {
         # 譜面輸出目錄
         "output_sheet_path": "./output",
@@ -117,7 +120,7 @@ def config():
     }
 
 
-def logger_config():
+def logger_config() -> dict[str, Any]:
     return {
         "logging_level": "INFO",  # DEBUG # INFO # ERROR # WARNING
         "log_file_path": "./logs/Reverse-sheet-sky-children-of-the-light",
