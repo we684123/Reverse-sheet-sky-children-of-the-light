@@ -1,4 +1,5 @@
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -41,21 +42,23 @@ closing = int(config["closing"]["use"])
 
 aims_video_file = None
 
+len_sys_argv = len(sys.argv)
+logger.debug(f"{sys.argv=}")
+logger.debug(f"{len_sys_argv=}")
+IS_CHECK_PYTHON_FILE: bool = len_sys_argv == 1
+IS_DRAG_VIDEO_TO_HERE: bool = len_sys_argv == 2  # noqa: PLR2004
+IS_DRAG_VIDEO_TO_HERE_BY_IDE: bool = len_sys_argv == 3 and sys.argv[1] == "-f"  # noqa: PLR2004
+IS_TOO_MUCH_ARGS: bool = len_sys_argv > 2  # noqa: PLR2004
+
 # ↓↓ 處理被拖到這個程式的影片
-if len(sys.argv) == 3 and sys.argv[1] == "-f":
+if IS_DRAG_VIDEO_TO_HERE_BY_IDE:  # TODO(we684123): 這個之後移除  # noqa: TD003
     # 如果是在 IDE(Hydrogen)下的話則自動覆蓋 sys.argv
     # ps'影片如果改了的話，請記得改下面的影片名稱
     sys.argv = [str(this_py_path / "./test.py"), str(this_py_path / "能看見海的街道.mp4")]
-# sys.argv = [
-#     str(this_py_path / './test.py'),
-#     str(this_py_path / 'requirements.txt')
-# ]
-# logger.info(sys.argv)
-logger.debug(f"sys.argv = {len(sys.argv)}")
-if len(sys.argv) == 1:
+if IS_CHECK_PYTHON_FILE:
     # 代表是直接點執行檔
     logger.info("🔎🈚Did not drag video to here,📗so will use tmp effect_config_parameter")
-if len(sys.argv) == 2:
+if IS_DRAG_VIDEO_TO_HERE:
     # 代表是拖影片檔到執行檔，此時需要驗證是否為影片
     aims_video_file = Path(sys.argv[1])
     logger.debug(sys.argv)
@@ -74,7 +77,7 @@ if len(sys.argv) == 2:
     except Exception:
         logger.exception(f'🎞️❌ "{aims_video_file!s}" not a Video.')
         ite.input_then_exit()
-if len(sys.argv) > 2:
+if IS_TOO_MUCH_ARGS:
     logger.error("🈵 sorry, but you only can drag a video to here, can't too more😅")
     ite.input_then_exit()
 # ↓↓之後從 effect_config 中找到調好的臨時設定檔，並從裡面取值覆蓋
@@ -83,13 +86,13 @@ if effect_config_path.exists():
     # 如果存在就開始動作
     logger.info(f'📝✅ "{effect_config_path!s}" exists.')
 
-    with open(effect_config_path, encoding="utf-8") as f:
+    with effect_config_path.open(encoding="utf-8") as f:
         content = f.read()
     ec = json.loads(content)
 
     # 如果是用拖影片進來的，那就依拖的為主，如果是點的就拿 effect_config_path 覆蓋
-    logger.debug(f"len(sys.argv) = {len(sys.argv)}")
-    if len(sys.argv) == 1:  # ←這是點的
+    logger.debug(f"len(sys.argv) = {len_sys_argv}")
+    if len_sys_argv == 1:  # ←這是點的
         aims_video_file = str(ec["aims_video_file"])
 
     left_upper = [int(ec["boundary_left"]), int(ec["boundary_up"])]
@@ -127,11 +130,7 @@ logger.info(f"duration= {duration}")
 logger.info(f"minute= {minute}")
 logger.info(f"seconds= {seconds}")
 logger.info("---------------")
-logger.info(
-    "".join(
-        ("d(`･∀･)b When you finish setting,", " plz click 'result' window and", " input keyboard 's' to save config.")
-    )
-)
+logger.info("d(`･∀･)b When you finish setting, plz click 'result' window and input keyboard 's' to save config.")
 logger.info("---------------")
 
 # specify_minute = input('plz input specify "minute" = ')
@@ -280,7 +279,7 @@ while cap.isOpened():
             "frame_end": replay_end,
         }
         logger.info(f"effect_config = \n{effect_config}")
-        with open(effect_config_path, "w", encoding="utf-8") as outfile:
+        with effect_config_path.open("w", encoding="utf-8") as outfile:
             json.dump(effect_config, outfile, ensure_ascii=False, indent=2)
         logger.info(f'📝✨ create "{effect_config_path!s}"✅.')
         logger.info("config saved.")
@@ -298,7 +297,7 @@ while cap.isOpened():
             cap.set(cv2.CAP_PROP_POS_FRAMES, aims_frame)
             cv2.setTrackbarPos("change", _wn3, 0)
             CHANGE_TIME = 0
-if logger.level == 10:
+if logger.level == logging.DEBUG:
     input("input enter to exit.")
 
 player.close_player()
