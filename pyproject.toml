@@ -67,7 +67,7 @@ otel_pin = [
 
 [tool.ruff]
 # https://docs.astral.sh/ruff/settings/#top-level
-exclude = ["**/.venv/", ".git_hooks/*"]
+exclude = ["**/.venv/", ".git/*", ".git_hooks/*"]
 line-length = 120
 required-version = ">=0.15.11"
 
