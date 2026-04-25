@@ -184,13 +184,7 @@ typeCheckingMode = "standard"
 venv = ".venv"
 venvPath = "."
 
-include = [
-  "app",
-  "migrations",
-  "command",
-  "common",
-  "main.py",
-]
+# include = []
 
 reportDeprecated = "warning"
 
