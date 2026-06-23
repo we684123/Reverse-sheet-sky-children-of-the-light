@@ -10,7 +10,7 @@ dependencies = [
   "typer>=0.24.1",
   # Shared Utilities
   "pydantic>=2.12.5",
-  "pydantic-settings>=2.13.1",
+  "pydantic-settings>=2.14.2",
   "python-dateutil>=2.9.0.post0",
   "python-dotenv>=1.2.2",
   "rich>=14.3.3",
